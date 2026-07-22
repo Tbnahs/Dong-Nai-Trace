@@ -1,0 +1,125 @@
+0. BRIEF CHUNG (bắt buộc đưa vào mọi prompt)
+
+Thiết kế giao diện cho Hệ thống Truy xuất nguồn gốc sản phẩm, hàng hóa Thành phố Đồng Nai , tên thương mại "Đồng Nai Trace" , do Sở Khoa học và Công nghệ Thành phố Đồng Nai chủ trì, đơn vị Checkee vận hành kỹ thuật (không hiển thị thương hiệu Checkee ở bất kỳ đâu trên giao diện public/doanh nghiệp).
+
+Bối cảnh sản phẩm: đây là cổng thông tin của cơ quan nhà nước Việt Nam phục vụ truy xuất nguồn gốc nông sản/hàng hóa — người dùng gồm: người tiêu dùng phổ thông (quét QR sản phẩm), doanh nghiệp/HTX/cơ sở sản xuất (đăng ký, khai báo sản phẩm), và cán bộ quản lý nhà nước (lãnh đạo tỉnh/thành, Sở KH&CN, phòng TDC).
+
+Bộ nhận diện:
+
+Logo: logo Sở KH&CN Thành phố Đồng Nai (dùng tạm đến khi có logo mới của Thành phố) — biểu tượng nguyên tử cách điệu hình con nai, màu xanh navy đậm ( 
+#1B2A6Bhoặc tương đương), nền trắng.
+Màu chủ đạo: xanh (đại diện Nông nghiệp) phối với cam (đại diện Công nghiệp) — dùng xanh làm màu chính (primary), cam làm màu nhấn (accent/CTA).
+Phong cách: chuyên nghiệp, đáng tin cậy, chuẩn mực cổng dịch vụ công (tham khảo phong cách các cổng dịch vụ công Việt Nam, dichvucong.gov.vn, nhưng hiện đại, sạch, nhiều khoảng trắng, không rườm rà).
+Font: sans-serif rõ ràng, hỗ trợ tốt tiếng Việt có dấu (ví dụ Inter, Be Vietnam Pro, Noto Sans).
+Bắt buộc responsive, accessible (tương phản đủ, cỡ chữ dễ đọc cho cả người lớn tuổi là can bộ quản lý).
+
+Kiến trúc hệ thống gồm 3 nền tảng — khi thiết kế cần ghi rõ đang làm cho nền tảng nào:
+
+Portal (Web công khai + Doanh nghiệp) — domain txng.dongnai.gov.vn — ai cũng vào xem được; doanh nghiệp đăng nhập để khai báo.
+App (di động) — “Đồng Nai Trace” — dùng chung nhiều vai trò, có thêm chức năng quét QR bằng camera.
+Client (nền tảng quản trị Master) — KHÔNG public, chỉ dành cho Checkee vận hành và tài khoản xem báo cáo được cấp riêng cho lãnh đạo tỉnh/Sở KH&CN/sở ban ngành — giao diện dạng dashboard quản trị nội bộ, có thể thiên hướng nghiệp vụ/dữ liệu hơn là thân thiện đại chúng.
+1. PROMPT — PORTAL: Trang chủ tra cứu công khai (không đăng nhập)
+Thiết kế trang chủ web (desktop + mobile responsive) cho cổng tra cứu truy xuất nguồn gốc
+công khai "Đồng Nai Trace" (txng.dongnai.gov.vn), phong cách cổng dịch vụ công hiện đại,
+màu chủ đạo xanh + cam, có logo Sở KH&CN Đồng Nai ở header.
+
+Bố cục cần có:
+- Header: logo + tên hệ thống, thanh điều hướng (Trang chủ, Tra cứu, Doanh nghiệp/HTX,
+  Đăng nhập / Đăng ký doanh nghiệp), chọn ngôn ngữ VI/EN.
+- Hero section: ô tìm kiếm lớn để tra cứu sản phẩm/doanh nghiệp theo tên, mã GTIN hoặc
+  mã lô/mẻ; nút "Quét mã QR" (dẫn hướng tải app).
+- Khối số liệu tổng quan dạng thẻ (card) hiển thị: tổng số doanh nghiệp/HTX đã tham gia,
+  tổng số sản phẩm đã công bố, số mã truy xuất đã đồng bộ — dữ liệu công khai, thời gian thực.
+- Danh mục nổi bật theo nhóm ngành hàng (nông sản, thủy sản, thực phẩm chế biến, thủ công
+  mỹ nghiệp...) dạng lưới icon/card có thể lọc.
+- Danh sách/carousel sản phẩm hoặc doanh nghiệp tiêu biểu mới cập nhật.
+- Footer: thông tin liên hệ Sở KH&CN, link Cổng TXNG Quốc gia, chính sách sử dụng.
+
+Không hiển thị bất kỳ thương hiệu đối tác kỹ thuật (Checkee) nào trên giao diện này.
+2. PROMPT — PORTAL: Kết quả tra cứu & Chi tiết sản phẩm
+Thiết kế 2 màn hình liên tiếp cho web "Đồng Nai Trace":
+
+Màn 1 — Kết quả tra cứu: hiển thị danh sách kết quả dạng card (ảnh sản phẩm, tên, doanh
+nghiệp, nhóm ngành hàng, trạng thái "Đã công khai"), có bộ lọc nâng cao bên trái (ngành
+hàng, địa bàn, đơn vị cung cấp giải pháp, trạng thái) và thanh sắp xếp.
+
+Màn 2 — Chi tiết truy xuất nguồn gốc sản phẩm: tra cứu theo mã GTIN hoặc mã Lô/mẻ, hiển
+thị đầy đủ: ảnh sản phẩm, tên, mô tả, xuất xứ, thương hiệu/nhãn hiệu, thành phần, quy cách
+đóng gói (khối lượng, kích thước, hạn sử dụng), chứng nhận (OCOP/VietGAP/GlobalGAP/HACCP/
+ISO) kèm file/ảnh đính kèm, thông tin doanh nghiệp sản xuất (tên, địa chỉ, liên hệ), và
+đặc biệt là khối "Hành trình truy xuất" — timeline/stepper trực quan hiển thị dữ liệu lô
+hàng/mã truy xuất được đồng bộ từ đơn vị cung cấp giải pháp (chỉ đọc, không chỉnh sửa).
+
+Phong cách minh bạch, đáng tin cậy, nhấn mạnh tính xác thực (có thể dùng icon "đã xác thực").
+Responsive tốt cho màn hình điện thoại vì đây là màn hình người dùng thường xem sau khi quét QR.
+3. PROMPT — PORTAL/APP: Đăng ký & Hồ sơ doanh nghiệp (dành cho DN/HTX/Cơ sở)
+Thiết kế luồng 4 màn hình cho doanh nghiệp/HTX/cơ sở sản xuất trên web Portal (và tương tự
+cho app di động dạng form full-screen):
+
+1. Form đăng ký tài khoản tổ chức mới: các trường tên tổ chức, loại hình (DN/HTX/Cơ sở SX),
+   mã số thuế, địa chỉ, địa bàn (dropdown phường/xã), người đại diện, SĐT/email, nhóm ngành
+   hàng, tài khoản đăng nhập, upload Giấy đăng ký kinh doanh/HTX (PDF/ảnh). Có thanh tiến
+   trình nhiều bước (stepper) rõ ràng.
+
+2. Màn hình theo dõi tiến độ hồ sơ: hiển thị % hoàn thiện dạng progress bar, danh sách các
+   mục còn thiếu, trạng thái (Chờ duyệt / Đã duyệt / Yêu cầu bổ sung) với badge màu tương
+   ứng (vàng/xanh/đỏ), và khu vực hiển thị yêu cầu bổ sung cụ thể từ cơ quan quản lý.
+
+3. Màn hình "Xin cấp mã định danh": sau khi hồ sơ được duyệt, hiển thị nút yêu cầu cấp mã
+   định danh chính thức trên nền tảng, và hiển thị mã định danh đã được cấp dạng thẻ nổi bật
+   kèm QR/mã vạch tương ứng.
+
+4. Form khai báo hồ sơ sản phẩm mới: nhiều field theo nhóm (Thông tin cơ bản: tên, mô tả,
+   mã định danh sản phẩm, mã GTIN, chủng loại, xuất xứ; Thành phần & quy cách: nguyên liệu,
+   thành phần, hạn sử dụng, bao bì, khối lượng, kích thước; Chứng nhận: loại chứng nhận,
+   upload file đính kèm; Media: hình ảnh sản phẩm, video giới thiệu). Form dài nên chia
+   thành các tab hoặc accordion, có nút lưu nháp và gửi duyệt.
+
+Giao diện dành cho người dùng doanh nghiệp phổ thông, không chuyên IT — ưu tiên rõ ràng,
+hướng dẫn từng bước (tooltip/helper text), validate lỗi rõ ràng ngay tại field.
+4. PROMPT — APP: Quet mã QR & Trang chủ tra cứu di động
+Thiết kế app di động (iOS/Android, theo chuẩn Material/HIG hiện đại) "Đồng Nai Trace",
+màu chủ đạo xanh + cam, cho 3 màn hình:
+
+1. Trang chủ (không đăng nhập): thanh tìm kiếm nổi bật trên cùng, nút lớn dạng FAB hoặc
+   card nổi bật "Quét mã QR" ở vị trí dễ bấm bằng ngón cái, danh mục ngành hàng dạng lưới
+   icon tròn, danh sách sản phẩm/doanh nghiệp gần đây hoặc nổi bật dạng card cuộn ngang.
+   Bottom navigation: Trang chủ, Quét QR, Tra cứu, Tài khoản.
+
+2. Màn hình quét QR: full-screen camera view với khung quét ở giữa, hướng dẫn ngắn phía
+   trên ("Đưa mã QR vào khung hình"), nút bật đèn flash, có thể nhập mã thủ công nếu không
+   quét được.
+
+3. Kết quả sau khi quét: bottom sheet hoặc màn hình chi tiết sản phẩm hiện lên ngay, có
+   animation xác nhận "Đã xác thực nguồn gốc" (dấu tick xanh) trước khi hiển thị chi tiết
+   đầy đủ (giống nội dung màn chi tiết sản phẩm ở Portal nhưng tối ưu cho màn hình nhỏ).
+
+Đây là tính năng đặc trưng riêng của App (Portal không có), nên cần thiết kế trải nghiệm
+mượt, nhanh, cảm giác "xác thực tức thì" — phù hợp người tiêu dùng phổ thông quét khi
+đứng ở kệ hàng/chợ.
+5. PROMPT — CUSTOMER: Dashboard quản trị nội bộ (Checkee / can bộ được cấp quyền)
+Thiết kế dashboard quản trị web nội bộ (KHÔNG public) cho "Đồng Nai Trace Client" — nền
+tảng quản trị Master dùng bởi đội vận hành kỹ thuật (Checkee) và tài khoản xem báo cáo
+cấp riêng cho lãnh đạo tỉnh/Sở KH&CN/sở ban ngành.
+
+Phong cách: dashboard nghiệp vụ/dữ liệu (data-dense), giống các admin panel doanh nghiệp
+hiện đại (kiểu Metronic/Retool), sidebar điều hướng bên trái, vẫn giữ tông màu xanh + cam
+nhưng tiết chế hơn, ưu tiên rõ ràng khi đọc số liệu.
+
+Bố cục:
+- Sidebar trái: Dashboard, Hồ sơ doanh nghiệp, Dữ liệu đồng bộ (sản phẩm/lô hàng/mã truy
+  xuất), Kết nối liên thông (Cổng TXNG Quốc gia, Bộ ban ngành, đơn vị giải pháp), Báo cáo
+  thống kê, Quản trị tài khoản & phân quyền, Nhật ký hệ thống.
+- Trang Dashboard tổng quan: các thẻ KPI lớn (tổng DN/HTX, tổng sản phẩm đã đăng ký, tổng
+  mã truy xuất đã đồng bộ, trạng thái đồng bộ dữ liệu Thành công/Thất bại theo thời gian
+  thực), biểu đồ xu hướng đăng ký theo thời gian, biểu đồ phân bổ theo ngành hàng/địa bàn,
+  bảng "Hồ sơ chờ duyệt" cần xử lý gấp.
+- Trang "Hồ sơ doanh nghiệp (tổng hợp)": bảng dữ liệu (data table) hợp nhất từ 2 nguồn —
+  (1) thông tin đăng ký từ Portal, (2) dữ liệu lô hàng/mã truy xuất đồng bộ từ đơn vị giải
+  pháp — có filter, search, và trạng thái đồng bộ theo màu.
+- Trang "Kết nối liên thông": danh sách các kết nối API (Cổng TXNG Quốc gia, các sở/ban/
+  ngành, đơn vị cung cấp giải pháp) dạng card/table hiển thị trạng thái kết nối (online/
+  lỗi), lần đồng bộ gần nhất, log lỗi.
+
+Lưu ý: không tạo/kích hoạt mã QR hay nhập nhật ký sản xuất trên giao diện này — chỉ giám
+sát, tổng hợp, phê duyệt, và cấu hình kết nối.
