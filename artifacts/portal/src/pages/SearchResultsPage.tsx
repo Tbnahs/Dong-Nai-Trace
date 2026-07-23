@@ -150,7 +150,7 @@ export default function SearchResultsPage() {
                 value={inputVal}
                 onChange={e => setInputVal(e.target.value)}
                 placeholder="Nhập tên sản phẩm, mã GTIN, mã lô/mẻ, tên doanh nghiệp..."
-                className="w-full pl-12 pr-4 py-3.5 focus:outline-none text-gray-700"
+                className="w-full pl-12 pr-4 py-3.5 focus:outline-none text-gray-700 bg-white"
               />
             </div>
             <button type="submit" className="bg-[#E8650A] text-white px-8 font-bold hover:bg-[#D55C08] transition-colors whitespace-nowrap">
