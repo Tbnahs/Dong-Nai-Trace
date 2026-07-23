@@ -117,74 +117,75 @@ export default function LandingPage() {
       </header>
 
       {/* HERO SECTION */}
-      <section className=" py-8 lg:py-0 px-6 lg:px-12">
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12 relative z-10">
+      <section className="py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto w-full px-6 lg:px-10 flex flex-col lg:flex-row items-center gap-10">
+
           {/* Cột trái */}
-          <div className="lg:w-[55%] flex flex-col items-start space-y-6">
-            <h1 className="text-2xl lg:text-[2.2rem] font-extrabold uppercase leading-[1.2]">
+          <div className="lg:w-[48%] flex flex-col items-start space-y-7">
+            <h1 className="text-4xl lg:text-[2.75rem] font-extrabold uppercase leading-[1.1]">
               <span className="text-[#2740BA]">
                 TRUY XUẤT NGUỒN GỐC SẢN PHẨM ĐỒNG NAI
               </span>
             </h1>
 
-            <p className="text-lg text-gray-600 max-w-xl leading-relaxed">
+            <p className="text-xl text-gray-600 leading-relaxed max-w-2xl">
               Nhờ ứng dụng công nghệ tiên tiến, hệ thống cho phép định danh,
               truy vết nguồn gốc sản phẩm hàng hóa tại Thành phố Đồng Nai.
             </p>
 
-            <form onSubmit={handleSearch} className="w-full mt-2">
-              {/* Input */}
+            <form onSubmit={handleSearch} className="w-full">
               <div className="flex flex-col lg:flex-row gap-4">
+
                 {searchType === "trace" ? (
                   <>
-                    <div className="flex-1 h-[58px] bg-white rounded-xl border border-gray-200 shadow-sm flex items-center px-5">
-                      <Barcode className="w-5 h-5 text-[#1b2a6b]" />
+                    <div className="flex-1 h-[62px] bg-white rounded-2xl border border-gray-200 shadow-md flex items-center px-6">
+                      <Barcode className="w-6 h-6 text-[#2740BA]" />
 
                       <input
                         type="text"
                         value={traceCode}
                         onChange={(e) => setTraceCode(e.target.value)}
                         placeholder="Nhập mã truy xuất sản phẩm"
-                        className="ml-4 w-full bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
+                        className="ml-4 w-full bg-transparent outline-none text-lg text-gray-700 placeholder:text-gray-400"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="h-[58px] px-8 rounded-xl bg-[#d55c08] hover:bg-[#b84d06] text-white font-semibold transition"
+                      className="h-[62px] px-10 rounded-2xl bg-[#2740BA] hover:bg-[#1d3396] text-white text-lg font-semibold transition"
                     >
                       Tra cứu
                     </button>
                   </>
                 ) : (
                   <>
-                    <div className="flex-1 h-[58px] bg-white rounded-xl border border-gray-200 shadow-sm flex items-center px-5">
-                      <Barcode className="w-5 h-5 text-[#1b2a6b]" />
+                    <div className="flex-1 h-[62px] bg-white rounded-2xl border border-gray-200 shadow-md flex items-center px-6">
+                      <Barcode className="w-6 h-6 text-[#2740BA]" />
 
                       <input
                         type="text"
                         value={gtin}
                         onChange={(e) => setGtin(e.target.value)}
                         placeholder="Nhập mã GTIN"
-                        className="ml-4 w-full bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
+                        className="ml-4 w-full bg-transparent outline-none text-lg text-gray-700 placeholder:text-gray-400"
                       />
                     </div>
 
-                    <div className="flex-1 h-[58px] bg-white rounded-xl border border-gray-200 shadow-sm flex items-center px-5">
-                      <Package className="w-5 h-5 text-[#1b2a6b]" />
+                    <div className="flex-1 h-[62px] bg-white rounded-2xl border border-gray-200 shadow-md flex items-center px-6">
+                      <Package className="w-6 h-6 text-[#2740BA]" />
 
                       <input
                         type="text"
                         value={lot}
                         onChange={(e) => setLot(e.target.value)}
-                        placeholder="Nhập số lô/mẻ"
-                        className="ml-4 w-full bg-transparent outline-none text-gray-700 placeholder:text-gray-400"
+                        placeholder="Nhập số lô / mẻ"
+                        className="ml-4 w-full bg-transparent outline-none text-lg text-gray-700 placeholder:text-gray-400"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="h-[58px] px-8 rounded-xl bg-[#d55c08] hover:bg-[#b84d06] text-white font-semibold transition"
+                      className="h-[62px] px-10 rounded-2xl bg-[#2740BA] hover:bg-[#1d3396] text-white text-lg font-semibold transition"
                     >
                       Tra cứu
                     </button>
@@ -192,15 +193,14 @@ export default function LandingPage() {
                 )}
               </div>
 
-              {/* Radio */}
-              <div className="flex flex-wrap items-center gap-8 mt-5 pl-2">
+              <div className="flex flex-wrap items-center gap-8 mt-6 pl-2">
                 <label className="flex items-center gap-2 cursor-pointer text-gray-700">
                   <input
                     type="radio"
                     name="searchType"
                     checked={searchType === "trace"}
                     onChange={() => setSearchType("trace")}
-                    className="w-5 h-5 accent-[#1b2a6b]"
+                    className="w-5 h-5 accent-[#2740BA]"
                   />
                   Mã truy xuất sản phẩm
                 </label>
@@ -211,7 +211,7 @@ export default function LandingPage() {
                     name="searchType"
                     checked={searchType === "gtin"}
                     onChange={() => setSearchType("gtin")}
-                    className="w-5 h-5 accent-[#1b2a6b]"
+                    className="w-5 h-5 accent-[#2740BA]"
                   />
                   Mã GTIN &amp; Số lô đóng gói
                 </label>
@@ -219,23 +219,23 @@ export default function LandingPage() {
             </form>
           </div>
 
-          {/* Cột phải - Mockup */}
-          <div className="lg:w-[50%] relative h-[660px] w-full flex justify-center items-center mt-12 lg:mt-0">
-            <div className="absolute w-[450px] h-[450px] sm:w-[580px] sm:h-[580px] "></div>
-
+          {/* Cột phải */}
+          <div className="lg:w-[52%] flex justify-center">
             <img
               src={heroGuide}
-              alt="Đồng Nai Trace – minh họa hệ thống truy xuất nguồn gốc"
-              className="relative z-10 w-full max-w-[760px] object-contain
-                         hover:scale-[1.03] transition-transform duration-700 ease-out
+              alt="Đồng Nai Trace"
+              className="w-full object-contain
+                         hover:scale-[1.03]
+                         transition-transform duration-700
                          animate-[float_6s_ease-in-out_infinite]"
             />
           </div>
+
         </div>
       </section>
 
       {/* STATS SECTION */}
-      <section className="bg-white pt-0 pb-12 -mt-12">
+      <section className="bg-white pb-12 -mt-2">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
           <div className="bg-[#F5F7FA] rounded-3xl shadow-sm border border-slate-100 px-8 lg:px-12 py-10">
