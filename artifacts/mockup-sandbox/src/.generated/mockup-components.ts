@@ -4,6 +4,7 @@ export const modules: ModuleMap = {
   "./components/mockups/dong-nai-trace/AdminDashboard.tsx": () => import("../components/mockups/dong-nai-trace/AdminDashboard.tsx"),
   "./components/mockups/dong-nai-trace/AppMobile.tsx": () => import("../components/mockups/dong-nai-trace/AppMobile.tsx"),
   "./components/mockups/dong-nai-trace/PortalHome.tsx": () => import("../components/mockups/dong-nai-trace/PortalHome.tsx"),
+  "./components/mockups/dong-nai-trace/PortalLanding.tsx": () => import("../components/mockups/dong-nai-trace/PortalLanding.tsx"),
   "./components/mockups/dong-nai-trace/PortalRegister.tsx": () => import("../components/mockups/dong-nai-trace/PortalRegister.tsx"),
   "./components/mockups/dong-nai-trace/PortalSearch.tsx": () => import("../components/mockups/dong-nai-trace/PortalSearch.tsx")
 };
