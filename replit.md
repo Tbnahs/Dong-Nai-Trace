@@ -1,45 +1,59 @@
 # Đồng Nai Trace
 
-Hệ thống truy xuất nguồn gốc sản phẩm hàng hóa Thành phố Đồng Nai — a product-traceability portal for businesses in Đồng Nai province, Vietnam.
-
-## Run & Operate
-
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
-- `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+A product traceability portal for businesses in Đồng Nai province, Vietnam. Users can search for products and view full traceability details; businesses manage their listings through a dashboard.
 
 ## Stack
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, Vite, Tailwind CSS 4, Radix UI, Wouter, TanStack Query |
+| Backend | Express 5, TypeScript, Node.js |
+| Database | PostgreSQL + Drizzle ORM |
+| Monorepo | pnpm Workspaces |
 
-## Where things live
+## Project structure
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+```
+artifacts/
+  portal/        – React frontend (served at /portal/)
+  api-server/    – Express API server (port 8080)
+  mockup-sandbox/ – UI development/preview sandbox
+lib/
+  db/            – Database schema and Drizzle config
+  api-spec/      – OpenAPI specification and codegen config
+  api-zod/       – Generated Zod schemas
+  api-client-react/ – Generated React Query hooks
+scripts/         – Workspace utility scripts
+```
 
-## Architecture decisions
+## Running the project
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+Dependencies are installed via pnpm from the workspace root:
 
-## Product
+```bash
+pnpm install
+```
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+Both services are managed as workflows and start automatically:
+
+- **Portal (frontend)**: `pnpm --filter @workspace/portal run dev` — served at `/portal/`
+- **API Server (backend)**: `pnpm --filter @workspace/api-server run dev` — port 8080
+
+## Environment variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `SESSION_SECRET` | Yes | Express session signing secret |
+
+## Database
+
+Push the schema to your database:
+
+```bash
+pnpm --filter @workspace/db run push
+```
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
-
-## Gotchas
-
-_Populate as you build — sharp edges, "always run X before Y" rules._
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
+<!-- Add any preferences the user asks to remember here -->
