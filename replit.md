@@ -1,6 +1,6 @@
-# [Project name]
+# Đồng Nai Trace
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Hệ thống truy xuất nguồn gốc sản phẩm hàng hóa Thành phố Đồng Nai — a product-traceability portal for businesses in Đồng Nai province, Vietnam.
 
 ## Run & Operate
 
