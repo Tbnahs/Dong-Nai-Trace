@@ -1,4 +1,5 @@
 import React from 'react';
+import hero3d from '../assets/hero-3d.png';
 import { Link, useLocation } from 'wouter';
 import { 
   CheckCircle2, 
@@ -112,35 +113,13 @@ export default function LandingPage() {
           <div className="lg:w-[45%] relative h-[450px] w-full flex justify-center items-center mt-12 lg:mt-0">
             <div className="absolute w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] bg-blue-200/40 rounded-full blur-3xl -z-10"></div>
             
-            <div className="w-[260px] sm:w-[280px] bg-white rounded-[2rem] shadow-2xl p-4 border-4 border-slate-100 relative z-10 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
-              <div className="bg-[#1B2A6B] text-white rounded-t-xl py-4 px-4 text-center">
-                <span className="font-bold text-sm block">TXNG SẢN PHẨM</span>
-              </div>
-              <div className="bg-slate-50 h-[300px] rounded-b-xl flex flex-col items-center justify-center p-6 gap-6 border-x border-b border-slate-100">
-                <div className="w-32 h-32 bg-white border-2 border-dashed border-[#1B2A6B]/30 rounded-lg flex items-center justify-center">
-                  <div className="w-20 h-20 bg-slate-200/50 rounded flex flex-wrap p-1 gap-1 relative overflow-hidden">
-                     <div className="w-[30%] h-[30%] bg-[#1B2A6B]"></div>
-                     <div className="w-[30%] h-[30%] bg-transparent"></div>
-                     <div className="w-[30%] h-[30%] bg-[#1B2A6B]"></div>
-                     
-                     <div className="w-[30%] h-[30%] bg-transparent"></div>
-                     <div className="w-[30%] h-[30%] bg-[#1B2A6B]"></div>
-                     <div className="w-[30%] h-[30%] bg-transparent"></div>
-                     
-                     <div className="w-[30%] h-[30%] bg-[#1B2A6B]"></div>
-                     <div className="w-[30%] h-[30%] bg-transparent"></div>
-                     <div className="w-[30%] h-[30%] bg-[#E8650A]"></div>
-                  </div>
-                </div>
-                <div className="w-full space-y-2">
-                  <div className="h-2 w-full bg-slate-200 rounded-full"></div>
-                  <div className="h-2 w-3/4 bg-slate-200 rounded-full mx-auto"></div>
-                </div>
-                <button className="w-full py-2.5 bg-[#E8650A] text-white rounded-lg text-xs font-bold uppercase mt-auto">
-                  Quét QR
-                </button>
-              </div>
-            </div>
+            <img
+              src={hero3d}
+              alt="Đồng Nai Trace – minh họa hệ thống truy xuất nguồn gốc"
+              className="relative z-10 w-full max-w-[480px] object-contain drop-shadow-2xl
+                         hover:scale-[1.03] transition-transform duration-700 ease-out
+                         animate-[float_6s_ease-in-out_infinite]"
+            />
             
             <div className="absolute top-10 right-0 lg:-right-4 bg-white p-4 rounded-xl shadow-xl border border-slate-100 flex items-center gap-4 z-20 animate-[bounce_3s_infinite]">
               <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center text-green-600">
