@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'wouter';
 import { Bell, AlertTriangle, CheckCircle2, Info, ArrowRight } from 'lucide-react';
 
 export default function NotificationsPage() {
@@ -57,9 +58,9 @@ export default function NotificationsPage() {
             <div>
               <h3 className="text-lg font-bold text-amber-900 mb-2">Hồ sơ cần bổ sung</h3>
               <p className="text-amber-800 mb-4">Sở KH&CN yêu cầu bổ sung bản scan màu của Giấy phép ĐKKD. Bản hiện tại bị mờ, không thể xác minh thông tin.</p>
-              <button className="px-6 py-2.5 bg-[#E8650A] text-white font-bold rounded-md hover:bg-[#D55C08] transition-colors shadow-sm">
+              <Link href="/dashboard/chung-nhan" className="inline-block px-6 py-2.5 bg-[#E8650A] text-white font-bold rounded-md hover:bg-[#D55C08] transition-colors shadow-sm">
                 Đến trang Hồ sơ tài liệu
-              </button>
+              </Link>
             </div>
           </div>
         )}

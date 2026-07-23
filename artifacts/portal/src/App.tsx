@@ -6,6 +6,8 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import SearchResultsPage from './pages/SearchResultsPage';
+import ProductDetailPage from './pages/ProductDetailPage';
 import DashboardLayout from './pages/dashboard/DashboardLayout';
 import OverviewPage from './pages/dashboard/OverviewPage';
 import OrgProfilePage from './pages/dashboard/OrgProfilePage';
@@ -41,6 +43,8 @@ function Router() {
       <Route path="/" component={LandingPage} />
       <Route path="/dang-nhap" component={LoginPage} />
       <Route path="/dang-ky" component={RegisterPage} />
+      <Route path="/tra-cuu" component={SearchResultsPage} />
+      <Route path="/san-pham/:id" component={ProductDetailPage} />
       
       {/* Dashboard Routes nested manually or matched via prefix */}
       <Route path="/dashboard" component={DashboardRoutes} />

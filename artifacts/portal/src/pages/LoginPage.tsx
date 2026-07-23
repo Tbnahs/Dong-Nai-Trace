@@ -84,9 +84,9 @@ export default function LoginPage() {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-[#1B2A6B] hover:text-[#152055]">
+                <button type="button" onClick={() => alert('Vui lòng liên hệ Sở KH&CN Đồng Nai: skhcn@dongnai.gov.vn để được hỗ trợ đặt lại mật khẩu.')} className="font-medium text-[#1B2A6B] hover:text-[#152055]">
                   Quên mật khẩu?
-                </a>
+                </button>
               </div>
             </div>
 

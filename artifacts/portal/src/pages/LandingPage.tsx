@@ -22,9 +22,11 @@ export default function LandingPage() {
   const [, setLocation] = useLocation();
   const logoUrl = import.meta.env.BASE_URL + 'images/logo-skhcn.png';
 
+  const [searchQuery, setSearchQuery] = React.useState('');
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setLocation('/dang-nhap');
+    setLocation('/tra-cuu' + (searchQuery.trim() ? `?q=${encodeURIComponent(searchQuery.trim())}` : ''));
   };
 
   return (
@@ -61,10 +63,10 @@ export default function LandingPage() {
         <nav className="bg-[#1B2A6B] text-white px-6 lg:px-12">
           <ul className="flex items-center gap-8 text-sm font-medium uppercase overflow-x-auto whitespace-nowrap">
             <li className="py-3 border-b-2 border-white cursor-pointer"><Link href="/">TRANG CHỦ</Link></li>
-            <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors">DANH MỤC SẢN PHẨM</li>
-            <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors">HƯỚNG DẪN DOANH NGHIỆP</li>
-            <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors">GỬI TIN BÁO</li>
-            <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors">KÊNH HỖ TRỢ</li>
+            <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors"><Link href="/tra-cuu">DANH MỤC SẢN PHẨM</Link></li>
+            <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors"><Link href="/dang-ky">HƯỚNG DẪN DOANH NGHIỆP</Link></li>
+            <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors"><Link href="/dashboard/ho-tro">GỬI TIN BÁO</Link></li>
+            <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors"><Link href="/dashboard/ho-tro">KÊNH HỖ TRỢ</Link></li>
           </ul>
         </nav>
       </header>
@@ -93,7 +95,9 @@ export default function LandingPage() {
             
             <form onSubmit={handleSearch} className="w-full max-w-lg mt-4 flex shadow-lg rounded-md overflow-hidden border border-slate-200">
               <input 
-                type="text" 
+                type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Nhập tên sản phẩm, mã GTIN, mã lô/mẻ..." 
                 className="flex-1 px-5 py-4 focus:outline-none text-gray-700 bg-white w-full"
               />
