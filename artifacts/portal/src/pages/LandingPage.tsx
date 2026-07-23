@@ -78,8 +78,6 @@ export default function LandingPage() {
           
           {/* Cột trái */}
           <div className="lg:w-[55%] flex flex-col items-start space-y-6">
-            <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">TRA CỨU NHANH</span>
-            
             <h1 className="text-4xl lg:text-[2.75rem] font-extrabold text-[#1B2A6B] uppercase leading-[1.2]">
               TRUY XUẤT NGUỒN GỐC<br />
               SẢN PHẨM ĐỒNG NAI
