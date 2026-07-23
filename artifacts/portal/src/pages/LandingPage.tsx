@@ -236,28 +236,48 @@ export default function LandingPage() {
       </section>
 
       {/* DANH MỤC NGÀNH HÀNG */}
-      <section className="py-20 px-6 lg:px-12 bg-[#F8FAFC]">
+      <section className="py-16 px-6 lg:px-12 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-[#1B2A6B] mb-2 uppercase">Danh mục sản phẩm</h2>
-            <p className="text-gray-500 font-medium">Khám phá theo nhóm ngành hàng</p>
+          {/* Header */}
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Danh mục</p>
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-[#1B2A6B] uppercase">Sản phẩm đáng chú ý</h2>
+            </div>
+            <button className="px-5 py-2 border border-[#1B2A6B] text-[#1B2A6B] text-sm font-semibold rounded hover:bg-[#1B2A6B] hover:text-white transition-colors whitespace-nowrap">
+              Xem thêm
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
-              { icon: '🌾', name: 'Nông sản & Rau củ', count: 312 },
-              { icon: '🐟', name: 'Thủy sản', count: 198 },
-              { icon: '🥩', name: 'Thịt & Chăn nuôi', count: 267 },
-              { icon: '🍯', name: 'Thực phẩm chế biến', count: 445 },
-              { icon: '🌺', name: 'Thủ công mỹ nghệ', count: 89 },
-              { icon: '🌿', name: 'Dược liệu', count: 67 },
-              { icon: '🏭', name: 'Công nghiệp chế biến', count: 234 },
-              { icon: '📋', name: 'Khác', count: 180 },
+              { name: 'Nông sản & Rau củ',      img: 'https://picsum.photos/seed/vegetable/600/360' },
+              { name: 'Phân bón & Vật tư nông nghiệp', img: 'https://picsum.photos/seed/fertilizer/600/360' },
+              { name: 'Thủy sản',               img: 'https://picsum.photos/seed/seafood/600/360' },
+              { name: 'Thịt & Chăn nuôi',       img: 'https://picsum.photos/seed/livestock/600/360' },
+              { name: 'Thực phẩm chế biến',     img: 'https://picsum.photos/seed/processed/600/360' },
+              { name: 'Dược liệu',              img: 'https://picsum.photos/seed/herbs/600/360' },
+              { name: 'Thủ công mỹ nghệ',       img: 'https://picsum.photos/seed/handicraft/600/360' },
+              { name: 'Công nghiệp chế biến',   img: 'https://picsum.photos/seed/industry/600/360' },
             ].map((cat, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md border border-slate-100 cursor-pointer transition-all hover:-translate-y-1 group">
-                <div className="text-4xl mb-4 grayscale-[20%] group-hover:grayscale-0 transition-all">{cat.icon}</div>
-                <h4 className="font-bold text-[#1B2A6B] mb-1 group-hover:text-[#E8650A] transition-colors">{cat.name}</h4>
-                <p className="text-sm text-gray-500">{cat.count} Sản phẩm</p>
+              <div
+                key={idx}
+                className="group cursor-pointer rounded overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow bg-white"
+              >
+                {/* Photo */}
+                <div className="overflow-hidden h-[200px]">
+                  <img
+                    src={cat.img}
+                    alt={cat.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                {/* Footer */}
+                <div className="flex items-center justify-between px-4 py-3 bg-white">
+                  <span className="text-sm font-semibold text-slate-800 group-hover:text-[#1B2A6B] transition-colors">{cat.name}</span>
+                  <span className="text-[#1B2A6B] font-bold text-lg leading-none">→</span>
+                </div>
               </div>
             ))}
           </div>
