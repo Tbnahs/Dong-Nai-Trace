@@ -110,7 +110,7 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
       {/* Topbar */}
-      <div className="bg-[#1B2A6B] py-4 px-6 lg:px-12">
+      <div className="bg-[#2740BA] py-4 px-6 lg:px-12">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link href="/tra-cuu" className="inline-flex items-center gap-2 text-blue-200 hover:text-white text-sm transition-colors">
             <ArrowLeft className="w-4 h-4" /> Kết quả tra cứu
@@ -141,7 +141,7 @@ export default function ProductDetailPage() {
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div>
                       <span className="text-xs font-bold text-[#E8650A] uppercase tracking-wider">{product.category}</span>
-                      <h1 className="text-2xl font-extrabold text-[#1B2A6B] mt-1 leading-tight">{product.name}</h1>
+                      <h1 className="text-2xl font-extrabold text-[#2740BA] mt-1 leading-tight">{product.name}</h1>
                     </div>
                     <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full shrink-0">
                       <ShieldCheck className="w-4 h-4 text-emerald-600" />
@@ -178,10 +178,10 @@ export default function ProductDetailPage() {
               <h2 className="text-lg font-bold text-gray-800 mb-4">Thông tin sản phẩm</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
-                  { label: 'Xuất xứ', value: product.origin, icon: <MapPin className="w-4 h-4 text-[#1B2A6B]" /> },
-                  { label: 'Khối lượng / Quy cách', value: product.weight, icon: <Package className="w-4 h-4 text-[#1B2A6B]" /> },
-                  { label: 'Bao bì đóng gói', value: product.packaging, icon: <Package className="w-4 h-4 text-[#1B2A6B]" /> },
-                  { label: 'Hạn sử dụng', value: product.expiry, icon: <Calendar className="w-4 h-4 text-[#1B2A6B]" /> },
+                  { label: 'Xuất xứ', value: product.origin, icon: <MapPin className="w-4 h-4 text-[#2740BA]" /> },
+                  { label: 'Khối lượng / Quy cách', value: product.weight, icon: <Package className="w-4 h-4 text-[#2740BA]" /> },
+                  { label: 'Bao bì đóng gói', value: product.packaging, icon: <Package className="w-4 h-4 text-[#2740BA]" /> },
+                  { label: 'Hạn sử dụng', value: product.expiry, icon: <Calendar className="w-4 h-4 text-[#2740BA]" /> },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100">
                     <div className="mt-0.5 shrink-0">{item.icon}</div>
@@ -231,7 +231,7 @@ export default function ProductDetailPage() {
             {/* Journey Timeline */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
               <h2 className="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
-                <Truck className="w-5 h-5 text-[#1B2A6B]" /> Hành trình truy xuất nguồn gốc
+                <Truck className="w-5 h-5 text-[#2740BA]" /> Hành trình truy xuất nguồn gốc
               </h2>
               <p className="text-xs text-gray-400 mb-6 flex items-center gap-1">
                 <ShieldCheck className="w-3 h-3 text-emerald-500" />
@@ -271,9 +271,9 @@ export default function ProductDetailPage() {
           <div className="space-y-5">
             {/* QR Code */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 text-center">
-              <QrCode className="w-8 h-8 text-[#1B2A6B] mx-auto mb-3" />
+              <QrCode className="w-8 h-8 text-[#2740BA] mx-auto mb-3" />
               <h3 className="font-bold text-gray-800 mb-3">Mã QR truy xuất</h3>
-              <div className="inline-block p-3 bg-white border-2 border-[#1B2A6B]/10 rounded-xl shadow-sm mb-3">
+              <div className="inline-block p-3 bg-white border-2 border-[#2740BA]/10 rounded-xl shadow-sm mb-3">
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=dongnaitrace-${params.id}&margin=4`}
                   alt="QR Code"
@@ -281,7 +281,7 @@ export default function ProductDetailPage() {
                 />
               </div>
               <p className="text-xs text-gray-500 mb-4">Quét mã để xem thông tin trên điện thoại</p>
-              <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-[#1B2A6B] text-[#1B2A6B] rounded-md text-sm font-semibold hover:bg-slate-50 transition-colors">
+              <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 border border-[#2740BA] text-[#2740BA] rounded-md text-sm font-semibold hover:bg-slate-50 transition-colors">
                 <Download className="w-4 h-4" /> Tải mã QR
               </button>
             </div>
@@ -289,10 +289,10 @@ export default function ProductDetailPage() {
             {/* Producer info */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
               <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-[#1B2A6B]" /> Nhà sản xuất
+                <Building2 className="w-5 h-5 text-[#2740BA]" /> Nhà sản xuất
               </h3>
               <div className="space-y-3">
-                <div className="font-semibold text-[#1B2A6B]">{product.org.name}</div>
+                <div className="font-semibold text-[#2740BA]">{product.org.name}</div>
                 <div className="flex items-start gap-2 text-sm text-gray-600">
                   <MapPin className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" />
                   <span>{product.org.address}</span>
@@ -309,7 +309,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Platform info */}
-            <div className="bg-[#1B2A6B] rounded-xl p-5 text-white">
+            <div className="bg-[#2740BA] rounded-xl p-5 text-white">
               <div className="flex items-center gap-2 mb-3">
                 <ShieldCheck className="w-5 h-5 text-emerald-400" />
                 <span className="font-bold text-sm">Đồng Nai Trace</span>

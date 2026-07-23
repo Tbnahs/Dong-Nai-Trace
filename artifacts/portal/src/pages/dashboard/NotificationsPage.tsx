@@ -16,7 +16,7 @@ export default function NotificationsPage() {
       <div className="flex border-b border-gray-200">
         <button
           onClick={() => setActiveTab('all')}
-          className={`px-6 py-3 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'all' ? 'border-[#1B2A6B] text-[#1B2A6B]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+          className={`px-6 py-3 text-sm font-bold border-b-2 transition-colors flex items-center gap-2 ${activeTab === 'all' ? 'border-[#2740BA] text-[#2740BA]' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
         >
           Thông báo chung <span className="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">2</span>
         </button>
@@ -39,7 +39,7 @@ export default function NotificationsPage() {
               </div>
               <div className="flex-1">
                 <div className="flex justify-between items-start mb-1">
-                  <h4 className={`text-sm font-bold ${notif.read ? 'text-gray-800' : 'text-[#1B2A6B]'}`}>{notif.title}</h4>
+                  <h4 className={`text-sm font-bold ${notif.read ? 'text-gray-800' : 'text-[#2740BA]'}`}>{notif.title}</h4>
                   <span className="text-xs text-gray-500 whitespace-nowrap ml-4">{notif.time}</span>
                 </div>
                 <p className={`text-sm ${notif.read ? 'text-gray-600' : 'text-gray-800 font-medium'}`}>{notif.desc}</p>

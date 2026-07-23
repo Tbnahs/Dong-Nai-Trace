@@ -56,7 +56,7 @@ export default function SupportPage() {
         {/* Left: Tickets */}
         <div className="lg:col-span-1 space-y-4">
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-5">
-            <h3 className="font-bold text-[#1B2A6B] mb-4 flex items-center gap-2">
+            <h3 className="font-bold text-[#2740BA] mb-4 flex items-center gap-2">
               <MessageSquare className="w-5 h-5" /> Yêu cầu của tôi
             </h3>
             <div className="space-y-3">
@@ -93,7 +93,7 @@ export default function SupportPage() {
                 <select
                   value={form.topic}
                   onChange={e => setForm(f => ({ ...f, topic: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                  className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                 >
                   <option>Lỗi kỹ thuật hệ thống</option>
                   <option>Tư vấn quy trình cấp mã</option>
@@ -110,7 +110,7 @@ export default function SupportPage() {
                   required
                   value={form.title}
                   onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                  className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                   placeholder="Ví dụ: Không thể tải lên chứng nhận VietGAP"
                 />
               </div>
@@ -122,7 +122,7 @@ export default function SupportPage() {
                   required
                   value={form.content}
                   onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
-                  className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                  className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                   placeholder="Mô tả chi tiết vấn đề bạn đang gặp phải..."
                 />
               </div>
@@ -142,7 +142,7 @@ export default function SupportPage() {
 
       {/* FAQ */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-        <h3 className="text-lg font-bold text-[#1B2A6B] mb-6">Câu hỏi thường gặp (FAQ)</h3>
+        <h3 className="text-lg font-bold text-[#2740BA] mb-6">Câu hỏi thường gặp (FAQ)</h3>
         <div className="space-y-3">
           {FAQS.map((faq, idx) => (
             <div key={idx} className="border border-gray-200 rounded-lg overflow-hidden">

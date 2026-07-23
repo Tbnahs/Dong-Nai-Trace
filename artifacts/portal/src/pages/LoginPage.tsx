@@ -21,7 +21,7 @@ export default function LoginPage() {
         <Link href="/" className="inline-flex items-center justify-center mb-6">
           <img src={logoUrl} alt="Logo" className="h-16 w-auto" />
         </Link>
-        <h2 className="mt-2 text-3xl font-extrabold text-[#1B2A6B]">
+        <h2 className="mt-2 text-3xl font-extrabold text-[#2740BA]">
           Đăng nhập hệ thống
         </h2>
         <p className="mt-2 text-sm text-gray-600">
@@ -45,7 +45,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#1B2A6B] focus:border-[#1B2A6B] sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#2740BA] focus:border-[#2740BA] sm:text-sm"
                   placeholder="admin@doanhnghiep.com"
                 />
               </div>
@@ -64,7 +64,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#1B2A6B] focus:border-[#1B2A6B] sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#2740BA] focus:border-[#2740BA] sm:text-sm"
                   placeholder="••••••••"
                 />
               </div>
@@ -76,7 +76,7 @@ export default function LoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 text-[#1B2A6B] focus:ring-[#1B2A6B] border-gray-300 rounded"
+                  className="h-4 w-4 text-[#2740BA] focus:ring-[#2740BA] border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                   Ghi nhớ đăng nhập
@@ -84,7 +84,7 @@ export default function LoginPage() {
               </div>
 
               <div className="text-sm">
-                <button type="button" onClick={() => alert('Vui lòng liên hệ Sở KH&CN Đồng Nai: skhcn@dongnai.gov.vn để được hỗ trợ đặt lại mật khẩu.')} className="font-medium text-[#1B2A6B] hover:text-[#152055]">
+                <button type="button" onClick={() => alert('Vui lòng liên hệ Sở KH&CN Đồng Nai: skhcn@dongnai.gov.vn để được hỗ trợ đặt lại mật khẩu.')} className="font-medium text-[#2740BA] hover:text-[#1f339e]">
                   Quên mật khẩu?
                 </button>
               </div>
@@ -113,7 +113,7 @@ export default function LoginPage() {
             <div className="mt-6">
               <Link
                 href="/dang-ky"
-                className="w-full flex justify-center py-2.5 px-4 border border-[#1B2A6B] rounded-md shadow-sm text-sm font-bold text-[#1B2A6B] bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1B2A6B]"
+                className="w-full flex justify-center py-2.5 px-4 border border-[#2740BA] rounded-md shadow-sm text-sm font-bold text-[#2740BA] bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2740BA]"
               >
                 Đăng ký doanh nghiệp mới
               </Link>

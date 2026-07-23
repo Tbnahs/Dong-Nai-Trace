@@ -46,7 +46,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-slate-50 flex font-sans">
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 w-64 bg-[#1B2A6B] text-white flex flex-col z-40 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+      <aside className={`fixed inset-y-0 left-0 w-64 bg-[#2740BA] text-white flex flex-col z-40 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
         <div className="p-4 border-b border-[#25398a] flex items-center gap-3">
           <img src={logoUrl} alt="Logo" className="h-10 w-auto bg-white rounded p-1" />
           <div className="flex flex-col">
@@ -117,7 +117,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="text-sm font-bold text-gray-800 leading-tight">HTX Nông nghiệp Xanh</div>
                 <div className="text-xs text-gray-500">MST: 3601234567</div>
               </div>
-              <div className="w-10 h-10 bg-[#1B2A6B] text-white rounded-full flex items-center justify-center font-bold text-sm">
+              <div className="w-10 h-10 bg-[#2740BA] text-white rounded-full flex items-center justify-center font-bold text-sm">
                 HTX
               </div>
             </div>

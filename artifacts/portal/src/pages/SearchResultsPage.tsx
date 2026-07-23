@@ -95,9 +95,9 @@ export default function SearchResultsPage() {
                 name="category"
                 checked={categoryFilter === c}
                 onChange={() => setCategoryFilter(c)}
-                className="text-[#1B2A6B] focus:ring-[#1B2A6B]"
+                className="text-[#2740BA] focus:ring-[#2740BA]"
               />
-              <span className={`text-sm transition-colors ${categoryFilter === c ? 'font-semibold text-[#1B2A6B]' : 'text-gray-600 group-hover:text-gray-900'}`}>{c}</span>
+              <span className={`text-sm transition-colors ${categoryFilter === c ? 'font-semibold text-[#2740BA]' : 'text-gray-600 group-hover:text-gray-900'}`}>{c}</span>
             </label>
           ))}
         </div>
@@ -108,7 +108,7 @@ export default function SearchResultsPage() {
         <select
           value={districtFilter}
           onChange={e => setDistrictFilter(e.target.value)}
-          className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+          className="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-[#2740BA] focus:border-[#2740BA]"
         >
           {DISTRICTS.map(d => <option key={d}>{d}</option>)}
         </select>
@@ -124,9 +124,9 @@ export default function SearchResultsPage() {
                 name="cert"
                 checked={certFilter === c}
                 onChange={() => setCertFilter(c)}
-                className="text-[#1B2A6B] focus:ring-[#1B2A6B]"
+                className="text-[#2740BA] focus:ring-[#2740BA]"
               />
-              <span className={`text-sm transition-colors ${certFilter === c ? 'font-semibold text-[#1B2A6B]' : 'text-gray-600 group-hover:text-gray-900'}`}>{c}</span>
+              <span className={`text-sm transition-colors ${certFilter === c ? 'font-semibold text-[#2740BA]' : 'text-gray-600 group-hover:text-gray-900'}`}>{c}</span>
             </label>
           ))}
         </div>
@@ -137,7 +137,7 @@ export default function SearchResultsPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
       {/* Header search bar */}
-      <div className="bg-[#1B2A6B] py-6 px-6 lg:px-12">
+      <div className="bg-[#2740BA] py-6 px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
           <Link href="/" className="inline-flex items-center gap-2 text-blue-200 hover:text-white text-sm mb-4 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Trang chủ
@@ -164,7 +164,7 @@ export default function SearchResultsPage() {
         {/* Mobile filter toggle */}
         <div className="flex items-center justify-between mb-6 lg:hidden">
           <p className="text-sm text-gray-600">
-            <span className="font-bold text-[#1B2A6B]">{filtered.length}</span> kết quả
+            <span className="font-bold text-[#2740BA]">{filtered.length}</span> kết quả
             {query && <> cho "<span className="font-semibold">{query}</span>"</>}
           </p>
           <button
@@ -195,7 +195,7 @@ export default function SearchResultsPage() {
             {/* Sort bar */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
               <p className="text-sm text-gray-600">
-                Tìm thấy <span className="font-bold text-[#1B2A6B]">{filtered.length}</span> sản phẩm
+                Tìm thấy <span className="font-bold text-[#2740BA]">{filtered.length}</span> sản phẩm
                 {query && <> cho "<span className="font-semibold">{query}</span>"</>}
               </p>
               <div className="flex items-center gap-2">
@@ -203,7 +203,7 @@ export default function SearchResultsPage() {
                 <select
                   value={sort}
                   onChange={e => setSort(e.target.value)}
-                  className="border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:ring-[#1B2A6B] focus:border-[#1B2A6B] bg-white"
+                  className="border border-gray-300 rounded-md py-1.5 px-3 text-sm focus:ring-[#2740BA] focus:border-[#2740BA] bg-white"
                 >
                   <option value="newest">Mới nhất</option>
                   <option value="name">Tên A-Z</option>
@@ -231,7 +231,7 @@ export default function SearchResultsPage() {
                       </div>
                       <div className="p-4 flex-1 flex flex-col">
                         <div className="flex items-start justify-between gap-2 mb-2">
-                          <h4 className="font-bold text-[#1B2A6B] group-hover:text-[#E8650A] transition-colors leading-tight">{p.name}</h4>
+                          <h4 className="font-bold text-[#2740BA] group-hover:text-[#E8650A] transition-colors leading-tight">{p.name}</h4>
                           <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" title="Đã xác thực" />
                         </div>
                         <p className="text-sm text-gray-500 mb-3 flex-1">{p.org}</p>

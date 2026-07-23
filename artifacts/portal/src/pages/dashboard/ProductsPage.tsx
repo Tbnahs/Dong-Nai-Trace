@@ -92,7 +92,7 @@ export default function ProductsPage() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Tìm kiếm sản phẩm..."
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-[#1B2A6B] focus:border-[#1B2A6B] w-full sm:w-64"
+              className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-[#2740BA] focus:border-[#2740BA] w-full sm:w-64"
             />
           </div>
           <button
@@ -119,7 +119,7 @@ export default function ProductsPage() {
               {filtered.map(p => (
                 <tr key={p.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 text-gray-500 font-medium">{p.id}</td>
-                  <td className="px-6 py-4 font-bold text-[#1B2A6B]">{p.name}</td>
+                  <td className="px-6 py-4 font-bold text-[#2740BA]">{p.name}</td>
                   <td className="px-6 py-4 text-gray-600">{p.category}</td>
                   <td className="px-6 py-4 text-gray-600">{p.date}</td>
                   <td className="px-6 py-4">
@@ -128,7 +128,7 @@ export default function ProductsPage() {
                     {p.status === 'draft' && <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">📝 Nháp</span>}
                   </td>
                   <td className="px-6 py-4">
-                    <button className="text-[#1B2A6B] font-semibold hover:underline text-sm">Chi tiết</button>
+                    <button className="text-[#2740BA] font-semibold hover:underline text-sm">Chi tiết</button>
                   </td>
                 </tr>
               ))}
@@ -142,9 +142,9 @@ export default function ProductsPage() {
 
       {/* Form Section */}
       {showForm && (
-        <div className="bg-white rounded-xl shadow-sm border border-[#1B2A6B] overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-[#2740BA] overflow-hidden">
           <div
-            className="bg-[#1B2A6B] text-white p-4 flex justify-between items-center cursor-pointer"
+            className="bg-[#2740BA] text-white p-4 flex justify-between items-center cursor-pointer"
             onClick={() => setShowForm(false)}
           >
             <h3 className="font-bold text-lg flex items-center gap-2">
@@ -164,7 +164,7 @@ export default function ProductsPage() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`px-4 py-3 text-sm font-bold border-b-2 whitespace-nowrap transition-colors ${activeTab === tab.id ? 'border-[#1B2A6B] text-[#1B2A6B] bg-white' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                  className={`px-4 py-3 text-sm font-bold border-b-2 whitespace-nowrap transition-colors ${activeTab === tab.id ? 'border-[#2740BA] text-[#2740BA] bg-white' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
                 >
                   {tab.label}
                 </button>
@@ -181,7 +181,7 @@ export default function ProductsPage() {
                         type="text"
                         value={form.name}
                         onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                         placeholder="Nhập tên sản phẩm..."
                       />
                     </div>
@@ -190,7 +190,7 @@ export default function ProductsPage() {
                       <select
                         value={form.category}
                         onChange={e => setForm(f => ({ ...f, category: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                       >
                         <option>Nông sản & Rau củ</option>
                         <option>Thủy sản</option>
@@ -205,7 +205,7 @@ export default function ProductsPage() {
                         type="text"
                         value={form.gtin}
                         onChange={e => setForm(f => ({ ...f, gtin: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                         placeholder="Mã vạch quốc tế..."
                       />
                     </div>
@@ -215,7 +215,7 @@ export default function ProductsPage() {
                         rows={4}
                         value={form.description}
                         onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                         placeholder="Nhập mô tả chi tiết..."
                       />
                     </div>
@@ -232,7 +232,7 @@ export default function ProductsPage() {
                         rows={3}
                         value={form.ingredients}
                         onChange={e => setForm(f => ({ ...f, ingredients: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                         placeholder="VD: Bưởi 100% tự nhiên, không chất bảo quản..."
                       />
                     </div>
@@ -242,7 +242,7 @@ export default function ProductsPage() {
                         type="text"
                         value={form.weight}
                         onChange={e => setForm(f => ({ ...f, weight: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                         placeholder="VD: 500g, 1kg, 24 quả/thùng..."
                       />
                     </div>
@@ -252,7 +252,7 @@ export default function ProductsPage() {
                         type="text"
                         value={form.expiry}
                         onChange={e => setForm(f => ({ ...f, expiry: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                         placeholder="VD: 7 ngày (bảo quản lạnh)..."
                       />
                     </div>
@@ -262,7 +262,7 @@ export default function ProductsPage() {
                         type="text"
                         value={form.packaging}
                         onChange={e => setForm(f => ({ ...f, packaging: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                        className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                         placeholder="VD: Túi lưới có nhãn TXNG, hộp carton..."
                       />
                     </div>
@@ -275,12 +275,12 @@ export default function ProductsPage() {
                   <p className="text-sm text-gray-600">Chọn các chứng nhận mà sản phẩm đã đạt được:</p>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     {['VietGAP', 'GlobalGAP', 'OCOP', 'ISO 9001', 'ISO 22000', 'HACCP', 'Hữu cơ Việt Nam', 'Organic'].map(cert => (
-                      <label key={cert} className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${form.certs.includes(cert) ? 'border-[#1B2A6B] bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}>
+                      <label key={cert} className={`flex items-center gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${form.certs.includes(cert) ? 'border-[#2740BA] bg-blue-50' : 'border-gray-200 hover:bg-gray-50'}`}>
                         <input
                           type="checkbox"
                           checked={form.certs.includes(cert)}
                           onChange={() => toggleCert(cert)}
-                          className="text-[#1B2A6B] rounded focus:ring-[#1B2A6B]"
+                          className="text-[#2740BA] rounded focus:ring-[#2740BA]"
                         />
                         <span className="text-sm font-medium">{cert}</span>
                       </label>
@@ -312,7 +312,7 @@ export default function ProductsPage() {
                       type="url"
                       value={form.imageNote}
                       onChange={e => setForm(f => ({ ...f, imageNote: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                      className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                       placeholder="https://youtube.com/..."
                     />
                   </div>

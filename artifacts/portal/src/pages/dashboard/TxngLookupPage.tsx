@@ -16,7 +16,7 @@ export default function TxngLookupPage() {
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Search Box */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center">
-        <h2 className="text-2xl font-extrabold text-[#1B2A6B] mb-2 uppercase">Tra cứu Truy xuất nguồn gốc</h2>
+        <h2 className="text-2xl font-extrabold text-[#2740BA] mb-2 uppercase">Tra cứu Truy xuất nguồn gốc</h2>
         <p className="text-gray-500 mb-6">Kiểm tra thông tin chi tiết của lô hàng bằng mã GTIN hoặc mã lô.</p>
         
         <form onSubmit={handleSearch} className="max-w-2xl mx-auto flex shadow-md rounded-md overflow-hidden border border-slate-300">
@@ -51,7 +51,7 @@ export default function TxngLookupPage() {
               <div className="flex-1 space-y-6">
                 <div>
                   <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Tên sản phẩm</div>
-                  <h3 className="text-2xl font-extrabold text-[#1B2A6B]">Rau muống hữu cơ VietGAP</h3>
+                  <h3 className="text-2xl font-extrabold text-[#2740BA]">Rau muống hữu cơ VietGAP</h3>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-y-4 gap-x-6">

@@ -7,7 +7,7 @@ export default function OverviewPage() {
       {/* Welcome Banner */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-[#1B2A6B]">Xin chào, HTX Nông nghiệp Xanh!</h2>
+          <h2 className="text-2xl font-bold text-[#2740BA]">Xin chào, HTX Nông nghiệp Xanh!</h2>
           <p className="text-sm text-gray-500 mt-1">Hôm nay là một ngày tuyệt vời để cập nhật thông tin sản phẩm.</p>
         </div>
         <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 border border-amber-200 px-4 py-2 rounded-full font-semibold text-sm">
@@ -30,7 +30,7 @@ export default function OverviewPage() {
             </div>
             <div>
               <div className="text-sm text-gray-500 font-medium">{kpi.label}</div>
-              <div className="text-xl font-bold text-[#1B2A6B]">{kpi.value}</div>
+              <div className="text-xl font-bold text-[#2740BA]">{kpi.value}</div>
             </div>
           </div>
         ))}
@@ -76,7 +76,7 @@ export default function OverviewPage() {
           <h3 className="text-lg font-bold text-gray-800 mb-6">Hoạt động gần đây</h3>
           <div className="relative border-l border-gray-200 ml-3 space-y-6">
             <div className="relative pl-6">
-              <span className="absolute -left-1.5 top-1 w-3 h-3 rounded-full bg-[#1B2A6B] ring-4 ring-white"></span>
+              <span className="absolute -left-1.5 top-1 w-3 h-3 rounded-full bg-[#2740BA] ring-4 ring-white"></span>
               <div className="text-xs text-gray-500 mb-1">Hôm nay, 09:41</div>
               <div className="text-sm font-semibold text-gray-800">Khai báo sản phẩm mới</div>
               <div className="text-sm text-gray-600">Đã lưu nháp "Bưởi Tân Triều xuất khẩu"</div>

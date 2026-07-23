@@ -14,7 +14,7 @@ export default function DocumentsPage() {
     <div className="space-y-6">
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="p-6 border-b border-gray-200">
-          <h2 className="text-lg font-bold text-[#1B2A6B]">Danh sách hồ sơ & tài liệu</h2>
+          <h2 className="text-lg font-bold text-[#2740BA]">Danh sách hồ sơ & tài liệu</h2>
           <p className="text-sm text-gray-500 mt-1">Quản lý các giấy tờ pháp lý và chứng nhận chất lượng của tổ chức.</p>
         </div>
 
@@ -49,8 +49,8 @@ export default function DocumentsPage() {
                   <td className="px-6 py-4">
                     {doc.file ? (
                       <div className="flex gap-2 text-gray-400">
-                        <button className="hover:text-[#1B2A6B] p-1"><Eye className="w-4 h-4" /></button>
-                        <button className="hover:text-[#1B2A6B] p-1"><Download className="w-4 h-4" /></button>
+                        <button className="hover:text-[#2740BA] p-1"><Eye className="w-4 h-4" /></button>
+                        <button className="hover:text-[#2740BA] p-1"><Download className="w-4 h-4" /></button>
                         <button className="hover:text-red-500 p-1"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     ) : (
@@ -68,9 +68,9 @@ export default function DocumentsPage() {
         <h3 className="text-sm font-bold text-gray-800 mb-4">Tải lên tài liệu mới</h3>
         <div className="border-2 border-dashed border-gray-300 rounded-xl p-10 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer text-center group">
           <div className="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-            <UploadCloud className="w-8 h-8 text-[#1B2A6B]" />
+            <UploadCloud className="w-8 h-8 text-[#2740BA]" />
           </div>
-          <p className="text-base font-bold text-[#1B2A6B] mb-1">Kéo thả file vào đây để tải lên</p>
+          <p className="text-base font-bold text-[#2740BA] mb-1">Kéo thả file vào đây để tải lên</p>
           <p className="text-sm text-gray-500">Hoặc <span className="text-[#E8650A] underline">chọn file từ máy tính</span></p>
           <p className="text-xs text-gray-400 mt-4">Hỗ trợ PDF, JPG, PNG (Tối đa 10MB)</p>
         </div>

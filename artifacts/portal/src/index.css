@@ -82,25 +82,25 @@
   --elevate-1: rgba(0, 0, 0, 0.03);
   --elevate-2: rgba(0, 0, 0, 0.08);
 
-  /* Đồng Nai Trace: navy #1B2A6B, orange #E8650A */
+  /* Đồng Nai Trace: navy #2740BA, orange #E8650A */
   --background: 0 0% 100%;
   --foreground: 222 47% 11%;
   --border: 214 32% 91%;
   --card: 0 0% 100%;
   --card-foreground: 222 47% 11%;
   --card-border: 214 32% 91%;
-  --sidebar: 229 58% 26%;         /* #1B2A6B navy */
+  --sidebar: 230 65% 44%;         /* #2740BA navy */
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-border: 229 50% 32%;
-  --sidebar-primary: 229 58% 26%;
+  --sidebar-border: 230 58% 50%;
+  --sidebar-primary: 230 65% 44%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 229 50% 35%;
+  --sidebar-accent: 230 58% 52%;
   --sidebar-accent-foreground: 0 0% 100%;
   --sidebar-ring: 24 91% 48%;     /* orange */
   --popover: 0 0% 100%;
   --popover-foreground: 222 47% 11%;
   --popover-border: 214 32% 91%;
-  --primary: 229 58% 26%;         /* #1B2A6B navy */
+  --primary: 230 65% 44%;         /* #2740BA navy */
   --primary-foreground: 0 0% 100%;
   --secondary: 214 32% 95%;
   --secondary-foreground: 222 47% 11%;
@@ -111,8 +111,8 @@
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
   --input: 214 32% 91%;
-  --ring: 229 58% 26%;
-  --chart-1: 229 58% 26%;
+  --ring: 230 65% 44%;
+  --chart-1: 230 65% 44%;
   --chart-2: 24 91% 48%;
   --chart-3: 142 71% 35%;
   --chart-4: 214 80% 55%;

@@ -32,13 +32,13 @@ export default function OrgProfilePage() {
         <div className="flex border-b border-gray-200">
           <button
             onClick={() => setActiveTab('info')}
-            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'info' ? 'border-[#1B2A6B] text-[#1B2A6B]' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'info' ? 'border-[#2740BA] text-[#2740BA]' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             Thông tin pháp lý
           </button>
           <button
             onClick={() => setActiveTab('id')}
-            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'id' ? 'border-[#1B2A6B] text-[#1B2A6B]' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
+            className={`px-6 py-4 text-sm font-bold border-b-2 transition-colors ${activeTab === 'id' ? 'border-[#2740BA] text-[#2740BA]' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             Mã định danh
           </button>
@@ -60,7 +60,7 @@ export default function OrgProfilePage() {
                     type="text"
                     value={form.name}
                     onChange={e => handleChange('name', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                   />
                 </div>
                 <div>
@@ -80,7 +80,7 @@ export default function OrgProfilePage() {
                     type="text"
                     value={form.address}
                     onChange={e => handleChange('address', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                   />
                 </div>
 
@@ -90,7 +90,7 @@ export default function OrgProfilePage() {
                     type="text"
                     value={form.representative}
                     onChange={e => handleChange('representative', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                   />
                 </div>
                 <div>
@@ -99,7 +99,7 @@ export default function OrgProfilePage() {
                     type="tel"
                     value={form.phone}
                     onChange={e => handleChange('phone', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                   />
                 </div>
                 <div>
@@ -108,7 +108,7 @@ export default function OrgProfilePage() {
                     type="email"
                     value={form.email}
                     onChange={e => handleChange('email', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                   />
                 </div>
                 <div>
@@ -116,7 +116,7 @@ export default function OrgProfilePage() {
                   <select
                     value={form.sector}
                     onChange={e => handleChange('sector', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#1B2A6B] focus:border-[#1B2A6B]"
+                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
                   >
                     <option>Nông sản & Rau củ</option>
                     <option>Thủy sản</option>
@@ -160,7 +160,7 @@ export default function OrgProfilePage() {
 
               <div className="bg-white border border-slate-200 rounded-xl p-6">
                 <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <Fingerprint className="w-5 h-5 text-[#1B2A6B]" /> Mã định danh sẽ bao gồm
+                  <Fingerprint className="w-5 h-5 text-[#2740BA]" /> Mã định danh sẽ bao gồm
                 </h4>
                 <ul className="space-y-3 text-sm text-gray-600">
                   <li className="flex items-center gap-3"><QrCode className="w-5 h-5 text-gray-400 shrink-0" /> QR Code chính thức gắn với sản phẩm</li>
