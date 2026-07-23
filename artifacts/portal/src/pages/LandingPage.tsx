@@ -78,11 +78,6 @@ export default function LandingPage() {
           
           {/* Cột trái */}
           <div className="lg:w-[55%] flex flex-col items-start space-y-6">
-            <div className="inline-flex items-center gap-2 bg-white px-4 py-1.5 rounded-full shadow-sm border border-slate-100">
-              <CheckCircle2 className="w-4 h-4 text-[#1B2A6B]" />
-              <span className="text-sm font-semibold text-[#1B2A6B]">Đồng Nai Trace</span>
-            </div>
-            
             <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">TRA CỨU NHANH</span>
             
             <h1 className="text-4xl lg:text-[2.75rem] font-extrabold text-[#1B2A6B] uppercase leading-[1.2]">
