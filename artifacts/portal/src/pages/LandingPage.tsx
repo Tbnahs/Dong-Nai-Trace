@@ -103,13 +103,13 @@ export default function LandingPage() {
           </div>
           
           {/* Cột phải - Mockup */}
-          <div className="lg:w-[45%] relative h-[560px] w-full flex justify-center items-center mt-12 lg:mt-0">
-            <div className="absolute w-[400px] h-[400px] sm:w-[520px] sm:h-[520px] bg-blue-200/40 rounded-full blur-3xl -z-10"></div>
+          <div className="lg:w-[50%] relative h-[620px] w-full flex justify-center items-center mt-12 lg:mt-0">
+            <div className="absolute w-[450px] h-[450px] sm:w-[580px] sm:h-[580px] bg-blue-200/40 rounded-full blur-3xl -z-10"></div>
             
             <img
               src={hero3d}
               alt="Đồng Nai Trace – minh họa hệ thống truy xuất nguồn gốc"
-              className="relative z-10 w-full max-w-[620px] object-contain
+              className="relative z-10 w-full max-w-[700px] object-contain
                          hover:scale-[1.03] transition-transform duration-700 ease-out
                          animate-[float_6s_ease-in-out_infinite]"
             />
