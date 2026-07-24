@@ -406,20 +406,40 @@ export default function RegisterPage() {
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-5">
                     <CheckCircle2 className="w-9 h-9 text-green-600" />
                   </div>
-                  <h2 className="text-2xl font-extrabold text-gray-800 mb-2">Đăng ký thành công!</h2>
-                  <p className="text-sm text-gray-500 leading-relaxed max-w-sm mb-8">
-                    Hồ sơ đã được gửi. Vui lòng lưu lại thông tin tài khoản bên dưới để đăng nhập sau khi được phê duyệt.
+                  <h2 className="text-2xl font-extrabold text-gray-800 mb-2">Hồ sơ đã được gửi!</h2>
+                  <p className="text-sm text-gray-500 leading-relaxed max-w-md mb-6">
+                    Hồ sơ doanh nghiệp và sản phẩm của bạn đã được chuyển đến <strong className="text-gray-700">Sở Khoa học và Công nghệ Đồng Nai</strong> để xét duyệt.
+                    Sau khi được phê duyệt, hệ thống sẽ cấp <strong className="text-gray-700">mã doanh nghiệp</strong> — người tiêu dùng có thể dùng mã này để tra cứu sản phẩm của bạn.
                   </p>
+
+                  {/* Process timeline */}
+                  <div className="w-full max-w-sm text-left mb-6">
+                    {[
+                      { step: '1', label: 'Hồ sơ gửi về Sở xét duyệt', sub: 'Thông qua hệ thống quản lý nội bộ', done: true },
+                      { step: '2', label: 'Sở phê duyệt hồ sơ', sub: 'Thời gian xử lý: 3–5 ngày làm việc', done: false },
+                      { step: '3', label: 'Cấp mã doanh nghiệp', sub: 'Mã dùng để tra cứu sản phẩm trên hệ thống', done: false },
+                    ].map((item, i) => (
+                      <div key={i} className="flex gap-4 items-start mb-4 last:mb-0">
+                        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 ${item.done ? 'bg-green-500 text-white' : 'bg-slate-100 text-slate-400 border border-slate-200'}`}>
+                          {item.done ? <CheckCircle2 className="w-4 h-4" /> : item.step}
+                        </div>
+                        <div>
+                          <p className={`text-sm font-semibold ${item.done ? 'text-gray-800' : 'text-gray-400'}`}>{item.label}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">{item.sub}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
 
                   {/* Credentials card */}
                   <div className="w-full max-w-sm bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-4 text-left shadow-sm">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Thông tin tài khoản</p>
-                    <CredentialRow icon={<User className="w-4 h-4" />} label="Tài khoản (Email đăng nhập)" value={form.repEmail} />
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Thông tin tài khoản đăng nhập</p>
+                    <CredentialRow icon={<User className="w-4 h-4" />} label="Tài khoản (Email)" value={form.repEmail} />
                     <CredentialRow icon={<Lock className="w-4 h-4" />} label="Mật khẩu" value={form.password} />
                   </div>
 
-                  <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5 mb-8 max-w-sm">
-                    ⚠️ Hãy ghi nhớ hoặc sao chép thông tin trên. Trang này sẽ không hiển thị lại mật khẩu của bạn.
+                  <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5 mb-6 max-w-sm">
+                    ⚠️ Lưu lại thông tin tài khoản ngay bây giờ. Trang này sẽ không hiển thị lại mật khẩu của bạn.
                   </p>
 
                   <button
