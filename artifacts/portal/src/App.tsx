@@ -5,8 +5,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { AuthProvider } from './context/AuthContext';
 
 import LandingPage from './pages/LandingPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import AuthPage from './pages/AuthPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import BusinessDetailPage from './pages/BusinessDetailPage';
@@ -26,8 +25,8 @@ function Router() {
     <PublicLayout>
       <Switch>
         <Route path="/" component={LandingPage} />
-        <Route path="/dang-nhap" component={LoginPage} />
-        <Route path="/dang-ky" component={RegisterPage} />
+        <Route path="/dang-nhap">{() => <AuthPage defaultTab="login" />}</Route>
+        <Route path="/dang-ky">{() => <AuthPage defaultTab="register" />}</Route>
         <Route path="/tra-cuu" component={SearchResultsPage} />
         <Route path="/san-pham/:id" component={ProductDetailPage} />
         <Route path="/doanh-nghiep/:id" component={BusinessDetailPage} />

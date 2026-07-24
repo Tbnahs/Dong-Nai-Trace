@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'wouter';
 import {
-  ArrowLeft, Plus, ShieldCheck, AlertCircle, Eye, Package,
-  X, UploadCloud, CheckCircle2,
+  ArrowLeft, Plus, ShieldCheck, AlertCircle, Eye, Pencil, Trash2, Package,
+  X, UploadCloud, CheckCircle2, ImagePlus,
 } from 'lucide-react';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -12,9 +12,9 @@ const WITH_TXNG = [
   { id: 'my3', name: 'Mật ong rừng nguyên chất', category: 'Thực phẩm', cert: 'OCOP', traceCode: 'TXNG-VCU-003-2024', img: 'https://picsum.photos/seed/matong/80/80', updatedAt: '01/06/2024', status: 'approved' },
 ];
 
-const WITHOUT_TXNG = [
-  { id: 'p1', name: 'Xoài cát hòa lộc', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/xoai/80/80', note: 'Chờ phê duyệt hồ sơ', status: 'pending' },
-  { id: 'p2', name: 'Sầu riêng Ri6', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/saurieng/80/80', note: 'Đang bổ sung tài liệu', status: 'pending' },
+const WITHOUT_TXNG_INIT = [
+  { id: 'p1', name: 'Xoài cát hòa lộc', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/xoai/80/80', status: 'approved' },
+  { id: 'p2', name: 'Sầu riêng Ri6', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/saurieng/80/80', status: 'pending' },
 ];
 
 const certColor: Record<string, string> = {
@@ -24,10 +24,27 @@ const certColor: Record<string, string> = {
 };
 
 const PRODUCT_CATS = ['Nông sản & Rau củ', 'Trái cây', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Khác'];
+const UNITS = ['kg', 'tấn', 'hộp', 'thùng', 'chai', 'gói', 'cái', 'bó'];
 const CERTS_LIST = ['VietGAP', 'GlobalGAP', 'OCOP', 'HACCP', 'ISO 22000', 'Hữu cơ'];
 
-// ─── Add Product Modal ────────────────────────────────────────────────────────
-interface AddProductForm {
+// ─── Status Badge ─────────────────────────────────────────────────────────────
+function StatusBadge({ status }: { status: string }) {
+  if (status === 'approved') {
+    return (
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+        <CheckCircle2 className="w-3 h-3" /> Đã duyệt
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+      <AlertCircle className="w-3 h-3" /> Chờ duyệt
+    </span>
+  );
+}
+
+// ─── Add / Edit Product Modal ─────────────────────────────────────────────────
+interface ProductForm {
   name: string;
   category: string;
   unit: string;
@@ -37,41 +54,50 @@ interface AddProductForm {
   description: string;
 }
 
-const emptyForm: AddProductForm = {
+const emptyForm: ProductForm = {
   name: '', category: PRODUCT_CATS[0], unit: '',
-  certs: [], certOther: false, certOtherText: '',
-  description: '',
+  certs: [], certOther: false, certOtherText: '', description: '',
 };
 
-function AddProductModal({ onClose, onAdd }: {
+function ProductModal({
+  onClose, onSave, initial, title,
+}: {
   onClose: () => void;
-  onAdd: (name: string, category: string) => void;
+  onSave: (name: string, category: string) => void;
+  initial?: Partial<ProductForm>;
+  title: string;
 }) {
-  const [form, setForm] = useState<AddProductForm>(emptyForm);
-  const [errors, setErrors] = useState<Partial<Record<keyof AddProductForm, string>>>({});
+  const [form, setForm] = useState<ProductForm>({ ...emptyForm, ...initial });
+  const [errors, setErrors] = useState<Partial<Record<keyof ProductForm, string>>>({});
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const set = <K extends keyof AddProductForm>(key: K, value: AddProductForm[K]) =>
+  const set = <K extends keyof ProductForm>(key: K, value: ProductForm[K]) =>
     setForm(f => ({ ...f, [key]: value }));
 
   const toggleCert = (c: string) =>
-    setForm(f => ({
-      ...f,
-      certs: f.certs.includes(c) ? f.certs.filter(x => x !== c) : [...f.certs, c],
-    }));
+    setForm(f => ({ ...f, certs: f.certs.includes(c) ? f.certs.filter(x => x !== c) : [...f.certs, c] }));
 
   const validate = () => {
-    const e: Partial<Record<keyof AddProductForm, string>> = {};
+    const e: Partial<Record<keyof ProductForm, string>> = {};
     if (!form.name.trim()) e.name = 'Vui lòng nhập tên sản phẩm';
     if (!form.unit.trim()) e.unit = 'Vui lòng nhập đơn vị tính';
     if (!form.description.trim()) e.description = 'Vui lòng nhập mô tả sản phẩm';
     return e;
   };
 
-  const handleSubmit = () => {
+  const handleSave = () => {
     const e = validate();
     if (Object.keys(e).length > 0) { setErrors(e); return; }
-    onAdd(form.name.trim(), form.category);
+    onSave(form.name.trim(), form.category);
     onClose();
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setImagePreview(url);
+    }
   };
 
   const inputCls = (err?: string) =>
@@ -79,116 +105,147 @@ function AddProductModal({ onClose, onAdd }: {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
+
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h2 className="text-base font-bold text-gray-800">Sản phẩm đăng ký truy xuất</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0">
+          <div>
+            <h2 className="text-base font-bold text-gray-800">{title}</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Điền đầy đủ thông tin để đăng ký sản phẩm</p>
+          </div>
           <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Body */}
-        <div className="p-6 space-y-5">
-          {/* Row: name + category */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Tên sản phẩm *</label>
+        {/* Body — scrollable */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Section: Thông tin cơ bản */}
+          <div className="px-6 pt-5 pb-4">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Thông tin cơ bản</p>
+
+            {/* Name — full width */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Tên sản phẩm <span className="text-red-500">*</span>
+              </label>
               <input
                 className={inputCls(errors.name)}
-                placeholder="VD: Rau muống VietGAP"
+                placeholder="VD: Bưởi da xanh VietGAP"
                 value={form.name}
                 onChange={e => { set('name', e.target.value); setErrors(er => ({ ...er, name: undefined })); }}
               />
               {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Danh mục *</label>
-              <select
-                className={inputCls() + ' bg-white'}
-                value={form.category}
-                onChange={e => set('category', e.target.value)}
-              >
-                {PRODUCT_CATS.map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
-          </div>
 
-          {/* Row: unit + certs */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Đơn vị tính *</label>
-              <input
-                className={inputCls(errors.unit)}
-                placeholder="VD: kg, hộp, thùng"
-                value={form.unit}
-                onChange={e => { set('unit', e.target.value); setErrors(er => ({ ...er, unit: undefined })); }}
-              />
-              {errors.unit && <p className="mt-1 text-xs text-red-600">{errors.unit}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Chứng nhận (chọn nhiều)</label>
-              <div className="flex flex-wrap gap-x-3 gap-y-2 pt-0.5">
-                {CERTS_LIST.map(c => (
-                  <label key={c} className="flex items-center gap-1.5 cursor-pointer text-sm">
-                    <input type="checkbox" checked={form.certs.includes(c)} onChange={() => toggleCert(c)}
-                      className="rounded text-[#2740BA] focus:ring-[#2740BA]" />
-                    {c}
-                  </label>
-                ))}
-                {/* Khác */}
-                <label className="flex items-center gap-1.5 cursor-pointer text-sm">
-                  <input type="checkbox" checked={form.certOther} onChange={e => set('certOther', e.target.checked)}
-                    className="rounded text-[#2740BA] focus:ring-[#2740BA]" />
-                  Khác
-                </label>
+            {/* Category + Unit — 2 cols */}
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Danh mục <span className="text-red-500">*</span></label>
+                <select className={inputCls() + ' bg-white'} value={form.category} onChange={e => set('category', e.target.value)}>
+                  {PRODUCT_CATS.map(c => <option key={c}>{c}</option>)}
+                </select>
               </div>
-              {form.certOther && (
-                <input
-                  className={inputCls() + ' mt-2'}
-                  placeholder="Nhập tên chứng nhận..."
-                  value={form.certOtherText}
-                  onChange={e => set('certOtherText', e.target.value)}
-                />
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Đơn vị tính <span className="text-red-500">*</span></label>
+                <div className="flex gap-2">
+                  <input
+                    className={inputCls(errors.unit)}
+                    placeholder="kg, hộp, thùng..."
+                    value={form.unit}
+                    list="unit-suggestions"
+                    onChange={e => { set('unit', e.target.value); setErrors(er => ({ ...er, unit: undefined })); }}
+                  />
+                  <datalist id="unit-suggestions">
+                    {UNITS.map(u => <option key={u} value={u} />)}
+                  </datalist>
+                </div>
+                {errors.unit && <p className="mt-1 text-xs text-red-600">{errors.unit}</p>}
+              </div>
             </div>
           </div>
 
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Mô tả sản phẩm *</label>
+          <div className="border-t border-gray-100" />
+
+          {/* Section: Chứng nhận */}
+          <div className="px-6 py-4">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Chứng nhận chất lượng</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+              {CERTS_LIST.map(c => (
+                <label key={c} className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border cursor-pointer transition-colors text-sm font-medium select-none ${form.certs.includes(c) ? 'bg-[#2740BA]/5 border-[#2740BA]/40 text-[#2740BA]' : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}>
+                  <input type="checkbox" checked={form.certs.includes(c)} onChange={() => toggleCert(c)}
+                    className="rounded text-[#2740BA] focus:ring-[#2740BA] w-4 h-4 shrink-0" />
+                  {c}
+                </label>
+              ))}
+              <label className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border cursor-pointer transition-colors text-sm font-medium select-none ${form.certOther ? 'bg-[#2740BA]/5 border-[#2740BA]/40 text-[#2740BA]' : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}>
+                <input type="checkbox" checked={form.certOther} onChange={e => set('certOther', e.target.checked)}
+                  className="rounded text-[#2740BA] focus:ring-[#2740BA] w-4 h-4 shrink-0" />
+                Khác
+              </label>
+            </div>
+            {form.certOther && (
+              <input className={inputCls() + ' mt-3'} placeholder="Nhập tên chứng nhận khác..."
+                value={form.certOtherText} onChange={e => set('certOtherText', e.target.value)} />
+            )}
+          </div>
+
+          <div className="border-t border-gray-100" />
+
+          {/* Section: Mô tả */}
+          <div className="px-6 py-4">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Mô tả sản phẩm</p>
             <textarea
               className={inputCls(errors.description) + ' min-h-[96px] resize-y'}
-              placeholder="Mô tả ngắn gọn về sản phẩm, quy trình sản xuất..."
+              placeholder="Mô tả ngắn gọn về sản phẩm, vùng trồng, quy trình sản xuất..."
               value={form.description}
               onChange={e => { set('description', e.target.value); setErrors(er => ({ ...er, description: undefined })); }}
             />
             {errors.description && <p className="mt-1 text-xs text-red-600">{errors.description}</p>}
           </div>
 
-          {/* Image upload */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">Hình ảnh sản phẩm</label>
-            <div className="border-2 border-dashed border-gray-200 rounded-xl py-8 flex flex-col items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
-              <UploadCloud className="w-8 h-8 text-gray-300" />
-              <p className="text-sm text-gray-400">Tải lên 1-5 hình ảnh sản phẩm (JPG, PNG)</p>
-            </div>
+          <div className="border-t border-gray-100" />
+
+          {/* Section: Hình ảnh */}
+          <div className="px-6 py-4">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Hình ảnh sản phẩm</p>
+            {imagePreview ? (
+              <div className="relative w-full h-40 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 group">
+                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                  <label className="cursor-pointer bg-white text-gray-800 text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+                    Đổi ảnh
+                    <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                  </label>
+                  <button onClick={() => setImagePreview(null)} className="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors">
+                    Xóa
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <label className="cursor-pointer block">
+                <div className="border-2 border-dashed border-gray-200 rounded-xl py-8 flex flex-col items-center gap-2 bg-gray-50 hover:bg-gray-100 hover:border-[#2740BA]/40 transition-colors">
+                  <div className="w-12 h-12 rounded-full bg-[#2740BA]/10 flex items-center justify-center">
+                    <ImagePlus className="w-6 h-6 text-[#2740BA]" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-600">Bấm để tải ảnh lên</p>
+                  <p className="text-xs text-gray-400">JPG, PNG — tối đa 5 hình</p>
+                </div>
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+              </label>
+            )}
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
-          <button
-            onClick={onClose}
-            className="flex items-center gap-1.5 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            ← Quay lại
+        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl shrink-0">
+          <button onClick={onClose}
+            className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors px-4 py-2 rounded-lg hover:bg-gray-100">
+            Hủy bỏ
           </button>
-          <button
-            onClick={handleSubmit}
-            className="flex items-center gap-1.5 px-6 py-2.5 bg-[#2740BA] text-white text-sm font-bold rounded-lg hover:bg-[#1f339e] transition-colors shadow-sm"
-          >
-            Hoàn tất đăng ký →
+          <button onClick={handleSave}
+            className="flex items-center gap-1.5 px-6 py-2.5 bg-[#2740BA] text-white text-sm font-bold rounded-lg hover:bg-[#1f339e] transition-colors shadow-sm">
+            <CheckCircle2 className="w-4 h-4" /> Lưu hồ sơ sản phẩm
           </button>
         </div>
       </div>
@@ -196,35 +253,26 @@ function AddProductModal({ onClose, onAdd }: {
   );
 }
 
-// ─── Status Badge ─────────────────────────────────────────────────────────────
-function StatusBadge({ status }: { status: string }) {
-  if (status === 'approved') {
-    return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-        <CheckCircle2 className="w-3 h-3" /> Đã được duyệt
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
-      <AlertCircle className="w-3 h-3" /> Chưa được duyệt
-    </span>
-  );
-}
-
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function ProductsProfilePage() {
   const [activeTab, setActiveTab] = useState<'with' | 'without'>('with');
   const [withList, setWithList] = useState(WITH_TXNG);
-  const [withoutList, setWithoutList] = useState(WITHOUT_TXNG);
+  const [withoutList, setWithoutList] = useState(WITHOUT_TXNG_INIT);
   const [showAdd, setShowAdd] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const addProduct = (name: string, category: string) => {
     setWithoutList(l => [...l, {
       id: `new-${Date.now()}`, name, category, cert: '', status: 'pending',
-      img: 'https://picsum.photos/seed/new/80/80', note: 'Đang xử lý hồ sơ',
+      img: 'https://picsum.photos/seed/new/80/80',
     }]);
     setActiveTab('without');
+  };
+
+  const deleteWithout = (id: string) => {
+    setWithoutList(l => l.filter(p => p.id !== id));
+    setDeleteId(null);
   };
 
   return (
@@ -297,7 +345,6 @@ export default function ProductsProfilePage() {
                     <StatusBadge status={p.status} />
                   </div>
                 </div>
-                {/* View only — no edit/delete */}
                 <div className="flex items-center gap-1 shrink-0">
                   <Link href={`/san-pham/${p.id}`}>
                     <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-gray-500" title="Xem">
@@ -310,14 +357,14 @@ export default function ProductsProfilePage() {
           </div>
         )}
 
-        {/* WITHOUT TXNG list */}
+        {/* WITHOUT TXNG list — with status + edit/view/delete */}
         {activeTab === 'without' && (
           <div className="space-y-3">
             {withoutList.length === 0 ? (
               <EmptyState msg="Tất cả sản phẩm đã có truy xuất nguồn gốc" />
             ) : withoutList.map(p => (
               <div key={p.id} className="bg-white rounded-xl border border-amber-100 shadow-sm p-4 flex items-center gap-4 hover:shadow-md transition-shadow">
-                <img src={p.img} alt={p.name} className="w-16 h-16 object-cover rounded-xl shrink-0 opacity-70" />
+                <img src={p.img} alt={p.name} className="w-16 h-16 object-cover rounded-xl shrink-0 opacity-80" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
@@ -325,9 +372,33 @@ export default function ProductsProfilePage() {
                   </div>
                   <p className="text-xs text-gray-500 mb-1.5">{p.category}</p>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded font-medium">{p.note}</span>
+                    {p.cert && (
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${certColor[p.cert] || 'bg-gray-100 text-gray-600'}`}>{p.cert}</span>
+                    )}
                     <StatusBadge status={p.status} />
                   </div>
+                </div>
+                {/* Actions: Edit, View, Delete */}
+                <div className="flex items-center gap-1 shrink-0">
+                  <button
+                    onClick={() => setEditingId(p.id)}
+                    className="p-2 rounded-lg hover:bg-blue-50 transition-colors text-gray-400 hover:text-[#2740BA]"
+                    title="Chỉnh sửa"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <Link href={`/san-pham/${p.id}`}>
+                    <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-gray-400 hover:text-gray-700" title="Xem">
+                      <Eye className="w-4 h-4" />
+                    </button>
+                  </Link>
+                  <button
+                    onClick={() => setDeleteId(p.id)}
+                    className="p-2 rounded-lg hover:bg-red-50 transition-colors text-gray-400 hover:text-red-500"
+                    title="Xóa"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
             ))}
@@ -337,10 +408,53 @@ export default function ProductsProfilePage() {
 
       {/* Add Product Modal */}
       {showAdd && (
-        <AddProductModal
+        <ProductModal
+          title="Tạo hồ sơ sản phẩm mới"
           onClose={() => setShowAdd(false)}
-          onAdd={addProduct}
+          onSave={addProduct}
         />
+      )}
+
+      {/* Edit Product Modal */}
+      {editingId && (() => {
+        const p = withoutList.find(x => x.id === editingId);
+        if (!p) return null;
+        return (
+          <ProductModal
+            title={`Chỉnh sửa: ${p.name}`}
+            initial={{ name: p.name, category: p.category }}
+            onClose={() => setEditingId(null)}
+            onSave={(name, category) => {
+              setWithoutList(l => l.map(x => x.id === editingId ? { ...x, name, category } : x));
+              setEditingId(null);
+            }}
+          />
+        );
+      })()}
+
+      {/* Delete confirm dialog */}
+      {deleteId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
+            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-6 h-6 text-red-500" />
+            </div>
+            <h3 className="font-bold text-gray-800 mb-2">Xóa sản phẩm?</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Sản phẩm <strong>{withoutList.find(p => p.id === deleteId)?.name}</strong> sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.
+            </p>
+            <div className="flex gap-3">
+              <button onClick={() => setDeleteId(null)}
+                className="flex-1 py-2.5 text-sm font-semibold border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                Hủy
+              </button>
+              <button onClick={() => deleteWithout(deleteId)}
+                className="flex-1 py-2.5 text-sm font-bold bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                Xóa sản phẩm
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

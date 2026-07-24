@@ -381,7 +381,7 @@ export default function LandingPage() {
               href="/dang-ky"
               className="mt-10 font-bold text-[#E8650A] hover:text-[#D55C08] flex items-center gap-2 group transition-colors"
             >
-              Đăng ký doanh nghiệp ngay{" "}
+              Hướng dẫn đăng ký tại đây{" "}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
