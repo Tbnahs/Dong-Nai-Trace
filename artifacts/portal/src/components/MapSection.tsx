@@ -1,5 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Building2, Package, ChevronDown, MapPin, X } from "lucide-react";
+import { Link } from "wouter";
+import { Building2, Package, ChevronDown, MapPin, X, ChevronRight } from "lucide-react";
+
+// Product-ID to catalog-ID mapping (for navigate to product detail page)
+const PRODUCT_CATALOG_ID: Record<string, string> = {
+  p2: 'sp001', // Bưởi Tân Triều
+  p4: 'sp002', // Rau muống hữu cơ
+  p9: 'p9',    // Mật ong (generic)
+  p15: 'sp003',// Tôm thẻ chân trắng
+};
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 interface Business {
@@ -336,18 +345,23 @@ export default function MapSection() {
                 <EmptyState label="doanh nghiệp" />
               ) : (
                 filteredBiz.map((b) => (
-                  <div key={b.id} className="px-4 py-3.5 hover:bg-slate-50 transition-colors">
-                    <p className="font-semibold text-slate-800 text-sm leading-snug">{b.name}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-[10px] bg-blue-100 text-[#2740BA] font-bold px-2 py-0.5 rounded-full">
-                        {b.type}
-                      </span>
-                      <span className="text-xs text-gray-400 flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />{b.wardName}
-                      </span>
+                  <Link key={b.id} href={`/doanh-nghiep/${b.id}`}>
+                    <div className="px-4 py-3.5 hover:bg-slate-50 transition-colors cursor-pointer group">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-semibold text-slate-800 text-sm leading-snug group-hover:text-[#2740BA] transition-colors">{b.name}</p>
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#2740BA] shrink-0 mt-0.5 transition-colors" />
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[10px] bg-blue-100 text-[#2740BA] font-bold px-2 py-0.5 rounded-full">
+                          {b.type}
+                        </span>
+                        <span className="text-xs text-gray-400 flex items-center gap-1">
+                          <MapPin className="w-3 h-3" />{b.wardName}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">{b.phone}</p>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">{b.phone}</p>
-                  </div>
+                  </Link>
                 ))
               )
             ) : (
@@ -355,20 +369,25 @@ export default function MapSection() {
                 <EmptyState label="sản phẩm" />
               ) : (
                 filteredProd.map((p) => (
-                  <div key={p.id} className="px-4 py-3.5 hover:bg-slate-50 transition-colors">
-                    <p className="font-semibold text-slate-800 text-sm leading-snug">{p.name}</p>
-                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                      <span className="text-[10px] bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-full">
-                        {p.category}
-                      </span>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${certColor(p.cert)}`}>
-                        {p.cert}
-                      </span>
-                      <span className="text-xs text-gray-400 flex items-center gap-1 ml-auto">
-                        <MapPin className="w-3 h-3" />{p.wardName}
-                      </span>
+                  <Link key={p.id} href={`/san-pham/${PRODUCT_CATALOG_ID[p.id] ?? p.id}`}>
+                    <div className="px-4 py-3.5 hover:bg-slate-50 transition-colors cursor-pointer group">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="font-semibold text-slate-800 text-sm leading-snug group-hover:text-[#2740BA] transition-colors">{p.name}</p>
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-[#2740BA] shrink-0 mt-0.5 transition-colors" />
+                      </div>
+                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                        <span className="text-[10px] bg-orange-100 text-orange-700 font-bold px-2 py-0.5 rounded-full">
+                          {p.category}
+                        </span>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${certColor(p.cert)}`}>
+                          {p.cert}
+                        </span>
+                        <span className="text-xs text-gray-400 flex items-center gap-1 ml-auto">
+                          <MapPin className="w-3 h-3" />{p.wardName}
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 ))
               )
             )}

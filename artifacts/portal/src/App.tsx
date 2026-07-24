@@ -2,40 +2,20 @@ import { Route, Switch, Router as WouterRouter } from 'wouter';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { AuthProvider } from './context/AuthContext';
 
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
-import DashboardLayout from './pages/dashboard/DashboardLayout';
-import OverviewPage from './pages/dashboard/OverviewPage';
-import OrgProfilePage from './pages/dashboard/OrgProfilePage';
-import ProductsPage from './pages/dashboard/ProductsPage';
-import TxngLookupPage from './pages/dashboard/TxngLookupPage';
-import DocumentsPage from './pages/dashboard/DocumentsPage';
-import NotificationsPage from './pages/dashboard/NotificationsPage';
-import SupportPage from './pages/dashboard/SupportPage';
+import BusinessDetailPage from './pages/BusinessDetailPage';
+import OrgProfilePage from './pages/OrgProfilePage';
+import ProductsProfilePage from './pages/ProductsProfilePage';
+import NotificationsPage from './pages/NotificationsPage';
 import NotFound from '@/pages/not-found';
 
 const queryClient = new QueryClient();
-
-function DashboardRoutes() {
-  return (
-    <DashboardLayout>
-      <Switch>
-        <Route path="/dashboard" component={OverviewPage} />
-        <Route path="/dashboard/ho-so-to-chuc" component={OrgProfilePage} />
-        <Route path="/dashboard/ho-so-san-pham" component={ProductsPage} />
-        <Route path="/dashboard/tra-cuu-txng" component={TxngLookupPage} />
-        <Route path="/dashboard/chung-nhan" component={DocumentsPage} />
-        <Route path="/dashboard/thong-bao" component={NotificationsPage} />
-        <Route path="/dashboard/ho-tro" component={SupportPage} />
-        <Route component={NotFound} />
-      </Switch>
-    </DashboardLayout>
-  );
-}
 
 function Router() {
   return (
@@ -45,11 +25,10 @@ function Router() {
       <Route path="/dang-ky" component={RegisterPage} />
       <Route path="/tra-cuu" component={SearchResultsPage} />
       <Route path="/san-pham/:id" component={ProductDetailPage} />
-      
-      {/* Dashboard Routes nested manually or matched via prefix */}
-      <Route path="/dashboard" component={DashboardRoutes} />
-      <Route path="/dashboard/:rest*" component={DashboardRoutes} />
-      
+      <Route path="/doanh-nghiep/:id" component={BusinessDetailPage} />
+      <Route path="/ho-so-doanh-nghiep" component={OrgProfilePage} />
+      <Route path="/ho-so-san-pham" component={ProductsProfilePage} />
+      <Route path="/thong-bao" component={NotificationsPage} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -58,12 +37,14 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
-          <Router />
-        </WouterRouter>
-        <Toaster />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+            <Router />
+          </WouterRouter>
+          <Toaster />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
