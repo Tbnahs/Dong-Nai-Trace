@@ -13,6 +13,7 @@ import BusinessDetailPage from './pages/BusinessDetailPage';
 import OrgProfilePage from './pages/OrgProfilePage';
 import ProductsProfilePage from './pages/ProductsProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
+import NewsPage from './pages/NewsPage';
 import NotFound from '@/pages/not-found';
 import PublicLayout from './components/PublicLayout';
 
@@ -31,6 +32,7 @@ function Router() {
         <Route path="/ho-so-doanh-nghiep" component={OrgProfilePage} />
         <Route path="/ho-so-san-pham" component={ProductsProfilePage} />
         <Route path="/thong-bao" component={NotificationsPage} />
+        <Route path="/tin-tuc" component={NewsPage} />
         <Route component={NotFound} />
       </Switch>
     </PublicLayout>

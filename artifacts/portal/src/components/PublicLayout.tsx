@@ -2,11 +2,10 @@ import { Link, useLocation } from "wouter";
 import { MapPin, Phone, Mail, ChevronRight } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "TRANG CHỦ",             href: "/" },
-  { label: "DANH MỤC",              href: "/tra-cuu" },
+  { label: "TRANG CHỦ",              href: "/" },
+  { label: "DANH MỤC",               href: "/tra-cuu" },
   { label: "HƯỚNG DẪN DOANH NGHIỆP", href: "/dang-ky" },
-  { label: "GỬI TIN BÁO",           href: "/dashboard/ho-tro" },
-  { label: "KÊNH HỖ TRỢ",           href: "/dashboard/ho-tro" },
+  { label: "TIN TỨC",                href: "/tin-tuc" },
 ];
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
