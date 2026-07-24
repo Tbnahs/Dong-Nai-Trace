@@ -1,40 +1,52 @@
-# Đồng Nai Trace — Portal
+# Đồng Nai Trace
 
-A product traceability portal for Đồng Nai province (Vietnam). Users can look up product origins, manage organisation profiles, and track certifications.
+A product traceability portal for Đồng Nai province, operated by the Department of Science and Technology (Sở Khoa học và Công nghệ). The system allows consumers, businesses, and regulators to trace the origin of agricultural and manufactured goods.
 
-## Stack
+## Architecture
 
-- **Frontend** (`artifacts/portal`): React + Vite + Tailwind CSS + shadcn/ui, served at `/portal/`
-- **Backend** (`artifacts/api-server`): Express 5 + Drizzle ORM, served at `/api`
-- **Database**: PostgreSQL (Replit-managed, `DATABASE_URL` is runtime-provided)
-- **Shared libs**: `lib/api-spec` (OpenAPI spec + Orval codegen), `lib/api-client-react` (React Query hooks), `lib/api-zod` (Zod schemas), `lib/db` (Drizzle client + schema)
+This is a pnpm monorepo with the following packages:
 
-## How to run
+| Package | Path | Description |
+|---|---|---|
+| `@workspace/portal` | `artifacts/portal/` | React + Vite public portal (search, product detail, business profiles, login/register) |
+| `@workspace/api-server` | `artifacts/api-server/` | Express 5 REST API server |
+| `@workspace/api-spec` | `lib/api-spec/` | OpenAPI spec + Orval codegen config |
+| `@workspace/api-client-react` | `lib/api-client-react/` | Auto-generated React Query hooks |
+| `@workspace/api-zod` | `lib/api-zod/` | Auto-generated Zod schemas |
+| `@workspace/db` | `lib/db/` | Drizzle ORM + PostgreSQL client |
 
-Both services start automatically via their managed workflows:
+## Running the project
 
-| Workflow | Command |
-|---|---|
-| `artifacts/portal: web` | `PORT=25265 BASE_PATH=/portal/ pnpm --filter @workspace/portal run dev` |
-| `artifacts/api-server: API Server` | `PORT=8080 pnpm --filter @workspace/api-server run dev` |
+Both services start automatically via Replit workflows:
 
-## Key URLs (dev)
+- **Portal** (React/Vite): `artifacts/portal: web` — served at `/portal/` on port 25265
+- **API Server** (Express): `artifacts/api-server: API Server` — served on port 8080
 
-- Portal: `https://<dev-domain>/portal/`
-- API health: `https://<dev-domain>/api/healthz`
+To install dependencies: `pnpm install`
+
+## API
+
+- Health check: `GET /api/healthz` → `{ "status": "ok" }`
 
 ## Database
 
-Replit provides a PostgreSQL database automatically. `DATABASE_URL` is injected at runtime — do not set it manually. Run migrations / schema pushes with Drizzle Kit from `lib/db/`.
+Uses Replit's managed PostgreSQL. The connection string is injected automatically as `DATABASE_URL`. Schema is defined in `lib/db/src/schema/index.ts` using Drizzle ORM. Run migrations with `pnpm --filter @workspace/db run db:push` (if configured).
 
-## Codegen
+## Tech stack
 
-After editing `lib/api-spec/openapi.yaml`, regenerate clients:
+- **Frontend**: React 19, Vite, Tailwind CSS, shadcn/ui, TanStack Query, Wouter, Leaflet
+- **Backend**: Express 5, Drizzle ORM, Pino logger
+- **Language**: TypeScript throughout
+- **Package manager**: pnpm (workspaces)
 
-```bash
-pnpm run --filter @workspace/api-spec codegen
-```
+## Branding
+
+- Name: **Đồng Nai Trace** (`txng.dongnai.gov.vn`)
+- Primary color: navy blue (`#1B2A6B`)
+- Accent color: orange (CTA/industrial)
+- Font: sans-serif with full Vietnamese diacritic support (Inter / Be Vietnam Pro)
+- Do **not** display Checkee branding on any public-facing page
 
 ## User preferences
 
-_(none recorded yet)_
+- Keep the existing project structure and stack
