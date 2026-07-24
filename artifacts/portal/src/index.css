@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800&display=swap');
 @import 'leaflet/dist/leaflet.css';
+
+/* Remove black focus rectangle on Leaflet clickable regions */
+.leaflet-interactive:focus {
+  outline: none;
+}
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @plugin "@tailwindcss/typography";

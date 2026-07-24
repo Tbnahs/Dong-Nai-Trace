@@ -1,21 +1,38 @@
+import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { MapPin, Phone, Mail, ChevronRight } from "lucide-react";
+import { MapPin, Phone, Mail, ChevronRight, User, Package, Bell, LogOut, ChevronDown } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 const NAV_LINKS = [
   { label: "TRANG CHỦ",              href: "/" },
   { label: "DANH MỤC",               href: "/tra-cuu" },
   { label: "HƯỚNG DẪN DOANH NGHIỆP", href: "/dang-ky" },
   { label: "TIN TỨC",                href: "/tin-tuc" },
+  { label: "LIÊN HỆ",               href: "/lien-he" },
 ];
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
+  const { isLoggedIn, user, logout } = useAuth();
+  const [avatarOpen, setAvatarOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const logoUrl = import.meta.env.BASE_URL + "images/logo-skhcn.png";
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setAvatarOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white text-slate-800 font-sans flex flex-col">
       {/* HEADER */}
-      <header className="w-full flex flex-col z-50 sticky top-0 bg-white shadow-sm">
+      <header className="w-full flex flex-col sticky top-0 bg-white shadow-sm" style={{ zIndex: 1001 }}>
         {/* Tầng 1 */}
         <div className="flex justify-between items-center py-3 px-6 lg:px-12 border-b border-gray-100">
           <Link href="/" className="flex items-center gap-3 cursor-pointer">
@@ -31,31 +48,83 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </Link>
 
           <div className="hidden lg:flex items-center gap-6">
-            <div className="text-right">
-              <Link
-                href="/dang-ky"
-                className="font-bold text-[#2740BA] text-sm hover:underline block"
-              >
-                Đăng ký tài khoản doanh nghiệp
-              </Link>
-              <span className="text-xs text-gray-500">
-                Quản lý thông tin sản phẩm của doanh nghiệp
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Link
-                href="/dang-ky"
-                className="px-5 py-2 border border-[#2740BA] text-[#2740BA] font-semibold text-sm rounded-md hover:bg-slate-50 transition-colors"
-              >
-                Đăng ký
-              </Link>
-              <Link
-                href="/dang-nhap"
-                className="px-5 py-2 bg-[#2740BA] text-white font-semibold text-sm rounded-md hover:bg-[#1f339e] transition-colors"
-              >
-                Đăng nhập
-              </Link>
-            </div>
+            {isLoggedIn && user ? (
+              /* ── Avatar dropdown (logged in) ── */
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setAvatarOpen((o) => !o)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+                >
+                  <div className="w-9 h-9 rounded-full bg-[#2740BA] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                    {user.initials}
+                  </div>
+                  <div className="text-left hidden xl:block">
+                    <p className="text-sm font-bold text-slate-800 leading-tight">{user.name}</p>
+                    <p className="text-xs text-gray-400">{user.type}</p>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${avatarOpen ? "rotate-180" : ""}`} />
+                </button>
+
+                {avatarOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 overflow-hidden" style={{ zIndex: 1002 }}>
+                    <div className="px-4 py-2.5 border-b border-gray-100">
+                      <p className="text-sm font-bold text-slate-800 leading-tight">{user.name}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{user.email}</p>
+                    </div>
+                    {[
+                      { icon: User,    label: "Hồ sơ doanh nghiệp", href: "/ho-so-doanh-nghiep" },
+                      { icon: Package, label: "Hồ sơ sản phẩm",     href: "/ho-so-san-pham" },
+                      { icon: Bell,    label: "Thông báo",           href: "/thong-bao" },
+                    ].map(({ icon: Icon, label, href }) => (
+                      <Link key={href} href={href} onClick={() => setAvatarOpen(false)}>
+                        <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 transition-colors cursor-pointer">
+                          <Icon className="w-4 h-4 text-[#2740BA]" />
+                          <span className="text-sm text-slate-700 font-medium">{label}</span>
+                        </div>
+                      </Link>
+                    ))}
+                    <div className="border-t border-gray-100 mt-1 pt-1">
+                      <button
+                        onClick={() => { logout(); setAvatarOpen(false); }}
+                        className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 transition-colors"
+                      >
+                        <LogOut className="w-4 h-4 text-red-400" />
+                        <span className="text-sm text-red-500 font-medium">Đăng xuất</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* ── Guest: register / login buttons ── */
+              <>
+                <div className="text-right">
+                  <Link
+                    href="/dang-ky"
+                    className="font-bold text-[#2740BA] text-sm hover:underline block"
+                  >
+                    Đăng ký tài khoản doanh nghiệp
+                  </Link>
+                  <span className="text-xs text-gray-500">
+                    Quản lý thông tin sản phẩm của doanh nghiệp
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Link
+                    href="/dang-ky"
+                    className="px-5 py-2 border border-[#2740BA] text-[#2740BA] font-semibold text-sm rounded-md hover:bg-slate-50 transition-colors"
+                  >
+                    Đăng ký
+                  </Link>
+                  <Link
+                    href="/dang-nhap"
+                    className="px-5 py-2 bg-[#2740BA] text-white font-semibold text-sm rounded-md hover:bg-[#1f339e] transition-colors"
+                  >
+                    Đăng nhập
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -85,7 +154,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <main className="flex-1">{children}</main>
 
       {/* FOOTER */}
-      <footer className="bg-[#2740BA] text-white pt-16 pb-6 px-6 lg:px-12 ">
+      <footer className="bg-[#2740BA] text-white pt-16 pb-6 px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
             {/* Col 1 */}
@@ -108,9 +177,11 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               </h4>
               <ul className="space-y-3.5">
                 {[
-                  { label: "Trang chủ",           href: "/" },
-                  { label: "Đăng ký doanh nghiệp", href: "/dang-ky" },
-                  { label: "Đăng nhập hệ thống",   href: "/dang-nhap" },
+                  { label: "Trang chủ",            href: "/" },
+                  { label: "Tin tức",               href: "/tin-tuc" },
+                  { label: "Liên hệ",               href: "/lien-he" },
+                  { label: "Đăng ký doanh nghiệp",  href: "/dang-ky" },
+                  { label: "Đăng nhập hệ thống",    href: "/dang-nhap" },
                 ].map(({ label, href }) => (
                   <li key={href}>
                     <Link

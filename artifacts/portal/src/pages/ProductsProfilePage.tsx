@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'wouter';
-import { ArrowLeft, Plus, ShieldCheck, AlertCircle, Edit2, Trash2, Eye, Package } from 'lucide-react';
+import { ArrowLeft, Plus, ShieldCheck, AlertCircle, Edit2, Trash2, Eye, Package, Copy, Check, Search } from 'lucide-react';
 
 const WITH_TXNG = [
   { id: 'my1', name: 'Bưởi Tân Triều', category: 'Trái cây', cert: 'VietGAP', traceCode: 'TXNG-VCU-001-2024', img: 'https://picsum.photos/seed/buoi/80/80', updatedAt: '15/10/2024' },

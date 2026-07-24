@@ -14,6 +14,7 @@ import OrgProfilePage from './pages/OrgProfilePage';
 import ProductsProfilePage from './pages/ProductsProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
 import NewsPage from './pages/NewsPage';
+import ContactPage from './pages/ContactPage';
 import NotFound from '@/pages/not-found';
 import PublicLayout from './components/PublicLayout';
 
@@ -33,6 +34,7 @@ function Router() {
         <Route path="/ho-so-san-pham" component={ProductsProfilePage} />
         <Route path="/thong-bao" component={NotificationsPage} />
         <Route path="/tin-tuc" component={NewsPage} />
+        <Route path="/lien-he" component={ContactPage} />
         <Route component={NotFound} />
       </Switch>
     </PublicLayout>
