@@ -1,59 +1,40 @@
-# Đồng Nai Trace
+# Đồng Nai Trace — Portal
 
-A product traceability portal for businesses in Đồng Nai province, Vietnam. Users can search for products and view full traceability details; businesses manage their listings through a dashboard.
+A product traceability portal for Đồng Nai province (Vietnam). Users can look up product origins, manage organisation profiles, and track certifications.
 
 ## Stack
 
-| Layer | Technology |
+- **Frontend** (`artifacts/portal`): React + Vite + Tailwind CSS + shadcn/ui, served at `/portal/`
+- **Backend** (`artifacts/api-server`): Express 5 + Drizzle ORM, served at `/api`
+- **Database**: PostgreSQL (Replit-managed, `DATABASE_URL` is runtime-provided)
+- **Shared libs**: `lib/api-spec` (OpenAPI spec + Orval codegen), `lib/api-client-react` (React Query hooks), `lib/api-zod` (Zod schemas), `lib/db` (Drizzle client + schema)
+
+## How to run
+
+Both services start automatically via their managed workflows:
+
+| Workflow | Command |
 |---|---|
-| Frontend | React 19, Vite, Tailwind CSS 4, Radix UI, Wouter, TanStack Query |
-| Backend | Express 5, TypeScript, Node.js |
-| Database | PostgreSQL + Drizzle ORM |
-| Monorepo | pnpm Workspaces |
+| `artifacts/portal: web` | `PORT=25265 BASE_PATH=/portal/ pnpm --filter @workspace/portal run dev` |
+| `artifacts/api-server: API Server` | `PORT=8080 pnpm --filter @workspace/api-server run dev` |
 
-## Project structure
+## Key URLs (dev)
 
-```
-artifacts/
-  portal/        – React frontend (served at /portal/)
-  api-server/    – Express API server (port 8080)
-  mockup-sandbox/ – UI development/preview sandbox
-lib/
-  db/            – Database schema and Drizzle config
-  api-spec/      – OpenAPI specification and codegen config
-  api-zod/       – Generated Zod schemas
-  api-client-react/ – Generated React Query hooks
-scripts/         – Workspace utility scripts
-```
-
-## Running the project
-
-Dependencies are installed via pnpm from the workspace root:
-
-```bash
-pnpm install
-```
-
-Both services are managed as workflows and start automatically:
-
-- **Portal (frontend)**: `pnpm --filter @workspace/portal run dev` — served at `/portal/`
-- **API Server (backend)**: `pnpm --filter @workspace/api-server run dev` — port 8080
-
-## Environment variables
-
-| Variable | Required | Description |
-|---|---|---|
-| `DATABASE_URL` | Yes | PostgreSQL connection string |
-| `SESSION_SECRET` | Yes | Express session signing secret |
+- Portal: `https://<dev-domain>/portal/`
+- API health: `https://<dev-domain>/api/healthz`
 
 ## Database
 
-Push the schema to your database:
+Replit provides a PostgreSQL database automatically. `DATABASE_URL` is injected at runtime — do not set it manually. Run migrations / schema pushes with Drizzle Kit from `lib/db/`.
+
+## Codegen
+
+After editing `lib/api-spec/openapi.yaml`, regenerate clients:
 
 ```bash
-pnpm --filter @workspace/db run push
+pnpm run --filter @workspace/api-spec codegen
 ```
 
 ## User preferences
 
-<!-- Add any preferences the user asks to remember here -->
+_(none recorded yet)_
