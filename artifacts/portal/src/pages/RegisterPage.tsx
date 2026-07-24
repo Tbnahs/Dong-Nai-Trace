@@ -53,16 +53,6 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-6 sm:px-12 py-4 flex justify-between items-center">
-        <Link href="/" className="flex items-center gap-3">
-          <img src={logoUrl} alt="Logo" className="h-10 w-auto" />
-          <span className="font-bold text-[#2740BA] hidden sm:block text-lg">ĐỒNG NAI TRACE</span>
-        </Link>
-        <Link href="/dang-nhap" className="text-sm font-medium text-gray-600 hover:text-[#2740BA] transition-colors">
-          Đã có tài khoản? Đăng nhập
-        </Link>
-      </header>
 
       <main className="flex-1 flex flex-col items-center py-10 px-4">
         <div className="w-full max-w-2xl">
