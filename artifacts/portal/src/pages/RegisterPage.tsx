@@ -59,7 +59,7 @@ export default function RegisterPage() {
           {/* Title */}
           {step < 4 && (
             <div className="mb-8">
-              <h1 className="text-2xl font-extrabold text-gray-800">Đăng ký hồ sơ truy xuất</h1>
+              <h1 className="text-2xl font-extrabold text-gray-800">Đăng ký tài khoản doanh nghiệp</h1>
               <p className="text-sm text-gray-500 mt-1">Cung cấp thông tin doanh nghiệp và sản phẩm để tham gia hệ thống</p>
             </div>
           )}
