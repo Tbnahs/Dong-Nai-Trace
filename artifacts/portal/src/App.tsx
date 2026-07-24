@@ -14,23 +14,26 @@ import OrgProfilePage from './pages/OrgProfilePage';
 import ProductsProfilePage from './pages/ProductsProfilePage';
 import NotificationsPage from './pages/NotificationsPage';
 import NotFound from '@/pages/not-found';
+import PublicLayout from './components/PublicLayout';
 
 const queryClient = new QueryClient();
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={LandingPage} />
-      <Route path="/dang-nhap" component={LoginPage} />
-      <Route path="/dang-ky" component={RegisterPage} />
-      <Route path="/tra-cuu" component={SearchResultsPage} />
-      <Route path="/san-pham/:id" component={ProductDetailPage} />
-      <Route path="/doanh-nghiep/:id" component={BusinessDetailPage} />
-      <Route path="/ho-so-doanh-nghiep" component={OrgProfilePage} />
-      <Route path="/ho-so-san-pham" component={ProductsProfilePage} />
-      <Route path="/thong-bao" component={NotificationsPage} />
-      <Route component={NotFound} />
-    </Switch>
+    <PublicLayout>
+      <Switch>
+        <Route path="/" component={LandingPage} />
+        <Route path="/dang-nhap" component={LoginPage} />
+        <Route path="/dang-ky" component={RegisterPage} />
+        <Route path="/tra-cuu" component={SearchResultsPage} />
+        <Route path="/san-pham/:id" component={ProductDetailPage} />
+        <Route path="/doanh-nghiep/:id" component={BusinessDetailPage} />
+        <Route path="/ho-so-doanh-nghiep" component={OrgProfilePage} />
+        <Route path="/ho-so-san-pham" component={ProductsProfilePage} />
+        <Route path="/thong-bao" component={NotificationsPage} />
+        <Route component={NotFound} />
+      </Switch>
+    </PublicLayout>
   );
 }
 
