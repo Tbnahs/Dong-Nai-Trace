@@ -218,9 +218,6 @@ export default function SearchResultsPage() {
       {/* Header search bar */}
       <div className="bg-[#2740BA] py-6 px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
-          <Link href="/" className="inline-flex items-center gap-2 text-blue-200 hover:text-white text-sm mb-4 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Trang chủ
-          </Link>
           <form onSubmit={handleSearch} className="flex max-w-3xl shadow-lg rounded-md overflow-hidden">
             <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
