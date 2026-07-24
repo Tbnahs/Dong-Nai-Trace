@@ -2,11 +2,10 @@ import { Link, useLocation } from "wouter";
 import { MapPin, Phone, Mail, ChevronRight } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "TRANG CHỦ",             href: "/" },
-  { label: "DANH MỤC",              href: "/tra-cuu" },
+  { label: "TRANG CHỦ",              href: "/" },
+  { label: "DANH MỤC",               href: "/tra-cuu" },
   { label: "HƯỚNG DẪN DOANH NGHIỆP", href: "/dang-ky" },
-  { label: "GỬI TIN BÁO",           href: "/dashboard/ho-tro" },
-  { label: "KÊNH HỖ TRỢ",           href: "/dashboard/ho-tro" },
+  { label: "TIN TỨC",                href: "/tin-tuc" },
 ];
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -86,7 +85,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <main className="flex-1">{children}</main>
 
       {/* FOOTER */}
-      <footer className="bg-[#2740BA] text-white pt-16 pb-6 px-6 lg:px-12 border-t-[6px] border-[#E8650A]">
+      <footer className="bg-[#2740BA] text-white pt-16 pb-6 px-6 lg:px-12 ">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
             {/* Col 1 */}
