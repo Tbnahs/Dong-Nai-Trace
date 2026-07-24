@@ -94,6 +94,9 @@ export default function MapSection() {
     ? PRODUCTS.filter((p) => p.wardCode === selectedWard.code)
     : PRODUCTS;
 
+  const markerRef   = useRef<any>(null);
+  const wardCodesRef = useRef<Set<string>>(new Set());
+
   // ── Initialise Leaflet once ──────────────────────────────────────────────────
   useEffect(() => {
     if (!mapRef.current || leafletMap.current) return;
@@ -120,15 +123,54 @@ export default function MapSection() {
 
       leafletMap.current = map;
 
+      // ── Helper: place / replace marker and fly to it ──────────────────────
+      function placeMarker(latlng: any, wardName?: string) {
+        if (markerRef.current) {
+          markerRef.current.remove();
+        }
+        const marker = L.marker(latlng, {
+          title: wardName ?? "Vị trí đã chọn",
+        }).addTo(map);
+        if (wardName) {
+          marker.bindPopup(
+            `<div style="font-size:13px;font-weight:600;color:#2740BA">${wardName}</div>
+             <div style="font-size:11px;color:#666;margin-top:2px">${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}</div>`,
+            { closeButton: false }
+          ).openPopup();
+        }
+        markerRef.current = marker;
+        map.flyTo(latlng, Math.max(map.getZoom(), 13), { animate: true, duration: 0.8 });
+      }
+
+      // ── Map click: place marker only inside Đồng Nai wards ───────────────
+      map.on("click", (e: any) => {
+        // Check if click is within any ward feature
+        let insideDongNai = false;
+        if (geoLayer.current) {
+          geoLayer.current.eachLayer((l: any) => {
+            if (insideDongNai) return;
+            if (l.getBounds && l.getBounds().contains(e.latlng)) {
+              // Rough bbox check — good enough for restriction UX
+              insideDongNai = true;
+            }
+          });
+        }
+        if (!insideDongNai) return;
+        placeMarker(e.latlng);
+      });
+
       // Load GeoJSON
       fetch("/portal/geojson/dongnai_wards.geojson")
         .then((r) => r.json())
         .then((data) => {
           const layer = L.geoJSON(data, {
             style: styleFeature(null),
-            onEachFeature: (feature, layer) => {
+            onEachFeature: (feature, layerItem) => {
               const props = feature.properties as any;
-              layer.on({
+              // Collect ward codes for containment check
+              if (props.code) wardCodesRef.current.add(props.code);
+
+              layerItem.on({
                 mouseover(e: any) {
                   e.target.setStyle({ fillOpacity: 0.55, weight: 2 });
                 },
@@ -136,14 +178,16 @@ export default function MapSection() {
                   geoLayer.current?.resetStyle(e.target);
                 },
                 click(e: any) {
+                  L.DomEvent.stopPropagation(e);
                   const ward = { code: props.code, name: props.name };
                   setSelectedWard((prev) =>
                     prev?.code === ward.code ? null : ward
                   );
-                  map.fitBounds(e.target.getBounds(), { padding: [20, 20] });
+                  // Place marker at exact click coordinates and fly there
+                  placeMarker(e.latlng, props.fullName ?? props.name);
                 },
               });
-              layer.bindTooltip(props.fullName ?? props.name, {
+              layerItem.bindTooltip(props.fullName ?? props.name, {
                 sticky: true,
                 className: "leaflet-tooltip-custom",
               });

@@ -23,6 +23,38 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+// ─── Featured demo data (subset from danh mục) ───────────────────────────────
+const FEATURED_BUSINESSES = [
+  { id: 'b1',  name: 'HTX Nông nghiệp Xanh',          type: 'Hợp tác xã',   district: 'Vĩnh Cửu',  products: 5,  cert: 'VietGAP',   img: 'https://picsum.photos/seed/biz1/400/260' },
+  { id: 'b4',  name: 'Trang trại Sạch Đồng Nai',       type: 'Trang trại',   district: 'Biên Hòa',  products: 12, cert: 'VietGAP',   img: 'https://picsum.photos/seed/biz4/400/260' },
+  { id: 'b2',  name: 'Công ty Thủy sản Đồng Nai',      type: 'Doanh nghiệp', district: 'Long Thành', products: 8, cert: 'HACCP',     img: 'https://picsum.photos/seed/biz2/400/260' },
+  { id: 'b6',  name: 'Công ty TNHH Thủy sản Nam Phát', type: 'Doanh nghiệp', district: 'Nhơn Trạch', products: 7, cert: 'GlobalGAP', img: 'https://picsum.photos/seed/biz6/400/260' },
+  { id: 'b5',  name: 'HTX Hồ Tiêu Long Khánh',         type: 'Hợp tác xã',   district: 'Long Khánh', products: 4, cert: 'OCOP',      img: 'https://picsum.photos/seed/biz5/400/260' },
+  { id: 'b10', name: 'Công ty TNHH Thực phẩm Bình An', type: 'Doanh nghiệp', district: 'Biên Hòa',  products: 9, cert: 'ISO 22000', img: 'https://picsum.photos/seed/biz10/400/260' },
+];
+
+const FEATURED_PRODUCTS = [
+  { id: 'sp001', name: 'Bưởi Tân Triều',          org: 'HTX Nông nghiệp Xanh',          district: 'Vĩnh Cửu',  cert: 'VietGAP',   img: 'https://picsum.photos/seed/buoi/400/260' },
+  { id: 'sp003', name: 'Tôm sú đông lạnh',         org: 'Công ty Thủy sản Đồng Nai',     district: 'Long Thành', cert: 'HACCP',    img: 'https://picsum.photos/seed/tomsu/400/260' },
+  { id: 'sp006', name: 'Dưa hấu không hạt',        org: 'HTX Dưa hấu Định Quán',         district: 'Định Quán', cert: 'OCOP',      img: 'https://picsum.photos/seed/duahau/400/260' },
+  { id: 'sp007', name: 'Mật ong rừng nguyên chất', org: 'Trang trại Ong Rừng Đồng Nai',  district: 'Tân Phú',   cert: 'OCOP',      img: 'https://picsum.photos/seed/matong/400/260' },
+  { id: 'sp010', name: 'Tiêu sọ Long Khánh',       org: 'HTX Hồ Tiêu Long Khánh',        district: 'Long Khánh', cert: 'OCOP',     img: 'https://picsum.photos/seed/tieu/400/260' },
+  { id: 'sp005', name: 'Nước mắm truyền thống',    org: 'Cơ sở Nước mắm Hương Đồng',    district: 'Xuân Lộc',  cert: 'ISO 22000', img: 'https://picsum.photos/seed/nuocmam/400/260' },
+];
+
+const certColor: Record<string, string> = {
+  'VietGAP':   'bg-emerald-100 text-emerald-700',
+  'GlobalGAP': 'bg-blue-100 text-blue-700',
+  'OCOP':      'bg-orange-100 text-orange-700',
+  'HACCP':     'bg-purple-100 text-purple-700',
+  'ISO 22000': 'bg-sky-100 text-sky-700',
+};
+const typeColor: Record<string, string> = {
+  'Hợp tác xã':  'bg-blue-100 text-[#2740BA]',
+  'Doanh nghiệp':'bg-green-100 text-green-700',
+  'Trang trại':  'bg-lime-100 text-lime-700',
+};
+
 export default function LandingPage() {
   const [searchType, setSearchType] = useState("trace");
 
@@ -284,6 +316,122 @@ export default function LandingPage() {
       </section>
       {/* BẢN ĐỒ SECTION */}
       <MapSection />
+
+      {/* DOANH NGHIỆP TIÊU BIỂU */}
+      <section className="py-16 px-6 lg:px-12 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Danh mục</p>
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-[#2740BA] uppercase">
+                Doanh nghiệp tiêu biểu
+              </h2>
+            </div>
+            <Link
+              href="/tra-cuu?tab=business"
+              className="px-5 py-2 border border-[#2740BA] text-[#2740BA] text-sm font-semibold rounded hover:bg-[#2740BA] hover:text-white transition-colors whitespace-nowrap"
+            >
+              Xem tất cả
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {FEATURED_BUSINESSES.map((b) => (
+              <Link key={b.id} href={`/tra-cuu?tab=business&highlight=${b.id}`}>
+                <div className="group cursor-pointer bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden h-full flex flex-col">
+                  <div className="overflow-hidden h-[180px]">
+                    <img
+                      src={b.img}
+                      alt={b.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-4 flex-1 flex flex-col">
+                    <h4 className="font-bold text-slate-800 group-hover:text-[#2740BA] transition-colors leading-snug mb-2">
+                      {b.name}
+                    </h4>
+                    <div className="flex items-center gap-1.5 text-sm text-gray-500 mb-3">
+                      <MapPin className="w-3.5 h-3.5 shrink-0" />
+                      {b.district}
+                    </div>
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="flex gap-1.5 flex-wrap">
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${typeColor[b.type] ?? 'bg-gray-100 text-gray-600'}`}>
+                          {b.type}
+                        </span>
+                        {b.cert && (
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${certColor[b.cert] ?? 'bg-gray-100 text-gray-600'}`}>
+                            {b.cert}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-400">{b.products} sản phẩm</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SẢN PHẨM NỔI BẬT */}
+      <section className="py-16 px-6 lg:px-12 bg-[#F5F7FA]">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Danh mục</p>
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-[#2740BA] uppercase">
+                Sản phẩm nổi bật
+              </h2>
+            </div>
+            <Link
+              href="/tra-cuu"
+              className="px-5 py-2 border border-[#2740BA] text-[#2740BA] text-sm font-semibold rounded hover:bg-[#2740BA] hover:text-white transition-colors whitespace-nowrap"
+            >
+              Xem tất cả
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {FEATURED_PRODUCTS.map((p) => (
+              <Link key={p.id} href={`/tra-cuu?highlight=${p.id}`}>
+                <div className="group cursor-pointer bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden h-full flex flex-col">
+                  <div className="overflow-hidden h-[180px]">
+                    <img
+                      src={p.img}
+                      alt={p.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-4 flex-1 flex flex-col">
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <h4 className="font-bold text-[#2740BA] group-hover:text-[#E8650A] transition-colors leading-snug">
+                        {p.name}
+                      </h4>
+                      <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                    </div>
+                    <p className="text-sm text-gray-500 mb-3 flex-1">{p.org}</p>
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="flex gap-1.5 flex-wrap">
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">
+                          {p.district}
+                        </span>
+                        {p.cert && (
+                          <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${certColor[p.cert] ?? 'bg-gray-100 text-gray-600'}`}>
+                            {p.cert}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[#2740BA] font-bold text-lg leading-none group-hover:text-[#E8650A] transition-colors">→</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* DANH MỤC NGÀNH HÀNG */}
       <section className="py-16 px-6 lg:px-12 bg-white">

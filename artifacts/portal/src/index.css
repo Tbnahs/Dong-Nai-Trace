@@ -11,6 +11,13 @@
   50% { transform: translateY(-14px); }
 }
 
+@keyframes highlight-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(232,101,10,0.0), 0 0 0 0 rgba(232,101,10,0.0); background-color: transparent; }
+  15%  { box-shadow: 0 0 0 4px rgba(232,101,10,0.5), 0 0 0 8px rgba(232,101,10,0.15); background-color: rgba(255,237,213,0.6); }
+  60%  { box-shadow: 0 0 0 4px rgba(232,101,10,0.3), 0 0 0 8px rgba(232,101,10,0.08); background-color: rgba(255,237,213,0.35); }
+  100% { box-shadow: 0 0 0 0   rgba(232,101,10,0.0), 0 0 0 0 rgba(232,101,10,0.0); background-color: transparent; }
+}
+
 @theme inline {
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
