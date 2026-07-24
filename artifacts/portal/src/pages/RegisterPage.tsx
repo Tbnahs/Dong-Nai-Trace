@@ -407,11 +407,7 @@ export default function RegisterPage() {
                     <CheckCircle2 className="w-9 h-9 text-green-600" />
                   </div>
                   <h2 className="text-2xl font-extrabold text-gray-800 mb-2">Hồ sơ đã được gửi!</h2>
-                  <p className="text-sm text-gray-500 leading-relaxed max-w-md mb-6">
-                    Hồ sơ doanh nghiệp và sản phẩm của bạn đã được chuyển đến <strong className="text-gray-700">Sở Khoa học và Công nghệ Đồng Nai</strong> để xét duyệt.
-                    Sau khi được phê duyệt, hệ thống sẽ cấp <strong className="text-gray-700">mã doanh nghiệp</strong> — người tiêu dùng có thể dùng mã này để tra cứu sản phẩm của bạn.
-                  </p>
-
+                  
                   {/* Process timeline */}
                   <div className="w-full max-w-sm text-left mb-6">
                     {[

@@ -266,7 +266,7 @@ export default function SearchResultsPage() {
               )}
               <button
                 type="submit"
-                className="shrink-0 bg-[#2740BA] border-2 border-white text-white font-bold px-7 py-3 rounded-full hover:bg-[#1f339e] transition-colors shadow-sm whitespace-nowrap"
+                className="shrink-0 border-2 border-white font-bold px-7 py-3 rounded-full hover:bg-[#1f339e] transition-colors shadow-sm whitespace-nowrap bg-[#e8650a] text-[#FFFF] border-t-[#e8650a] border-r-[#e8650a] border-b-[#e8650a] border-l-[#e8650a]"
               >
                 Tra cứu
               </button>
@@ -299,7 +299,6 @@ export default function SearchResultsPage() {
           </form>
         </div>
       </div>
-
       <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8">
         {/* Tab switcher */}
         <div className="flex gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-6 w-fit shadow-sm">
