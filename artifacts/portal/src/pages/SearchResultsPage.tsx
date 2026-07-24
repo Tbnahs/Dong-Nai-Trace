@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useSearch, useLocation } from 'wouter';
 import {
   Search, ShieldCheck, ChevronDown, ChevronRight,
-  SlidersHorizontal, X, ArrowLeft, Building2, Package, MapPin, Phone
+  SlidersHorizontal, X, ArrowLeft, Building2, Package, MapPin, Phone, Barcode
 } from 'lucide-react';
 
 // ─── Products ─────────────────────────────────────────────────────────────────
@@ -79,6 +79,12 @@ export default function SearchResultsPage() {
   const [sort, setSort]                     = useState('newest');
   const [showMobileFilter, setShowMobileFilter] = useState(false);
 
+  // ── Search bar mode ─────────────────────────────────────────────────────────
+  const [searchType, setSearchType] = useState<'trace' | 'gtin'>('gtin');
+  const [traceCode, setTraceCode]   = useState('');
+  const [gtin, setGtin]             = useState('');
+  const [lot, setLot]               = useState('');
+
   // ── Scroll-to and flash-highlight on mount ──────────────────────────────────
   useEffect(() => {
     if (!highlighted) return;
@@ -129,7 +135,9 @@ export default function SearchResultsPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setQuery(inputVal);
+    const q = searchType === 'trace' ? traceCode : `${gtin} ${lot}`.trim();
+    setQuery(q || inputVal);
+    setInputVal(q || inputVal);
   };
 
   const clearFilters = () => {
@@ -218,16 +226,76 @@ export default function SearchResultsPage() {
       {/* Header search bar */}
       <div className="bg-[#2740BA] py-6 px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
-          <form onSubmit={handleSearch} className="flex max-w-3xl shadow-lg rounded-md overflow-hidden">
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input type="text" value={inputVal} onChange={e => setInputVal(e.target.value)}
-                placeholder="Nhập tên sản phẩm, mã GTIN, mã lô/mẻ, tên doanh nghiệp..."
-                className="w-full pl-12 pr-4 py-3.5 focus:outline-none text-gray-700 bg-white" />
+          <form onSubmit={handleSearch}>
+            {/* Input row */}
+            <div className="flex items-center gap-3 max-w-2xl">
+              {searchType === 'trace' ? (
+                <div className="flex-1 flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
+                  <Barcode className="w-5 h-5 text-gray-400 shrink-0" />
+                  <input
+                    type="text"
+                    value={traceCode}
+                    onChange={e => setTraceCode(e.target.value)}
+                    placeholder="Nhập mã truy xuất sản phẩm"
+                    className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+                  />
+                </div>
+              ) : (
+                <>
+                  <div className="flex-1 flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
+                    <Barcode className="w-5 h-5 text-gray-400 shrink-0" />
+                    <input
+                      type="text"
+                      value={gtin}
+                      onChange={e => setGtin(e.target.value)}
+                      placeholder="Nhập mã GTIN"
+                      className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+                    />
+                  </div>
+                  <div className="flex-1 flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
+                    <Package className="w-5 h-5 text-gray-400 shrink-0" />
+                    <input
+                      type="text"
+                      value={lot}
+                      onChange={e => setLot(e.target.value)}
+                      placeholder="Nhập số lô"
+                      className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+                    />
+                  </div>
+                </>
+              )}
+              <button
+                type="submit"
+                className="shrink-0 bg-[#2740BA] border-2 border-white text-white font-bold px-7 py-3 rounded-full hover:bg-[#1f339e] transition-colors shadow-sm whitespace-nowrap"
+              >
+                Tra cứu
+              </button>
             </div>
-            <button type="submit" className="bg-[#E8650A] text-white px-8 font-bold hover:bg-[#D55C08] transition-colors whitespace-nowrap">
-              Tra cứu
-            </button>
+
+            {/* Radio row */}
+            <div className="flex items-center gap-6 mt-3">
+              {[
+                { value: 'trace', label: 'Mã truy xuất sản phẩm' },
+                { value: 'gtin',  label: 'Mã GTIN & Số lô đóng gói' },
+              ].map(opt => (
+                <label key={opt.value} className="flex items-center gap-2 cursor-pointer text-sm text-white/90 hover:text-white select-none">
+                  <span className={`w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
+                    searchType === opt.value ? 'border-white bg-white' : 'border-white/60'
+                  }`}>
+                    {searchType === opt.value && <span className="w-2 h-2 rounded-full bg-[#2740BA]" />}
+                  </span>
+                  <input
+                    type="radio"
+                    name="searchType"
+                    value={opt.value}
+                    checked={searchType === opt.value}
+                    onChange={() => setSearchType(opt.value as 'trace' | 'gtin')}
+                    className="sr-only"
+                  />
+                  {opt.label}
+                </label>
+              ))}
+            </div>
           </form>
         </div>
       </div>
