@@ -8,13 +8,10 @@ import {
 // ─── Constants ────────────────────────────────────────────────────────────────
 const DISTRICTS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
 const ORG_TYPES = ['Doanh nghiệp', 'Hợp tác xã (HTX)', 'Trang trại', 'Cơ sở sản xuất', 'Hộ kinh doanh'];
-const PRODUCT_CATS = ['Nông sản & Rau củ', 'Trái cây', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Khác'];
-const CERTS_LIST = ['VietGAP', 'GlobalGAP', 'OCOP', 'HACCP', 'ISO 22000', 'Hữu cơ'];
 
 const STEPS = [
   { label: 'Thông tin doanh nghiệp' },
   { label: 'Người đại diện' },
-  { label: 'Sản phẩm đăng ký' },
   { label: 'Xác nhận' },
 ];
 
@@ -36,12 +33,6 @@ interface FormData {
   cccd: string;
   password: string;
   confirmPassword: string;
-  // Step 3
-  productName: string;
-  productCategory: string;
-  unit: string;
-  description: string;
-  certs: string[];
 }
 
 const initialForm: FormData = {
@@ -49,8 +40,6 @@ const initialForm: FormData = {
   address: '', district: DISTRICTS[0], phone: '', email: '',
   repName: '', repPhone: '', repEmail: '', cccd: '',
   password: '', confirmPassword: '',
-  productName: '', productCategory: PRODUCT_CATS[0], unit: '', description: '',
-  certs: [],
 };
 
 // ─── Validation rules per step ────────────────────────────────────────────────
@@ -76,11 +65,6 @@ function validateStep(step: number, form: FormData): Errors {
     else if (form.password.length < 8) e.password = 'Mật khẩu phải có ít nhất 8 ký tự';
     if (!form.confirmPassword)  e.confirmPassword = 'Vui lòng xác nhận mật khẩu';
     else if (form.password !== form.confirmPassword) e.confirmPassword = 'Mật khẩu xác nhận không khớp';
-  }
-  if (step === 3) {
-    if (!form.productName.trim())  e.productName  = 'Vui lòng nhập tên sản phẩm';
-    if (!form.unit.trim())         e.unit         = 'Vui lòng nhập đơn vị tính';
-    if (!form.description.trim())  e.description  = 'Vui lòng nhập mô tả sản phẩm';
   }
   return e;
 }
@@ -186,12 +170,6 @@ export default function RegisterPage() {
   const set = (key: keyof FormData) => (val: string | string[]) =>
     setForm(f => ({ ...f, [key]: val }));
 
-  const toggleCert = (c: string) =>
-    setForm(f => ({
-      ...f,
-      certs: f.certs.includes(c) ? f.certs.filter(x => x !== c) : [...f.certs, c],
-    }));
-
   const handleNext = () => {
     const errs = validateStep(step, form);
     if (Object.keys(errs).length > 0) {
@@ -201,7 +179,7 @@ export default function RegisterPage() {
     }
     setErrors({});
     setTouched(false);
-    setStep(s => Math.min(4, s + 1));
+    setStep(s => Math.min(3, s + 1));
   };
 
   const handleBack = () => {
@@ -218,15 +196,15 @@ export default function RegisterPage() {
         <div className="w-full max-w-2xl">
 
           {/* Title */}
-          {step < 4 && (
+          {step < 3 && (
             <div className="mb-8">
               <h1 className="text-2xl font-extrabold text-gray-800">Đăng ký tài khoản doanh nghiệp</h1>
-              <p className="text-sm text-gray-500 mt-1">Cung cấp thông tin doanh nghiệp và sản phẩm để tham gia hệ thống</p>
+              <p className="text-sm text-gray-500 mt-1">Cung cấp thông tin doanh nghiệp để tham gia hệ thống</p>
             </div>
           )}
 
           {/* Stepper */}
-          {step < 4 && (
+          {step < 3 && (
             <div className="flex items-start gap-0 mb-8 relative">
               {STEPS.map((s, i) => {
                 const num = i + 1;
@@ -358,56 +336,14 @@ export default function RegisterPage() {
                 </div>
               )}
 
-              {/* ── STEP 3: Sản phẩm đăng ký ── */}
+              {/* ── STEP 3: Xác nhận ── */}
               {step === 3 && (
-                <div>
-                  <h2 className="text-lg font-bold text-gray-800 mb-6">Sản phẩm đăng ký truy xuất</h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <Field label="Tên sản phẩm *" error={e.productName} half>
-                      <input className={inputCls(e.productName)} placeholder="VD: Rau muống VietGAP"
-                        value={form.productName} onChange={ev => set('productName')(ev.target.value)} />
-                    </Field>
-                    <Field label="Danh mục *" half>
-                      <select className={selectCls()} value={form.productCategory} onChange={ev => set('productCategory')(ev.target.value)}>
-                        {PRODUCT_CATS.map(c => <option key={c}>{c}</option>)}
-                      </select>
-                    </Field>
-                    <Field label="Đơn vị tính *" error={e.unit} half>
-                      <input className={inputCls(e.unit)} placeholder="VD: kg, hộp, thùng"
-                        value={form.unit} onChange={ev => set('unit')(ev.target.value)} />
-                    </Field>
-                    <Field label="" half>
-                      <p className="text-sm font-medium text-gray-700 mb-2">Chứng nhận (chọn nhiều)</p>
-                      <div className="flex flex-wrap gap-2">
-                        {CERTS_LIST.map(c => (
-                          <label key={c} className="flex items-center gap-1.5 cursor-pointer text-sm">
-                            <input type="checkbox" checked={form.certs.includes(c)} onChange={() => toggleCert(c)}
-                              className="rounded text-[#2740BA] focus:ring-[#2740BA]" />
-                            {c}
-                          </label>
-                        ))}
-                      </div>
-                    </Field>
-                    <Field label="Mô tả sản phẩm *" error={e.description}>
-                      <textarea className={`${inputCls(e.description)} min-h-[96px] resize-y`}
-                        placeholder="Mô tả ngắn gọn về sản phẩm, quy trình sản xuất..."
-                        value={form.description} onChange={ev => set('description')(ev.target.value)} />
-                    </Field>
-                    <div className="sm:col-span-2">
-                      <UploadZone label="Hình ảnh sản phẩm" hint="Tải lên 1-5 hình ảnh sản phẩm (JPG, PNG)" />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* ── STEP 4: Thông tin tài khoản + Xác nhận ── */}
-              {step === 4 && (
                 <div className="flex flex-col items-center text-center py-4">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-5">
                     <CheckCircle2 className="w-9 h-9 text-green-600" />
                   </div>
                   <h2 className="text-2xl font-extrabold text-gray-800 mb-2">Hồ sơ đã được gửi!</h2>
-                  
+
                   {/* Process timeline */}
                   <div className="w-full max-w-sm text-left mb-6">
                     {[
@@ -449,7 +385,7 @@ export default function RegisterPage() {
             </div>
 
             {/* Nav buttons */}
-            {step < 4 && (
+            {step < 3 && (
               <div className="bg-gray-50 border-t border-gray-200 px-6 sm:px-8 py-4 flex justify-between items-center">
                 {step > 1 ? (
                   <button onClick={handleBack} className="flex items-center gap-1.5 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
@@ -462,7 +398,7 @@ export default function RegisterPage() {
                   onClick={handleNext}
                   className="flex items-center gap-1.5 px-6 py-2.5 bg-[#2740BA] text-white text-sm font-bold rounded-lg hover:bg-[#1f339e] transition-colors shadow-sm"
                 >
-                  {step === 3 ? 'Hoàn tất đăng ký' : 'Tiếp tục'} <ChevronRight className="w-4 h-4" />
+                  {step === 2 ? 'Hoàn tất đăng ký' : 'Tiếp tục'} <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             )}

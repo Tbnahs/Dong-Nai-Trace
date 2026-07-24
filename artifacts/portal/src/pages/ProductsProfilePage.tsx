@@ -1,38 +1,229 @@
 import React, { useState } from 'react';
 import { Link } from 'wouter';
-import { ArrowLeft, Plus, ShieldCheck, AlertCircle, Edit2, Trash2, Eye, Package, Copy, Check, Search } from 'lucide-react';
+import {
+  ArrowLeft, Plus, ShieldCheck, AlertCircle, Eye, Package,
+  X, UploadCloud, CheckCircle2,
+} from 'lucide-react';
 
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const WITH_TXNG = [
-  { id: 'my1', name: 'Bưởi Tân Triều', category: 'Trái cây', cert: 'VietGAP', traceCode: 'TXNG-VCU-001-2024', img: 'https://picsum.photos/seed/buoi/80/80', updatedAt: '15/10/2024' },
-  { id: 'my2', name: 'Rau muống hữu cơ', category: 'Nông sản', cert: 'VietGAP', traceCode: 'TXNG-XL-002-2024', img: 'https://picsum.photos/seed/raumuong/80/80', updatedAt: '10/08/2024' },
-  { id: 'my3', name: 'Mật ong rừng nguyên chất', category: 'Thực phẩm', cert: 'OCOP', traceCode: 'TXNG-VCU-003-2024', img: 'https://picsum.photos/seed/matong/80/80', updatedAt: '01/06/2024' },
+  { id: 'my1', name: 'Bưởi Tân Triều', category: 'Trái cây', cert: 'VietGAP', traceCode: 'TXNG-VCU-001-2024', img: 'https://picsum.photos/seed/buoi/80/80', updatedAt: '15/10/2024', status: 'approved' },
+  { id: 'my2', name: 'Rau muống hữu cơ', category: 'Nông sản', cert: 'VietGAP', traceCode: 'TXNG-XL-002-2024', img: 'https://picsum.photos/seed/raumuong/80/80', updatedAt: '10/08/2024', status: 'approved' },
+  { id: 'my3', name: 'Mật ong rừng nguyên chất', category: 'Thực phẩm', cert: 'OCOP', traceCode: 'TXNG-VCU-003-2024', img: 'https://picsum.photos/seed/matong/80/80', updatedAt: '01/06/2024', status: 'approved' },
 ];
 
 const WITHOUT_TXNG = [
-  { id: 'p1', name: 'Xoài cát hòa lộc', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/xoai/80/80', note: 'Chờ phê duyệt hồ sơ' },
-  { id: 'p2', name: 'Sầu riêng Ri6', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/saurieng/80/80', note: 'Đang bổ sung tài liệu' },
+  { id: 'p1', name: 'Xoài cát hòa lộc', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/xoai/80/80', note: 'Chờ phê duyệt hồ sơ', status: 'pending' },
+  { id: 'p2', name: 'Sầu riêng Ri6', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/saurieng/80/80', note: 'Đang bổ sung tài liệu', status: 'pending' },
 ];
 
 const certColor: Record<string, string> = {
   'VietGAP': 'bg-emerald-100 text-emerald-700',
-  'OCOP':    'bg-orange-100 text-orange-700',
-  'HACCP':   'bg-purple-100 text-purple-700',
+  'OCOP': 'bg-orange-100 text-orange-700',
+  'HACCP': 'bg-purple-100 text-purple-700',
 };
 
+const PRODUCT_CATS = ['Nông sản & Rau củ', 'Trái cây', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Khác'];
+const CERTS_LIST = ['VietGAP', 'GlobalGAP', 'OCOP', 'HACCP', 'ISO 22000', 'Hữu cơ'];
+
+// ─── Add Product Modal ────────────────────────────────────────────────────────
+interface AddProductForm {
+  name: string;
+  category: string;
+  unit: string;
+  certs: string[];
+  certOther: boolean;
+  certOtherText: string;
+  description: string;
+}
+
+const emptyForm: AddProductForm = {
+  name: '', category: PRODUCT_CATS[0], unit: '',
+  certs: [], certOther: false, certOtherText: '',
+  description: '',
+};
+
+function AddProductModal({ onClose, onAdd }: {
+  onClose: () => void;
+  onAdd: (name: string, category: string) => void;
+}) {
+  const [form, setForm] = useState<AddProductForm>(emptyForm);
+  const [errors, setErrors] = useState<Partial<Record<keyof AddProductForm, string>>>({});
+
+  const set = <K extends keyof AddProductForm>(key: K, value: AddProductForm[K]) =>
+    setForm(f => ({ ...f, [key]: value }));
+
+  const toggleCert = (c: string) =>
+    setForm(f => ({
+      ...f,
+      certs: f.certs.includes(c) ? f.certs.filter(x => x !== c) : [...f.certs, c],
+    }));
+
+  const validate = () => {
+    const e: Partial<Record<keyof AddProductForm, string>> = {};
+    if (!form.name.trim()) e.name = 'Vui lòng nhập tên sản phẩm';
+    if (!form.unit.trim()) e.unit = 'Vui lòng nhập đơn vị tính';
+    if (!form.description.trim()) e.description = 'Vui lòng nhập mô tả sản phẩm';
+    return e;
+  };
+
+  const handleSubmit = () => {
+    const e = validate();
+    if (Object.keys(e).length > 0) { setErrors(e); return; }
+    onAdd(form.name.trim(), form.category);
+    onClose();
+  };
+
+  const inputCls = (err?: string) =>
+    `w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 placeholder:text-gray-400 transition-colors ${err ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-300 focus:ring-[#2740BA] focus:border-transparent'}`;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+          <h2 className="text-base font-bold text-gray-800">Sản phẩm đăng ký truy xuất</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="p-6 space-y-5">
+          {/* Row: name + category */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Tên sản phẩm *</label>
+              <input
+                className={inputCls(errors.name)}
+                placeholder="VD: Rau muống VietGAP"
+                value={form.name}
+                onChange={e => { set('name', e.target.value); setErrors(er => ({ ...er, name: undefined })); }}
+              />
+              {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Danh mục *</label>
+              <select
+                className={inputCls() + ' bg-white'}
+                value={form.category}
+                onChange={e => set('category', e.target.value)}
+              >
+                {PRODUCT_CATS.map(c => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+          </div>
+
+          {/* Row: unit + certs */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Đơn vị tính *</label>
+              <input
+                className={inputCls(errors.unit)}
+                placeholder="VD: kg, hộp, thùng"
+                value={form.unit}
+                onChange={e => { set('unit', e.target.value); setErrors(er => ({ ...er, unit: undefined })); }}
+              />
+              {errors.unit && <p className="mt-1 text-xs text-red-600">{errors.unit}</p>}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Chứng nhận (chọn nhiều)</label>
+              <div className="flex flex-wrap gap-x-3 gap-y-2 pt-0.5">
+                {CERTS_LIST.map(c => (
+                  <label key={c} className="flex items-center gap-1.5 cursor-pointer text-sm">
+                    <input type="checkbox" checked={form.certs.includes(c)} onChange={() => toggleCert(c)}
+                      className="rounded text-[#2740BA] focus:ring-[#2740BA]" />
+                    {c}
+                  </label>
+                ))}
+                {/* Khác */}
+                <label className="flex items-center gap-1.5 cursor-pointer text-sm">
+                  <input type="checkbox" checked={form.certOther} onChange={e => set('certOther', e.target.checked)}
+                    className="rounded text-[#2740BA] focus:ring-[#2740BA]" />
+                  Khác
+                </label>
+              </div>
+              {form.certOther && (
+                <input
+                  className={inputCls() + ' mt-2'}
+                  placeholder="Nhập tên chứng nhận..."
+                  value={form.certOtherText}
+                  onChange={e => set('certOtherText', e.target.value)}
+                />
+              )}
+            </div>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Mô tả sản phẩm *</label>
+            <textarea
+              className={inputCls(errors.description) + ' min-h-[96px] resize-y'}
+              placeholder="Mô tả ngắn gọn về sản phẩm, quy trình sản xuất..."
+              value={form.description}
+              onChange={e => { set('description', e.target.value); setErrors(er => ({ ...er, description: undefined })); }}
+            />
+            {errors.description && <p className="mt-1 text-xs text-red-600">{errors.description}</p>}
+          </div>
+
+          {/* Image upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Hình ảnh sản phẩm</label>
+            <div className="border-2 border-dashed border-gray-200 rounded-xl py-8 flex flex-col items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
+              <UploadCloud className="w-8 h-8 text-gray-300" />
+              <p className="text-sm text-gray-400">Tải lên 1-5 hình ảnh sản phẩm (JPG, PNG)</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
+          <button
+            onClick={onClose}
+            className="flex items-center gap-1.5 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            ← Quay lại
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="flex items-center gap-1.5 px-6 py-2.5 bg-[#2740BA] text-white text-sm font-bold rounded-lg hover:bg-[#1f339e] transition-colors shadow-sm"
+          >
+            Hoàn tất đăng ký →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Status Badge ─────────────────────────────────────────────────────────────
+function StatusBadge({ status }: { status: string }) {
+  if (status === 'approved') {
+    return (
+      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+        <CheckCircle2 className="w-3 h-3" /> Đã được duyệt
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+      <AlertCircle className="w-3 h-3" /> Chưa được duyệt
+    </span>
+  );
+}
+
+// ─── Main page ────────────────────────────────────────────────────────────────
 export default function ProductsProfilePage() {
   const [activeTab, setActiveTab] = useState<'with' | 'without'>('with');
   const [withList, setWithList] = useState(WITH_TXNG);
   const [withoutList, setWithoutList] = useState(WITHOUT_TXNG);
   const [showAdd, setShowAdd] = useState(false);
-  const [newName, setNewName] = useState('');
 
-  const removeWith = (id: string) => setWithList(l => l.filter(x => x.id !== id));
-  const removeWithout = (id: string) => setWithoutList(l => l.filter(x => x.id !== id));
-  const addProduct = () => {
-    if (!newName.trim()) return;
-    setWithoutList(l => [...l, { id: `new-${Date.now()}`, name: newName.trim(), category: 'Khác', cert: '', img: 'https://picsum.photos/seed/new/80/80', note: 'Đang xử lý hồ sơ' }]);
-    setNewName('');
-    setShowAdd(false);
+  const addProduct = (name: string, category: string) => {
+    setWithoutList(l => [...l, {
+      id: `new-${Date.now()}`, name, category, cert: '', status: 'pending',
+      img: 'https://picsum.photos/seed/new/80/80', note: 'Đang xử lý hồ sơ',
+    }]);
     setActiveTab('without');
   };
 
@@ -61,22 +252,6 @@ export default function ProductsProfilePage() {
           </button>
         </div>
 
-        {/* Add product inline */}
-        {showAdd && (
-          <div className="bg-blue-50 border border-[#2740BA]/20 rounded-xl p-4 mb-5 flex gap-3 items-center">
-            <input
-              autoFocus
-              value={newName}
-              onChange={e => setNewName(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && addProduct()}
-              placeholder="Nhập tên sản phẩm..."
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#2740BA]"
-            />
-            <button onClick={addProduct} className="px-4 py-2 bg-[#2740BA] text-white text-sm font-bold rounded-lg hover:bg-[#1f339e]">Thêm</button>
-            <button onClick={() => setShowAdd(false)} className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-white">Hủy</button>
-          </div>
-        )}
-
         {/* Tab switcher */}
         <div className="flex gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-6 w-fit shadow-sm">
           <button
@@ -101,7 +276,7 @@ export default function ProductsProfilePage() {
           </button>
         </div>
 
-        {/* WITH TXNG list */}
+        {/* WITH TXNG list — view only */}
         {activeTab === 'with' && (
           <div className="space-y-3">
             {withList.length === 0 ? (
@@ -119,20 +294,16 @@ export default function ProductsProfilePage() {
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${certColor[p.cert] || 'bg-gray-100 text-gray-600'}`}>{p.cert}</span>
                     <span className="text-[10px] text-gray-400 font-mono bg-slate-50 px-2 py-0.5 rounded">{p.traceCode}</span>
                     <span className="text-[10px] text-gray-400">Cập nhật: {p.updatedAt}</span>
+                    <StatusBadge status={p.status} />
                   </div>
                 </div>
+                {/* View only — no edit/delete */}
                 <div className="flex items-center gap-1 shrink-0">
                   <Link href={`/san-pham/${p.id}`}>
                     <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-gray-500" title="Xem">
                       <Eye className="w-4 h-4" />
                     </button>
                   </Link>
-                  <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-gray-500" title="Sửa">
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button onClick={() => removeWith(p.id)} className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-400" title="Xóa">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
                 </div>
               </div>
             ))}
@@ -153,24 +324,24 @@ export default function ProductsProfilePage() {
                     <h3 className="font-bold text-slate-800 truncate">{p.name}</h3>
                   </div>
                   <p className="text-xs text-gray-500 mb-1.5">{p.category}</p>
-                  <span className="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded font-medium">{p.note}</span>
-                </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  <button className="px-3 py-1.5 bg-[#2740BA] text-white text-xs font-bold rounded-lg hover:bg-[#1f339e] transition-colors" title="Khai báo TXNG">
-                    Khai báo TXNG
-                  </button>
-                  <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-gray-500" title="Sửa">
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button onClick={() => removeWithout(p.id)} className="p-2 rounded-lg hover:bg-red-50 transition-colors text-red-400" title="Xóa">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[10px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded font-medium">{p.note}</span>
+                    <StatusBadge status={p.status} />
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
+      {/* Add Product Modal */}
+      {showAdd && (
+        <AddProductModal
+          onClose={() => setShowAdd(false)}
+          onAdd={addProduct}
+        />
+      )}
     </div>
   );
 }

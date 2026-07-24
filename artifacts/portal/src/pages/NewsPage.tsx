@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Calendar, Tag, ChevronRight, Search } from "lucide-react";
 
 // ─── Mock news data ───────────────────────────────────────────────────────────
@@ -76,6 +76,7 @@ const categoryColor: Record<string, string> = {
 };
 
 export default function NewsPage() {
+  const [, navigate] = useLocation();
   const [activeCategory, setActiveCategory] = useState("Tất cả");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -139,78 +140,79 @@ export default function NewsPage() {
 
         {/* Featured article */}
         {featured && activeCategory === "Tất cả" && searchQuery === "" && (
-          <div className="mb-8 bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 flex flex-col lg:flex-row group cursor-pointer hover:shadow-md transition-shadow">
-            <div className="lg:w-1/2 h-56 lg:h-auto overflow-hidden">
-              <img
-                src={featured.img}
-                alt={featured.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-            <div className="lg:w-1/2 p-8 flex flex-col justify-center">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-xs font-bold bg-[#E8650A] text-white px-3 py-1 rounded-full uppercase tracking-wide">
-                  Nổi bật
-                </span>
-                <span
-                  className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${categoryColor[featured.category] ?? "bg-gray-100 text-gray-600"}`}
-                >
-                  {featured.category}
-                </span>
+          <Link href={`/tin-tuc/${featured.id}`}>
+            <div className="mb-8 bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 flex flex-col lg:flex-row group cursor-pointer hover:shadow-md transition-shadow">
+              <div className="lg:w-1/2 h-56 lg:h-auto overflow-hidden">
+                <img
+                  src={featured.img}
+                  alt={featured.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
               </div>
-              <h2 className="text-xl lg:text-2xl font-extrabold text-slate-800 leading-snug mb-3 group-hover:text-[#2740BA] transition-colors">
-                {featured.title}
-              </h2>
-              <p className="text-sm text-gray-500 leading-relaxed mb-5">{featured.summary}</p>
-              <div className="flex items-center justify-between">
-                <span className="flex items-center gap-1.5 text-xs text-gray-400">
-                  <Calendar className="w-3.5 h-3.5" /> {featured.date}
-                </span>
-                <span className="text-sm font-semibold text-[#2740BA] flex items-center gap-1 group-hover:gap-2 transition-all">
-                  Đọc tiếp <ChevronRight className="w-4 h-4" />
-                </span>
+              <div className="lg:w-1/2 p-8 flex flex-col justify-center">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-xs font-bold bg-[#E8650A] text-white px-3 py-1 rounded-full uppercase tracking-wide">
+                    Nổi bật
+                  </span>
+                  <span
+                    className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${categoryColor[featured.category] ?? "bg-gray-100 text-gray-600"}`}
+                  >
+                    {featured.category}
+                  </span>
+                </div>
+                <h2 className="text-xl lg:text-2xl font-extrabold text-slate-800 leading-snug mb-3 group-hover:text-[#2740BA] transition-colors">
+                  {featured.title}
+                </h2>
+                <p className="text-sm text-gray-500 leading-relaxed mb-5">{featured.summary}</p>
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 text-xs text-gray-400">
+                    <Calendar className="w-3.5 h-3.5" /> {featured.date}
+                  </span>
+                  <span className="text-sm font-semibold text-[#2740BA] flex items-center gap-1 group-hover:gap-2 transition-all">
+                    Đọc tiếp <ChevronRight className="w-4 h-4" />
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
         )}
 
         {/* News grid */}
         {rest.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {rest.map((news) => (
-              <div
-                key={news.id}
-                className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden flex flex-col group cursor-pointer"
-              >
-                <div className="h-48 overflow-hidden">
-                  <img
-                    src={news.img}
-                    alt={news.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-5 flex flex-col flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <span
-                      className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${categoryColor[news.category] ?? "bg-gray-100 text-gray-600"}`}
-                    >
-                      {news.category}
-                    </span>
-                    <span className="flex items-center gap-1 text-xs text-gray-400 ml-auto">
-                      <Calendar className="w-3 h-3" /> {news.date}
+              <Link key={news.id} href={`/tin-tuc/${news.id}`}>
+                <div className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden flex flex-col group cursor-pointer h-full">
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={news.img}
+                      alt={news.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-5 flex flex-col flex-1">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span
+                        className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${categoryColor[news.category] ?? "bg-gray-100 text-gray-600"}`}
+                      >
+                        {news.category}
+                      </span>
+                      <span className="flex items-center gap-1 text-xs text-gray-400 ml-auto">
+                        <Calendar className="w-3 h-3" /> {news.date}
+                      </span>
+                    </div>
+                    <h3 className="font-bold text-slate-800 leading-snug mb-2 group-hover:text-[#2740BA] transition-colors flex-1">
+                      {news.title}
+                    </h3>
+                    <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4">
+                      {news.summary}
+                    </p>
+                    <span className="text-xs font-semibold text-[#2740BA] flex items-center gap-1 group-hover:gap-2 transition-all mt-auto">
+                      Đọc tiếp <ChevronRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
-                  <h3 className="font-bold text-slate-800 leading-snug mb-2 group-hover:text-[#2740BA] transition-colors flex-1">
-                    {news.title}
-                  </h3>
-                  <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 mb-4">
-                    {news.summary}
-                  </p>
-                  <span className="text-xs font-semibold text-[#2740BA] flex items-center gap-1 group-hover:gap-2 transition-all mt-auto">
-                    Đọc tiếp <ChevronRight className="w-3.5 h-3.5" />
-                  </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (

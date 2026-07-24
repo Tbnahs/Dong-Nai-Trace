@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Save, AlertCircle, CheckCircle2, Fingerprint, QrCode, Download } from 'lucide-react';
 
+// Demo: toggle this to see both states
+const APPROVAL_STATUS: 'approved' | 'pending' = 'pending';
+
 export default function OrgProfilePage() {
   const [activeTab, setActiveTab] = useState<'info' | 'id'>('info');
   const [saved, setSaved] = useState(false);
@@ -27,6 +30,39 @@ export default function OrgProfilePage() {
 
   return (
     <div className="space-y-6">
+      {/* ── Approval Status Banner ── */}
+      {APPROVAL_STATUS === 'approved' ? (
+        <div className="flex items-center gap-3 px-5 py-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+          <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-emerald-800">Hồ sơ đã được duyệt</p>
+            <p className="text-xs text-emerald-700 mt-0.5">
+              Hồ sơ doanh nghiệp của bạn đã được Sở KH&CN Đồng Nai xét duyệt thành công.
+            </p>
+          </div>
+          <span className="ml-auto shrink-0 text-[11px] font-bold px-3 py-1 rounded-full bg-emerald-600 text-white">
+            Đã duyệt
+          </span>
+        </div>
+      ) : (
+        <div className="flex items-center gap-3 px-5 py-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <div className="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center shrink-0">
+            <AlertCircle className="w-5 h-5 text-amber-600" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-amber-800">Hồ sơ chưa được duyệt</p>
+            <p className="text-xs text-amber-700 mt-0.5">
+              Hồ sơ đang được Sở KH&CN Đồng Nai thẩm định. Thời gian xử lý: 3–5 ngày làm việc.
+            </p>
+          </div>
+          <span className="ml-auto shrink-0 text-[11px] font-bold px-3 py-1 rounded-full bg-amber-500 text-white">
+            Chờ duyệt
+          </span>
+        </div>
+      )}
+
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
         {/* Tabs */}
         <div className="flex border-b border-gray-200">
@@ -141,22 +177,37 @@ export default function OrgProfilePage() {
 
           {activeTab === 'id' && (
             <div className="max-w-2xl space-y-6">
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
-                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <AlertCircle className="w-8 h-8 text-amber-600" />
+              {APPROVAL_STATUS === 'approved' ? (
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-6 text-center">
+                  <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-emerald-800 mb-2">Hồ sơ đã được duyệt</h3>
+                  <p className="text-emerald-700 text-sm mb-6">
+                    Mã định danh chính thức của doanh nghiệp đã được cấp. Bạn có thể tải xuống QR Code và sử dụng ngay.
+                  </p>
+                  <button className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-md transition-colors">
+                    Tải xuống QR Code
+                  </button>
                 </div>
-                <h3 className="text-xl font-bold text-amber-800 mb-2">Chờ cấp mã định danh</h3>
-                <p className="text-amber-700 text-sm mb-6">
-                  Hồ sơ của bạn đang được Sở Khoa học & Công nghệ thẩm định. Mã định danh chính thức sẽ được cấp sau khi hồ sơ được phê duyệt 100%.
-                </p>
-                <button
-                  disabled
-                  className="px-6 py-2.5 bg-gray-300 text-gray-500 font-bold rounded-md cursor-not-allowed"
-                >
-                  Yêu cầu cấp mã
-                </button>
-                <p className="text-xs text-gray-500 mt-4 italic">Nút này sẽ khả dụng khi hồ sơ được duyệt (100%)</p>
-              </div>
+              ) : (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
+                  <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <AlertCircle className="w-8 h-8 text-amber-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-amber-800 mb-2">Chờ cấp mã định danh</h3>
+                  <p className="text-amber-700 text-sm mb-6">
+                    Hồ sơ của bạn đang được Sở Khoa học & Công nghệ thẩm định. Mã định danh chính thức sẽ được cấp sau khi hồ sơ được phê duyệt 100%.
+                  </p>
+                  <button
+                    disabled
+                    className="px-6 py-2.5 bg-gray-300 text-gray-500 font-bold rounded-md cursor-not-allowed"
+                  >
+                    Yêu cầu cấp mã
+                  </button>
+                  <p className="text-xs text-gray-500 mt-4 italic">Nút này sẽ khả dụng khi hồ sơ được duyệt (100%)</p>
+                </div>
+              )}
 
               <div className="bg-white border border-slate-200 rounded-xl p-6">
                 <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
