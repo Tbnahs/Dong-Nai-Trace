@@ -1,0 +1,81 @@
+ Chỉ hiển thị duy nhất tỉnh Đồng Nai.
+
+   - Không hiển thị các tỉnh/thành khác.
+
+   - Bản đồ mặc định được căn giữa (center) và zoom vừa đủ để bao phủ toàn bộ địa giới tỉnh Đồng Nai.
+
+
+
+2. Hiển thị ranh giới hành chính cấp xã/phường của tỉnh Đồng Nai theo dữ liệu mới nhất sau sáp nhập.
+
+   - Mỗi xã/phường được tô bằng một màu khác nhau (phối màu hài hòa, hiện đại).
+
+   - Có viền ranh giới rõ ràng giữa các khu vực.
+
+   - Hiệu ứng hover làm sáng nhẹ khu vực đang rê chuột.
+
+
+
+3. Tương tác khi người dùng click lên bản đồ:
+
+   - Người dùng có thể click vào bất kỳ vị trí nào bên trong tỉnh Đồng Nai.
+
+   - Ngay sau khi click:
+
+     - Tự động đặt một Marker (ghim) tại đúng tọa độ vừa chọn.
+
+     - Marker cũ sẽ được thay thế nếu người dùng click vị trí khác.
+
+     - Bản đồ tự động pan (dịch tâm) đến vị trí vừa chọn.
+
+     - Đồng thời zoom in mượt để tập trung vào vị trí đó.
+
+   - Chỉ cho phép đặt marker trong phạm vi tỉnh Đồng Nai.
+
+
+
+4. Bộ lọc khu vực:
+
+   - Đặt một dropdown nhỏ ở góc trên bên phải của section bản đồ.
+
+   - Dropdown chứa danh sách toàn bộ xã/phường thuộc tỉnh Đồng Nai theo dữ liệu mới nhất.
+
+   - Khi chọn một xã/phường:
+
+     - Bản đồ tự động pan đến khu vực đó.
+
+     - Zoom vừa đủ để hiển thị toàn bộ ranh giới xã/phường được chọn.
+
+     - Highlight khu vực bằng màu nổi bật hơn các khu vực còn lại.
+
+
+
+5. Thiết kế UI:
+
+   - Giao diện hiện đại theo phong cách SaaS.
+
+   - Bo góc lớn (16–20px).
+
+   - Có shadow nhẹ.
+
+   - Animation mượt khi zoom, pan và đổi khu vực.
+
+   - Responsive trên Desktop và Mobile.
+
+
+
+6. Công nghệ:
+
+   - Sử dụng Leaflet hoặc MapLibre GL JS.
+
+   - Dữ liệu bản đồ sử dụng GeoJSON hành chính mới nhất sau sáp nhập của tỉnh Đồng Nai.
+
+   - Không sử dụng Google Maps mặc định.
+
+   - Mọi thao tác zoom, pan, marker và highlight đều có animation mượt.
+
+
+
+Kết quả mong muốn:
+
+Một section bản đồ tương tác chỉ dành riêng cho tỉnh Đồng Nai, hiển thị đầy đủ các xã/phường với màu sắc khác nhau, cho phép người dùng click để cắm ghim, tự động focus vào vị trí đã chọn và có dropdown để nhanh chóng di chuyển đến từng xã/phường trong tỉnh.

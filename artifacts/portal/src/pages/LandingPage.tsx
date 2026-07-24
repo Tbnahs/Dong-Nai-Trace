@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import hero3d from "../assets/hero-3d.png";
 import heroGuide from "../assets/hero-guide.png";
+import MapSection from "../components/MapSection";
 import { Link, useLocation } from "wouter";
 import {
   CheckCircle2,
@@ -101,7 +102,7 @@ export default function LandingPage() {
               <Link href="/">TRANG CHỦ</Link>
             </li>
             <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors">
-              <Link href="/tra-cuu">DANH MỤC SẢN PHẨM</Link>
+              <Link href="/tra-cuu">DANH MỤC</Link>
             </li>
             <li className="py-3 border-b-2 border-transparent text-white/80 hover:text-white cursor-pointer transition-colors">
               <Link href="/dang-ky">HƯỚNG DẪN DOANH NGHIỆP</Link>
@@ -281,83 +282,8 @@ export default function LandingPage() {
 
         </div>
       </section>
-      {/* 4 BƯỚC SECTION */}
-      <section className="py-20 px-6 lg:px-12 bg-[#2740BA] text-white">
-        <div className="max-w-7xl mx-auto flex flex-col items-center text-center">
-          <span className="text-sm font-bold text-blue-300 uppercase tracking-widest mb-4">
-            ĐĂNG KÝ ĐỊNH DANH
-          </span>
-          <h2 className="text-4xl lg:text-5xl font-extrabold uppercase mb-2">
-            4 BƯỚC — DỄ DÀNG
-          </h2>
-          <h3 className="text-3xl lg:text-4xl font-bold text-[#E8650A] uppercase mb-16">
-            VÀ NHANH CHÓNG
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full relative">
-            <div className="hidden lg:block absolute top-[44px] left-[12%] right-[12%] h-[2px] bg-white/20 z-0 border-t-2 border-dashed border-white/20"></div>
-
-            <div className="flex flex-col items-center relative z-10">
-              <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm border border-white/20">
-                <FileEdit className="w-10 h-10 text-white" />
-              </div>
-              <div className="bg-[#E8650A] text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-                BƯỚC 1
-              </div>
-              <h4 className="text-xl font-bold mb-3">Đăng ký tài khoản</h4>
-              <p className="text-blue-100 text-sm max-w-[240px]">
-                Tạo tài khoản doanh nghiệp trên Portal với thông tin cơ bản.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center relative z-10">
-              <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm border border-white/20">
-                <FolderOpen className="w-10 h-10 text-white" />
-              </div>
-              <div className="bg-[#E8650A] text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-                BƯỚC 2
-              </div>
-              <h4 className="text-xl font-bold mb-3">Hoàn thiện hồ sơ</h4>
-              <p className="text-blue-100 text-sm max-w-[240px]">
-                Cung cấp thông tin pháp lý, upload tài liệu chứng nhận.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center relative z-10">
-              <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm border border-white/20">
-                <CheckSquare className="w-10 h-10 text-white" />
-              </div>
-              <div className="bg-[#E8650A] text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-                BƯỚC 3
-              </div>
-              <h4 className="text-xl font-bold mb-3">Được phê duyệt</h4>
-              <p className="text-blue-100 text-sm max-w-[240px]">
-                Sở KH&CN xét duyệt trong 3-5 ngày làm việc.
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center relative z-10">
-              <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center mb-6 backdrop-blur-sm border border-white/20">
-                <Tag className="w-10 h-10 text-white" />
-              </div>
-              <div className="bg-[#E8650A] text-white text-xs font-bold px-3 py-1 rounded-full mb-4">
-                BƯỚC 4
-              </div>
-              <h4 className="text-xl font-bold mb-3">Nhận mã định danh</h4>
-              <p className="text-blue-100 text-sm max-w-[240px]">
-                Cấp mã chính thức + QR code trên nền tảng cho sản phẩm.
-              </p>
-            </div>
-          </div>
-
-          <Link
-            href="/dang-ky"
-            className="mt-16 bg-[#E8650A] hover:bg-[#D55C08] text-white px-10 py-4 rounded-full font-bold text-lg uppercase tracking-wider transition-colors shadow-lg hover:shadow-xl flex items-center gap-2"
-          >
-            Đăng ký ngay <ArrowRight className="w-5 h-5" />
-          </Link>
-        </div>
-      </section>
+      {/* BẢN ĐỒ SECTION */}
+      <MapSection />
 
       {/* DANH MỤC NGÀNH HÀNG */}
       <section className="py-16 px-6 lg:px-12 bg-white">
