@@ -1,16 +1,9 @@
-<<<<<<< HEAD
 # Đồng Nai Trace
 
 A product traceability portal for Đồng Nai province, operated by the Department of Science and Technology (Sở Khoa học và Công nghệ). The system allows consumers, businesses, and regulators to trace the origin of agricultural and manufactured goods.
 
-# Đồng Nai Traceability Portal
-
-A Vietnamese agricultural product traceability platform for Đồng Nai province. Allows consumers and businesses to look up, trace, and verify agricultural product origins.
->>>>>>> 13e22afc288ae591469ed6ca144aea9bdf2946cb
-
 ## Architecture
 
-<<<<<<< HEAD
 This is a pnpm monorepo with the following packages:
 
 | Package | Path | Description |
@@ -22,29 +15,46 @@ This is a pnpm monorepo with the following packages:
 | `@workspace/api-zod` | `lib/api-zod/` | Auto-generated Zod schemas |
 | `@workspace/db` | `lib/db/` | Drizzle ORM + PostgreSQL client |
 
-## Running the project
+## How to Run
 
-Both services start automatically via Replit workflows:
+Both services start automatically via managed Replit workflows:
 
-- **Portal** (React/Vite): `artifacts/portal: web` — served at `/portal/` on port 25265
-- **API Server** (Express): `artifacts/api-server: API Server` — served on port 8080
+| Service | Workflow name | Port | URL prefix |
+|---|---|---|---|
+| Portal (React/Vite) | `artifacts/portal: web` | 25265 | `/portal/` |
+| API Server (Express) | `artifacts/api-server: API Server` | 8080 | `/api/` |
 
-To install dependencies: `pnpm install`
+```bash
+# Install dependencies
+pnpm install
 
-## API
+# Push DB schema changes (dev only — production schema is managed by Replit Publish)
+pnpm --filter @workspace/db run push
 
-- Health check: `GET /api/healthz` → `{ "status": "ok" }`
+# Run OpenAPI codegen (regenerate hooks/schemas from openapi.yaml)
+pnpm run --filter @workspace/api-spec codegen
+
+# Run typecheck across the workspace
+pnpm run typecheck
+```
+
+## Tech Stack
+
+- **Frontend**: React 19, Vite, Tailwind CSS v4, shadcn/ui, TanStack Query, Wouter, Leaflet maps
+- **Backend**: Express 5, Drizzle ORM, Pino logger
+- **Language**: TypeScript throughout
+- **Package manager**: pnpm workspaces (yarn/npm are blocked by preinstall script)
 
 ## Database
 
-Uses Replit's managed PostgreSQL. The connection string is injected automatically as `DATABASE_URL`. Schema is defined in `lib/db/src/schema/index.ts` using Drizzle ORM. Run migrations with `pnpm --filter @workspace/db run db:push` (if configured).
+Uses Replit's managed PostgreSQL. `DATABASE_URL` is injected automatically. Schema is defined in `lib/db/src/schema/` using Drizzle ORM.
 
-## Tech stack
+## Environment Variables
 
-- **Frontend**: React 19, Vite, Tailwind CSS, shadcn/ui, TanStack Query, Wouter, Leaflet
-- **Backend**: Express 5, Drizzle ORM, Pino logger
-- **Language**: TypeScript throughout
-- **Package manager**: pnpm (workspaces)
+- `DATABASE_URL` — auto-managed by Replit (PostgreSQL connection string)
+- `SESSION_SECRET` — stored as a Replit Secret (required)
+- `NODE_ENV` — set to `development` in shared env
+- `LOG_LEVEL` — set to `info` in shared env
 
 ## Branding
 
@@ -53,52 +63,8 @@ Uses Replit's managed PostgreSQL. The connection string is injected automaticall
 - Accent color: orange (CTA/industrial)
 - Font: sans-serif with full Vietnamese diacritic support (Inter / Be Vietnam Pro)
 - Do **not** display Checkee branding on any public-facing page
-=======
-- **Frontend** (`artifacts/portal`): React 19 + Vite + Tailwind CSS v4 + shadcn/ui components, with Leaflet maps and Wouter routing. Vietnamese-language UI.
-- **API Server** (`artifacts/api-server`): Express 5 + TypeScript, built with esbuild, structured logging with Pino.
-- **Database** (`lib/db`): Drizzle ORM + PostgreSQL (Replit managed). Schema lives in `lib/db/src/schema/`.
-- **Shared libs**: `lib/api-zod` (Zod schemas), `lib/api-client-react` (React Query hooks), `lib/api-spec` (OpenAPI + Orval codegen).
-
-## How to Run
-
-Both services start automatically via managed workflows:
-
-| Service | Workflow name | Port |
-|---|---|---|
-| Portal (frontend) | `artifacts/portal: web` | 25265 |
-| API Server | `artifacts/api-server: API Server` | 8080 |
-
-The frontend is served at `/portal/` and the API at `/api/`.
-
-## Development
-
-```bash
-# Install dependencies
-pnpm install
-
-# Run typecheck across the workspace
-pnpm run typecheck
-
-# Push DB schema changes (dev only)
-pnpm --filter @workspace/db run push
-
-# Run OpenAPI codegen (regenerate hooks/schemas from openapi.yaml)
-pnpm run --filter @workspace/api-spec codegen
-```
->>>>>>> 13e22afc288ae591469ed6ca144aea9bdf2946cb
-
-## Environment Variables
-
-<<<<<<< HEAD
-- Keep the existing project structure and stack
-=======
-- `DATABASE_URL` — auto-managed by Replit (PostgreSQL connection string)
-- `NODE_ENV` — set to `development` in shared env
-- `LOG_LEVEL` — set to `info` in shared env
-- `SESSION_SECRET` — stored as a Replit Secret
 
 ## User Preferences
 
-- Use pnpm for all package management (yarn/npm are blocked by preinstall script)
+- Use pnpm for all package management
 - Keep existing project structure — do not restructure or migrate
->>>>>>> 13e22afc288ae591469ed6ca144aea9bdf2946cb
