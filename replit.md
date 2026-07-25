@@ -1,70 +1,36 @@
-# Đồng Nai Trace
+# Đồng Nai Trace — Portal
 
-A product traceability portal for Đồng Nai province, operated by the Department of Science and Technology (Sở Khoa học và Công nghệ). The system allows consumers, businesses, and regulators to trace the origin of agricultural and manufactured goods.
+Cổng thông tin truy xuất nguồn gốc sản phẩm, hàng hóa Thành phố Đồng Nai, do Sở Khoa học và Công nghệ chủ trì.
 
-## Architecture
+## Stack
 
-This is a pnpm monorepo with the following packages:
+- **Frontend** (`artifacts/portal`): React 19 + Vite + TailwindCSS + Wouter (routing) + TanStack Query + shadcn/ui components + React Leaflet (maps)
+- **Backend** (`artifacts/api-server`): Node.js + Express 5 + Pino (logging), built with esbuild
+- **Shared libs** (`lib/`):
+  - `api-spec` — OpenAPI spec (source of truth for all API contracts)
+  - `api-zod` — Zod schemas generated from OpenAPI spec
+  - `api-client-react` — React Query hooks generated from OpenAPI spec
+  - `db` — Drizzle ORM database layer
 
-| Package | Path | Description |
+## How to run
+
+Both services start automatically via managed workflows:
+
+| Service | Workflow name | URL |
 |---|---|---|
-| `@workspace/portal` | `artifacts/portal/` | React + Vite public portal (search, product detail, business profiles, login/register) |
-| `@workspace/api-server` | `artifacts/api-server/` | Express 5 REST API server |
-| `@workspace/api-spec` | `lib/api-spec/` | OpenAPI spec + Orval codegen config |
-| `@workspace/api-client-react` | `lib/api-client-react/` | Auto-generated React Query hooks |
-| `@workspace/api-zod` | `lib/api-zod/` | Auto-generated Zod schemas |
-| `@workspace/db` | `lib/db/` | Drizzle ORM + PostgreSQL client |
+| Portal (frontend) | `artifacts/portal: web` | Port 25265, path `/` |
+| API Server | `artifacts/api-server: API Server` | Port 8080, path `/api` |
 
-## How to Run
+Install dependencies (first time or after pulling): `pnpm install`
 
-Both services start automatically via managed Replit workflows:
+## Project context
 
-| Service | Workflow name | Port | URL prefix |
-|---|---|---|---|
-| Portal (React/Vite) | `artifacts/portal: web` | 25265 | `/portal/` |
-| API Server (Express) | `artifacts/api-server: API Server` | 8080 | `/api/` |
+- Brand: "Đồng Nai Trace" — professional government portal aesthetic, navy/orange palette
+- Primary colors: xanh navy `#1B2A6B` (primary), cam/orange (accent/CTA)
+- Font: Vietnamese-supporting sans-serif (Inter / Be Vietnam Pro / Noto Sans)
+- Three platforms in scope: Portal (public web), App (mobile), Client (admin dashboard)
+- This repo covers the **Portal** (public + enterprise) and its shared API/DB backend
 
-```bash
-# Install dependencies
-pnpm install
+## User preferences
 
-# Push DB schema changes (dev only — production schema is managed by Replit Publish)
-pnpm --filter @workspace/db run push
-
-# Run OpenAPI codegen (regenerate hooks/schemas from openapi.yaml)
-pnpm run --filter @workspace/api-spec codegen
-
-# Run typecheck across the workspace
-pnpm run typecheck
-```
-
-## Tech Stack
-
-- **Frontend**: React 19, Vite, Tailwind CSS v4, shadcn/ui, TanStack Query, Wouter, Leaflet maps
-- **Backend**: Express 5, Drizzle ORM, Pino logger
-- **Language**: TypeScript throughout
-- **Package manager**: pnpm workspaces (yarn/npm are blocked by preinstall script)
-
-## Database
-
-Uses Replit's managed PostgreSQL. `DATABASE_URL` is injected automatically. Schema is defined in `lib/db/src/schema/` using Drizzle ORM.
-
-## Environment Variables
-
-- `DATABASE_URL` — auto-managed by Replit (PostgreSQL connection string)
-- `SESSION_SECRET` — stored as a Replit Secret (required)
-- `NODE_ENV` — set to `development` in shared env
-- `LOG_LEVEL` — set to `info` in shared env
-
-## Branding
-
-- Name: **Đồng Nai Trace** (`txng.dongnai.gov.vn`)
-- Primary color: navy blue (`#1B2A6B`)
-- Accent color: orange (CTA/industrial)
-- Font: sans-serif with full Vietnamese diacritic support (Inter / Be Vietnam Pro)
-- Do **not** display Checkee branding on any public-facing page
-
-## User Preferences
-
-- Use pnpm for all package management
-- Keep existing project structure — do not restructure or migrate
+<!-- Add remembered user preferences here -->
