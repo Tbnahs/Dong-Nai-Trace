@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import {
   Plus, Search, Pencil, Trash2, Package, X, UploadCloud,
   CheckCircle2, AlertCircle, ShieldCheck, FileText, ImagePlus,
-  Check, ChevronDown, Eye, Tag, Ruler, Calendar, QrCode,
+  Check, ChevronDown, Eye, Tag, Ruler, Calendar, QrCode, ArrowLeft,
+  Download, Share2, MapPin, Leaf, Truck, Store, FlaskConical, Info,
+  Building2,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -63,8 +65,104 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-// ─── Detail Drawer ────────────────────────────────────────────────────────────
+// ─── Detail view ──────────────────────────────────────────────────────────────
+type JourneyStep = {
+  icon: 'leaf' | 'flask' | 'calendar' | 'package' | 'truck' | 'store';
+  label: string;
+  date: string;
+  detail: string;
+  location: string;
+  org: string;
+};
+
+type TraceDetail = {
+  origin: string;
+  packaging: string;
+  updateDate: string;
+  orgShort: string;
+  gtin: string;
+  lotCode: string;
+  weight: string;
+  expiry: string;
+  ingredients: string;
+  journey: JourneyStep[];
+};
+
+const TRACE_JOURNEY: JourneyStep[] = [
+  {
+    icon: 'leaf',
+    label: 'Gieo trồng',
+    date: '1/7/2024',
+    detail: 'Gieo hạt giống được kiểm định, đất được xử lý theo chuẩn VietGAP.',
+    location: 'Vườn A – Tân Triều',
+    org: 'HTX Nông nghiệp Xanh',
+  },
+  {
+    icon: 'flask',
+    label: 'Chăm sóc',
+    date: '8/7/2024',
+    detail: 'Tưới nước, bón phân hữu cơ theo lịch, kiểm tra sâu bệnh định kỳ.',
+    location: 'Vườn A – Tân Triều',
+    org: 'HTX Nông nghiệp Xanh',
+  },
+  {
+    icon: 'calendar',
+    label: 'Thu hoạch',
+    date: '14/7/2024',
+    detail: 'Thu hoạch đợt 1, đạt tiêu chuẩn kích thước và màu sắc, không có dấu hiệu bệnh.',
+    location: 'Vườn A – Tân Triều',
+    org: 'HTX Nông nghiệp Xanh',
+  },
+  {
+    icon: 'package',
+    label: 'Đóng gói',
+    date: '14/7/2024',
+    detail: 'Đóng gói, dán nhãn mã QR truy xuất nguồn gốc, kiểm tra VSATTP.',
+    location: 'Nhà đóng gói HTX',
+    org: 'HTX Nông nghiệp Xanh',
+  },
+  {
+    icon: 'truck',
+    label: 'Vận chuyển & Phân phối',
+    date: '15/7/2024',
+    detail: 'Vận chuyển bằng xe lạnh đến điểm phân phối.',
+    location: 'Đồng Nai',
+    org: 'HTX Nông nghiệp Xanh',
+  },
+];
+
+function getTraceDetail(product: Product): TraceDetail | null {
+  if (!product.traceCode) return null;
+
+  return {
+    origin: product.id === 'p1' ? 'Tân Triều, Vĩnh Cửu, Đồng Nai' : 'Đồng Nai',
+    packaging: product.unit ? `${product.unit} theo tiêu chuẩn sản phẩm` : 'Theo tiêu chuẩn sản phẩm',
+    updateDate: product.updatedAt,
+    orgShort: 'HTX Nông nghiệp Xanh',
+    gtin: `89340000${product.id.replace(/\D/g, '')}`,
+    lotCode: `L-${product.updatedAt.replace(/\//g, '')}-${product.id.replace(/\D/g, '')}`,
+    weight: product.unit ? `Theo đơn vị ${product.unit}` : '',
+    expiry: 'Theo nhãn sản phẩm',
+    ingredients: `${product.name} tự nhiên 100%`,
+    journey: TRACE_JOURNEY,
+  };
+}
+
+const JOURNEY_ICON: Record<JourneyStep['icon'], React.ElementType> = {
+  leaf: Leaf,
+  flask: FlaskConical,
+  calendar: Calendar,
+  package: Package,
+  truck: Truck,
+  store: Store,
+};
+
 function ProductDetailDrawer({ product, onClose, onEdit }: { product: Product; onClose: () => void; onEdit: () => void }) {
+  const trace = getTraceDetail(product);
+  const [activeTab, setActiveTab] = useState<'journey' | 'info' | 'org'>('journey');
+  const hasTrace = Boolean(trace);
+  const traceJourney = trace?.journey ?? [];
+
   return (
     <>
       {/* Backdrop */}
@@ -79,15 +177,17 @@ function ProductDetailDrawer({ product, onClose, onEdit }: { product: Product; o
       {/* Panel */}
       <motion.div
         key="drawer"
-        initial={{ x: '100%' }}
-        animate={{ x: 0 }}
-        exit={{ x: '100%' }}
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20, scale: 0.98 }}
         transition={{ type: 'spring', damping: 28, stiffness: 260 }}
-        className="fixed right-0 top-0 bottom-0 z-[1100] w-full max-w-md bg-white shadow-2xl flex flex-col overflow-hidden"
+        className="fixed inset-3 sm:inset-5 lg:inset-8 z-[1100] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 shrink-0">
-          <h2 className="text-base font-extrabold text-slate-800">Chi tiết sản phẩm</h2>
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-slate-100 shrink-0">
+          <button onClick={onClose} className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-[#2740BA] transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Chi tiết sản phẩm
+          </button>
           <div className="flex items-center gap-2">
             <button
               onClick={onEdit}
@@ -102,66 +202,194 @@ function ProductDetailDrawer({ product, onClose, onEdit }: { product: Product; o
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto">
-          {/* Product image */}
-          <div className="relative h-52 w-full bg-slate-100 shrink-0">
-            <img src={product.img} alt={product.name} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4">
-              <h3 className="text-xl font-extrabold text-white leading-tight drop-shadow">{product.name}</h3>
-              <div className="flex flex-wrap items-center gap-2 mt-2">
-                <StatusBadge status={product.status} />
+        <div className="flex-1 overflow-y-auto bg-[#F8FAFC]">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-5 p-4 sm:p-6 lg:grid-cols-[280px_1fr] lg:p-8">
+            {/* Left column */}
+            <div className="space-y-4">
+              <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                <img src={product.img} alt={product.name} className="h-64 w-full object-cover sm:h-72 lg:h-80" />
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                {hasTrace ? (
+                  <>
+                    <div className="mx-auto mb-3 w-fit rounded-xl border border-slate-200 bg-white p-2">
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(product.traceCode ?? '')}&margin=4`}
+                        alt={`Mã QR ${product.name}`}
+                        className="h-36 w-36"
+                      />
+                    </div>
+                    <p className="mb-4 text-center text-xs text-slate-500">Mã QR truy xuất nguồn gốc</p>
+                    <div className="flex gap-2">
+                      <button className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 px-2 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+                        <Download className="w-3.5 h-3.5" /> Tải QR
+                      </button>
+                      <button className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-slate-300 px-2 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+                        <Share2 className="w-3.5 h-3.5" /> Chia sẻ
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex min-h-52 flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 px-5 text-center">
+                    <QrCode className="mb-3 h-10 w-10 text-slate-300" />
+                    <p className="text-sm font-bold text-slate-500">Chưa có mã truy xuất</p>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-400">Thông tin QR và hành trình sản phẩm sẽ hiển thị sau khi được cấp mã TXNG.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Right column */}
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+              <div className="mb-4 flex flex-wrap items-center gap-2">
                 {product.certs.map(c => (
-                  <span key={c} className="inline-flex rounded-md bg-white/20 backdrop-blur-sm border border-white/30 px-2 py-0.5 text-[10px] font-bold text-white">{c}</span>
+                  <span key={c} className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-600">
+                    <span className="h-1.5 w-1.5 rounded-full bg-current opacity-70" /> {c}
+                  </span>
+                ))}
+                <StatusBadge status={product.status} />
+              </div>
+
+              <h3 className="text-2xl font-extrabold leading-tight text-slate-800 sm:text-3xl">{product.name}</h3>
+              <p className="mt-2 text-sm text-slate-500">
+                Mã truy xuất:{' '}
+                <span className="font-mono font-bold text-[#2740BA]">{product.traceCode ?? ''}</span>
+              </p>
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">{product.description}</p>
+
+              <div className="my-5 grid grid-cols-2 gap-3 border-y border-slate-100 py-4 sm:grid-cols-4">
+                <TraceMeta icon={MapPin} label="Nguồn gốc" value={trace?.origin ?? ''} />
+                <TraceMeta icon={Package} label="Quy cách" value={trace?.packaging ?? ''} />
+                <TraceMeta icon={Calendar} label="Cập nhật" value={trace?.updateDate ?? ''} />
+                <TraceMeta icon={Building2} label="Đơn vị" value={trace?.orgShort ?? ''} />
+              </div>
+
+              <div className="flex overflow-x-auto border-b border-slate-200">
+                {[
+                  { key: 'journey' as const, icon: CheckCircle2, label: 'Hành trình sản phẩm' },
+                  { key: 'info' as const, icon: Info, label: 'Thông tin sản phẩm' },
+                  { key: 'org' as const, icon: Building2, label: 'Doanh nghiệp' },
+                ].map(tab => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    className={`inline-flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-3 text-xs font-semibold transition-colors sm:px-4 ${
+                      activeTab === tab.key
+                        ? 'border-[#2740BA] text-[#2740BA]'
+                        : 'border-transparent text-slate-500 hover:text-slate-700'
+                    }`}
+                  >
+                    <tab.icon className="h-3.5 w-3.5" /> {tab.label}
+                  </button>
                 ))}
               </div>
-            </div>
-          </div>
 
-          <div className="px-6 py-6 space-y-5">
-            {/* Info rows */}
-            <div className="grid grid-cols-2 gap-3">
-              <InfoRow icon={Tag} label="Danh mục" value={product.category} />
-              <InfoRow icon={Ruler} label="Đơn vị tính" value={product.unit || '—'} />
-              <InfoRow icon={Calendar} label="Cập nhật" value={product.updatedAt} />
-              <InfoRow icon={QrCode} label="Mã TXNG" value={product.traceCode || 'Chưa cấp'} highlight={!!product.traceCode} />
-            </div>
+              <div className="pt-5">
+                {activeTab === 'journey' && (
+                  hasTrace ? (
+                    <div className="space-y-0">
+                      {traceJourney.map((step, index) => {
+                        const Icon = JOURNEY_ICON[step.icon];
+                        return (
+                          <div key={`${step.label}-${step.date}`} className="relative flex gap-3 pb-5 last:pb-0">
+                            {index < traceJourney.length - 1 && <span className="absolute left-[11px] top-7 h-[calc(100%-12px)] w-px bg-slate-200" />}
+                            <span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-500 ring-4 ring-white">
+                              <Icon className="h-3.5 w-3.5" />
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              <div className="flex items-start justify-between gap-3">
+                                <p className="text-sm font-bold text-slate-700">{step.label}</p>
+                                <span className="shrink-0 text-[11px] text-slate-400">{step.date}</span>
+                              </div>
+                              <p className="mt-1 text-xs leading-relaxed text-slate-500">{step.detail}</p>
+                              <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400">
+                                <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {step.location}</span>
+                                <span className="inline-flex items-center gap-1"><Building2 className="h-3 w-3" /> {step.org}</span>
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <TraceEmptyState title="Chưa có hành trình sản phẩm" detail="Các mốc sản xuất, thu hoạch và phân phối sẽ được cập nhật sau khi sản phẩm có mã truy xuất nguồn gốc." />
+                  )
+                )}
 
-            {/* Description */}
-            {product.description && (
-              <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5" /> Mô tả
-                </p>
-                <p className="text-sm text-slate-700 leading-relaxed">{product.description}</p>
+                {activeTab === 'info' && (
+                  <div className="space-y-3">
+                    {[
+                      { label: 'Mã GTIN', value: trace?.gtin ?? '' },
+                      { label: 'Mã lô / Batch', value: trace?.lotCode ?? '' },
+                      { label: 'Khối lượng / Quy cách', value: trace?.weight ?? '' },
+                      { label: 'Hạn sử dụng', value: trace?.expiry ?? '' },
+                      { label: 'Xuất xứ', value: trace?.origin ?? '' },
+                      { label: 'Thành phần', value: trace?.ingredients ?? '' },
+                    ].map(row => (
+                      <div key={row.label} className="flex min-h-10 items-start gap-4 border-b border-slate-100 py-2.5 last:border-0">
+                        <span className="w-44 shrink-0 text-xs text-slate-500">{row.label}</span>
+                        <span className="text-sm font-medium text-slate-800">{row.value}</span>
+                      </div>
+                    ))}
+                    <div className="border-t border-slate-100 pt-4">
+                      <p className="mb-3 text-sm font-semibold text-slate-700">Chứng nhận chất lượng</p>
+                      <div className="flex flex-wrap gap-2">
+                        {product.certs.map(cert => (
+                          <span key={cert} className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">
+                            <CheckCircle2 className="h-3.5 w-3.5" /> {cert}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'org' && (
+                  hasTrace ? (
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4">
+                        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#2740BA] text-xl font-extrabold text-white">HT</div>
+                        <div>
+                          <p className="font-bold text-[#2740BA]">{trace?.orgShort}</p>
+                          <p className="mt-0.5 text-xs text-slate-500">Đơn vị tham gia hệ thống truy xuất</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-slate-600">Đơn vị chịu trách nhiệm cập nhật thông tin và xác thực hành trình sản phẩm trên hệ thống Đồng Nai Trace.</p>
+                    </div>
+                  ) : (
+                    <TraceEmptyState title="Chưa có thông tin doanh nghiệp TXNG" detail="Thông tin đơn vị tham gia hệ thống truy xuất sẽ hiển thị sau khi sản phẩm được cấp mã." />
+                  )
+                )}
               </div>
-            )}
-
-            {/* Certs */}
-            {product.certs.length > 0 && (
-              <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Chứng nhận chất lượng
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {product.certs.map(c => (
-                    <span key={c} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> {c}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* ID */}
-            <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">ID sản phẩm</p>
-              <p className="font-mono text-sm text-slate-600">{product.id}</p>
             </div>
           </div>
         </div>
       </motion.div>
     </>
+  );
+}
+
+function TraceMeta({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: string }) {
+  return (
+    <div className="min-w-0">
+      <p className="flex items-center gap-1 text-[10px] font-semibold text-slate-400">
+        <Icon className="h-3 w-3 shrink-0" /> {label}
+      </p>
+      <p className={`mt-1 truncate text-xs font-bold ${value ? 'text-slate-700' : 'text-transparent'}`} aria-label={value ? undefined : `${label} chưa có dữ liệu`}>
+        {value || '\u00a0'}
+      </p>
+    </div>
+  );
+}
+
+function TraceEmptyState({ title, detail }: { title: string; detail: string }) {
+  return (
+    <div className="flex min-h-44 flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 px-6 text-center">
+      <Info className="mb-2 h-7 w-7 text-slate-300" />
+      <p className="text-sm font-bold text-slate-500">{title}</p>
+      <p className="mt-1 max-w-md text-xs leading-relaxed text-slate-400">{detail}</p>
+    </div>
   );
 }
 
@@ -518,7 +746,6 @@ export default function ProductsProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#F4F6FB] font-sans pb-16">
-
       {/* Page header */}
       <div className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -534,7 +761,6 @@ export default function ProductsProfilePage() {
           </button>
         </div>
       </div>
-
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
@@ -613,7 +839,7 @@ export default function ProductsProfilePage() {
                       <th className="px-6 py-3.5">Sản phẩm</th>
                       <th className="px-4 py-3.5">Danh mục</th>
                       <th className="px-4 py-3.5">Chứng nhận</th>
-                      <th className="px-4 py-3.5">Mã TXNG</th>
+                      <th className="px-4 py-3.5">Mã Tra Cứu</th>
                       <th className="px-4 py-3.5">Trạng thái</th>
                       <th className="px-4 py-3.5">Cập nhật</th>
                       <th className="px-6 py-3.5 text-right">Thao tác</th>
@@ -748,7 +974,6 @@ export default function ProductsProfilePage() {
           )}
         </div>
       </div>
-
       {/* Detail drawer */}
       <AnimatePresence>
         {viewId && (() => {
@@ -763,7 +988,6 @@ export default function ProductsProfilePage() {
           );
         })()}
       </AnimatePresence>
-
       {/* Add modal */}
       <AnimatePresence>
         {showAdd && (
@@ -774,7 +998,6 @@ export default function ProductsProfilePage() {
           />
         )}
       </AnimatePresence>
-
       {/* Edit modal */}
       <AnimatePresence>
         {editingProduct && (
@@ -792,7 +1015,6 @@ export default function ProductsProfilePage() {
           />
         )}
       </AnimatePresence>
-
       {/* Delete confirm */}
       <AnimatePresence>
         {deleteId && (
