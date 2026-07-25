@@ -25,7 +25,7 @@ const FEATURED_BUSINESSES = [
   { id: 'b1',  name: 'HTX Nông nghiệp Xanh',          type: 'Hợp tác xã',   district: 'Vĩnh Cửu',  products: 5,  cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=260&fit=crop' },
   { id: 'b4',  name: 'Trang trại Sạch Đồng Nai',       type: 'Trang trại',   district: 'Biên Hòa',  products: 12, cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=260&fit=crop' },
   { id: 'b2',  name: 'Công ty Thủy sản Đồng Nai',      type: 'Doanh nghiệp', district: 'Long Thành', products: 8, cert: 'HACCP',     img: 'https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=400&h=260&fit=crop' },
-  { id: 'b6',  name: 'Công ty TNHH Thủy sản Nam Phát', type: 'Doanh nghiệp', district: 'Nhơn Trạch', products: 7, cert: 'GlobalGAP', img: 'https://images.unsplash.com/photo-1534361960057-19f073e29f93?w=400&h=260&fit=crop' },
+  { id: 'b6',  name: 'Công ty TNHH Thủy sản Nam Phát', type: 'Doanh nghiệp', district: 'Nhơn Trạch', products: 7, cert: 'GlobalGAP', img: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=260&fit=crop' },
   { id: 'b5',  name: 'HTX Hồ Tiêu Long Khánh',         type: 'Hợp tác xã',   district: 'Long Khánh', products: 4, cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=260&fit=crop' },
   { id: 'b10', name: 'Công ty TNHH Thực phẩm Bình An', type: 'Doanh nghiệp', district: 'Biên Hòa',  products: 9, cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=260&fit=crop' },
 ];
@@ -35,7 +35,7 @@ const FEATURED_PRODUCTS = [
   { id: 'sp003', name: 'Tôm sú đông lạnh',         org: 'Công ty Thủy sản Đồng Nai',     district: 'Long Thành', cert: 'HACCP',    img: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400&h=260&fit=crop' },
   { id: 'sp006', name: 'Dưa hấu không hạt',        org: 'HTX Dưa hấu Định Quán',         district: 'Định Quán', cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1563114773-84221bd62daa?w=400&h=260&fit=crop' },
   { id: 'sp007', name: 'Mật ong rừng nguyên chất', org: 'Trang trại Ong Rừng Đồng Nai',  district: 'Tân Phú',   cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=260&fit=crop' },
-  { id: 'sp010', name: 'Tiêu sọ Long Khánh',       org: 'HTX Hồ Tiêu Long Khánh',        district: 'Long Khánh', cert: 'OCOP',     img: 'https://images.unsplash.com/photo-1599909533731-a4f31a68a3dd?w=400&h=260&fit=crop' },
+  { id: 'sp010', name: 'Tiêu sọ Long Khánh',       org: 'HTX Hồ Tiêu Long Khánh',        district: 'Long Khánh', cert: 'OCOP',     img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&h=260&fit=crop' },
   { id: 'sp005', name: 'Nước mắm truyền thống',    org: 'Cơ sở Nước mắm Hương Đồng',    district: 'Xuân Lộc',  cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=260&fit=crop' },
 ];
 
@@ -271,7 +271,7 @@ export default function LandingPage() {
               },
               {
                 name: "Phân bón & Vật tư nông nghiệp",
-                img: "https://images.unsplash.com/photo-1592982537447-6f2a6a0c1b0a?w=600&h=360&fit=crop",
+                img: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=360&fit=crop",
               },
               {
                 name: "Thủy sản",

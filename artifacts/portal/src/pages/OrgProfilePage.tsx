@@ -1,7 +1,99 @@
 import React, { useState } from 'react';
-import { Link } from 'wouter';
-import { ArrowLeft, Building2, MapPin, Phone, Mail, Edit2, CheckCircle2, Save, X } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Edit2, CheckCircle2, Save, X, FileText, Download, 
+  ImageIcon, Building2, MapPin, Phone, Mail, 
+  ShieldCheck, Briefcase, FileSignature, Map 
+} from 'lucide-react';
+import { useAuth, type FileDoc } from '../context/AuthContext';
+
+function DocCard({ doc, label }: { doc: FileDoc; label: string }) {
+  const isImage = doc.mimeType.startsWith('image/');
+  return (
+    <div className="group relative border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-all duration-200">
+      {isImage ? (
+        <div className="w-full h-40 bg-slate-100 overflow-hidden">
+          <img src={doc.dataUrl} alt={label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        </div>
+      ) : (
+        <div className="w-full h-40 bg-slate-50 flex flex-col items-center justify-center gap-3 transition-colors group-hover:bg-slate-100">
+          <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+            <FileText className="w-6 h-6 text-[#2740BA]" />
+          </div>
+          <p className="text-xs text-slate-500 px-4 text-center truncate max-w-full font-medium">{doc.name}</p>
+        </div>
+      )}
+      <div className="px-4 py-3.5 flex items-center justify-between gap-3 border-t border-slate-100 bg-white relative z-10">
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold text-slate-800 truncate">{label}</p>
+          <p className="text-[11px] text-slate-500 truncate mt-0.5">{doc.name}</p>
+        </div>
+        <a
+          href={doc.dataUrl}
+          download={doc.name}
+          className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-slate-50 text-[#2740BA] hover:bg-[#2740BA] hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2740BA]"
+          title="Tải về"
+        >
+          <Download className="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  );
+}
+
+function Field({ 
+  label, 
+  value, 
+  editValue, 
+  onChange, 
+  isEditing, 
+  icon: Icon, 
+  fullWidth = false 
+}: {
+  label: string;
+  value: string;
+  editValue: string;
+  onChange: (val: string) => void;
+  isEditing: boolean;
+  icon: React.ElementType;
+  fullWidth?: boolean;
+}) {
+  return (
+    <div className={`flex flex-col gap-2 ${fullWidth ? 'sm:col-span-2' : ''}`}>
+      <label className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+        <Icon className="w-3.5 h-3.5" /> {label}
+      </label>
+      <div className="relative h-11">
+        <AnimatePresence mode="popLayout" initial={false}>
+          {isEditing ? (
+            <motion.input
+              key="input"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.15 }}
+              type="text"
+              value={editValue}
+              onChange={e => onChange(e.target.value)}
+              className="absolute inset-0 w-full h-full border-slate-300 rounded-lg px-3.5 text-sm font-medium text-slate-900 focus:border-[#2740BA] focus:ring-1 focus:ring-[#2740BA] shadow-sm transition-colors bg-white outline-none border"
+            />
+          ) : (
+            <motion.div
+              key="text"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.15 }}
+              className="absolute inset-0 w-full h-full flex items-center px-3.5 text-sm font-semibold text-slate-800 bg-slate-50/80 border border-transparent rounded-lg"
+            >
+              {value}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
 
 export default function OrgProfilePage() {
   const { user } = useAuth();
@@ -24,90 +116,232 @@ export default function OrgProfilePage() {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const inputCls = `w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#2740BA] ${editing ? 'border-gray-300 bg-white' : 'border-transparent bg-slate-50 text-gray-700'}`;
+  const legalFields = [
+    { label: 'Tên doanh nghiệp / tổ chức', key: 'name', icon: Building2, fullWidth: true },
+    { label: 'Mã số thuế', key: 'tax', icon: FileSignature },
+    { label: 'Loại hình', key: 'type', icon: Briefcase },
+    { label: 'Ngành nghề', key: 'industry', icon: ShieldCheck, fullWidth: true },
+  ];
+
+  const contactFields = [
+    { label: 'Địa chỉ', key: 'address', icon: MapPin, fullWidth: true },
+    { label: 'Huyện / Thị xã', key: 'district', icon: Map },
+    { label: 'Số điện thoại', key: 'phone', icon: Phone },
+    { label: 'Email', key: 'email', icon: Mail },
+  ];
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" }
+    })
+  };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans">
-      <div className="bg-white border-b border-gray-200 px-6 lg:px-12 py-3">
-        <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-800 text-sm">
-            <ArrowLeft className="w-4 h-4" /> Trang chủ
-          </Link>
-          <span className="text-xs text-gray-400">Hồ sơ doanh nghiệp</span>
-        </div>
-      </div>
-
-      <div className="max-w-3xl mx-auto px-6 lg:px-12 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-[#2740BA] flex items-center justify-center text-white font-extrabold text-lg">
-              {form.name.slice(0, 2).toUpperCase()}
-            </div>
-            <div>
-              <h1 className="text-xl font-extrabold text-slate-800">Hồ sơ doanh nghiệp</h1>
-              <p className="text-sm text-gray-500">Quản lý thông tin tổ chức</p>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#F4F6FB] font-sans pb-20 relative overflow-hidden">
+      {/* Decorative background shape */}
+      <div className="absolute top-0 left-0 right-0 h-80 bg-gradient-to-b from-slate-200/50 to-transparent pointer-events-none" />
+      
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
+        
+        {/* Floating Notification */}
+        <AnimatePresence>
           {saved && (
-            <span className="flex items-center gap-1.5 text-sm text-emerald-600 font-semibold">
-              <CheckCircle2 className="w-4 h-4" /> Đã lưu
-            </span>
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.9 }}
+              className="fixed top-6 right-1/2 translate-x-1/2 sm:right-8 sm:translate-x-0 z-50 flex items-center gap-2.5 bg-emerald-50 text-emerald-700 px-5 py-3 rounded-xl border border-emerald-200 shadow-lg font-semibold text-sm"
+            >
+              <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+              Đã lưu hồ sơ thành công
+            </motion.div>
           )}
-        </div>
+        </AnimatePresence>
 
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8 space-y-6">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-            <h2 className="font-bold text-gray-800">Thông tin tổ chức</h2>
-            {!editing ? (
-              <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 text-sm font-semibold text-[#2740BA] hover:underline">
-                <Edit2 className="w-4 h-4" /> Chỉnh sửa
-              </button>
-            ) : (
-              <div className="flex gap-2">
-                <button onClick={() => setEditing(false)} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 border border-gray-300 px-3 py-1.5 rounded-lg">
-                  <X className="w-3.5 h-3.5" /> Hủy
-                </button>
-                <button onClick={handleSave} className="flex items-center gap-1 text-sm text-white bg-[#2740BA] hover:bg-[#1f339e] px-3 py-1.5 rounded-lg font-semibold">
-                  <Save className="w-3.5 h-3.5" /> Lưu
-                </button>
+        <motion.div initial="hidden" animate="visible" variants={sectionVariants} custom={0}>
+          <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm mb-8">
+            {/* Header background pattern/gradient */}
+            <div className="h-28 bg-gradient-to-r from-[#2740BA] to-[#1a2d8f]">
+              <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
+            </div>
+            
+            <div className="px-6 sm:px-8 pb-6 sm:pb-8">
+              <div className="relative flex flex-col sm:flex-row sm:items-end justify-between gap-6 -mt-12">
+                <div className="flex flex-col sm:flex-row sm:items-end gap-5">
+                  <div className="w-24 h-24 rounded-2xl bg-white p-1.5 shadow-md flex-shrink-0 mx-auto sm:mx-0">
+                    <div className="w-full h-full rounded-xl bg-gradient-to-br from-[#2740BA] to-[#3a56df] flex items-center justify-center text-white font-black text-3xl shadow-inner tracking-tight">
+                      {form.name.slice(0, 2).toUpperCase()}
+                    </div>
+                  </div>
+                  <div className="pb-1 text-center sm:text-left">
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">{form.name}</h1>
+                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 mt-2.5">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] uppercase tracking-wide font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                        <Briefcase className="w-3.5 h-3.5" />
+                        {form.type}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] uppercase tracking-wide font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Đã duyệt
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Sticky or inline save/edit controls */}
+                <div className="flex items-center justify-center sm:justify-end gap-3 pb-1 w-full sm:w-auto">
+                  {!editing ? (
+                    <button
+                      onClick={() => setEditing(true)}
+                      className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-[#2740BA] hover:border-[#2740BA] transition-all shadow-sm w-full sm:w-auto justify-center"
+                    >
+                      <Edit2 className="w-4 h-4" />
+                      Cập nhật hồ sơ
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => setEditing(false)}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                        Hủy
+                      </button>
+                      <button
+                        onClick={handleSave}
+                        className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-[#E8650A] hover:bg-[#d45a08] shadow-sm hover:shadow transition-all"
+                      >
+                        <Save className="w-4 h-4" />
+                        Lưu thay đổi
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
-            )}
+            </div>
           </div>
+        </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {[
-              { label: 'Tên doanh nghiệp / tổ chức', key: 'name', span: true },
-              { label: 'Loại hình', key: 'type' },
-              { label: 'Mã số thuế', key: 'tax' },
-              { label: 'Ngành nghề', key: 'industry' },
-              { label: 'Địa chỉ', key: 'address' },
-              { label: 'Huyện / Thị xã', key: 'district' },
-              { label: 'Số điện thoại', key: 'phone' },
-              { label: 'Email', key: 'email' },
-            ].map(f => (
-              <div key={f.key} className={f.span ? 'sm:col-span-2' : ''}>
-                <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">{f.label}</label>
-                <input
-                  type="text"
+        <div className="space-y-6">
+          {/* Legal Info Card */}
+          <motion.section 
+            custom={1} initial="hidden" animate="visible" variants={sectionVariants}
+            className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8"
+          >
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-[#2740BA]">
+                <FileSignature className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-800">Thông tin pháp lý</h2>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">Dữ liệu đăng ký kinh doanh chính thức</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+              {legalFields.map(f => (
+                <Field 
+                  key={f.key}
+                  label={f.label}
                   value={(form as any)[f.key]}
-                  onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                  readOnly={!editing}
-                  className={inputCls}
+                  editValue={(form as any)[f.key]}
+                  onChange={(val) => setForm(prev => ({ ...prev, [f.key]: val }))}
+                  isEditing={editing}
+                  icon={f.icon}
+                  fullWidth={f.fullWidth}
                 />
-              </div>
-            ))}
-          </div>
-
-          {/* Cert status */}
-          <div className="border-t border-slate-100 pt-5">
-            <h3 className="font-bold text-gray-700 mb-3 text-sm uppercase tracking-wide">Chứng nhận</h3>
-            <div className="flex flex-wrap gap-2">
-              {['VietGAP', 'OCOP 3★'].map(c => (
-                <span key={c} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold bg-emerald-100 text-emerald-700">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> {c}
-                </span>
               ))}
             </div>
+          </motion.section>
+
+          {/* Contact Info Card */}
+          <motion.section
+            custom={2} initial="hidden" animate="visible" variants={sectionVariants}
+            className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8"
+          >
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+              <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-[#E8650A]">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-800">Thông tin liên hệ</h2>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">Địa chỉ trụ sở và phương thức liên lạc</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+              {contactFields.map(f => (
+                <Field 
+                  key={f.key}
+                  label={f.label}
+                  value={(form as any)[f.key]}
+                  editValue={(form as any)[f.key]}
+                  onChange={(val) => setForm(prev => ({ ...prev, [f.key]: val }))}
+                  isEditing={editing}
+                  icon={f.icon}
+                  fullWidth={f.fullWidth}
+                />
+              ))}
+            </div>
+          </motion.section>
+
+          {/* Certifications and Docs inside a grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <motion.section 
+              custom={3} initial="hidden" animate="visible" variants={sectionVariants}
+              className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8 lg:col-span-1 flex flex-col"
+            >
+               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-slate-800">Chứng nhận</h2>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">Tiêu chuẩn chất lượng</p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-3 flex-1">
+                {['VietGAP', 'OCOP 3 Sao'].map(c => (
+                  <div key={c} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-100 shadow-sm">
+                    <span className="flex items-center gap-2.5 text-sm font-bold text-slate-700">
+                      <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                      {c}
+                    </span>
+                    <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-100/50 px-2 py-1 rounded-md tracking-wider">Hợp lệ</span>
+                  </div>
+                ))}
+              </div>
+            </motion.section>
+
+            {(user?.documents?.businessLicense || user?.documents?.authorization) && (
+              <motion.section 
+                custom={4} initial="hidden" animate="visible" variants={sectionVariants}
+                className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8 lg:col-span-2"
+              >
+                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                  <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600">
+                    <ImageIcon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-slate-800">Tài liệu đính kèm</h2>
+                    <p className="text-xs text-slate-500 font-medium mt-0.5">Bản sao số hóa của hồ sơ gốc</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  {user.documents.businessLicense && (
+                    <DocCard doc={user.documents.businessLicense} label="Giấy phép kinh doanh" />
+                  )}
+                  {user.documents.authorization && (
+                    <DocCard doc={user.documents.authorization} label="Giấy ủy quyền" />
+                  )}
+                </div>
+              </motion.section>
+            )}
           </div>
         </div>
       </div>

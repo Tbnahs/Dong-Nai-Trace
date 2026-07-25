@@ -1,10 +1,41 @@
 import React, { useState } from 'react';
-import { Save, AlertCircle, CheckCircle2, Fingerprint, QrCode, Download } from 'lucide-react';
+import { Save, AlertCircle, CheckCircle2, Fingerprint, QrCode, Download, FileText, ImageIcon } from 'lucide-react';
+import { useAuth, type FileDoc } from '../../context/AuthContext';
 
 // Demo: toggle this to see both states
 const APPROVAL_STATUS: 'approved' | 'pending' = 'pending';
 
+function DocCard({ doc, label }: { doc: FileDoc; label: string }) {
+  const isImage = doc.mimeType.startsWith('image/');
+  return (
+    <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+      {isImage ? (
+        <img src={doc.dataUrl} alt={label} className="w-full h-40 object-cover" />
+      ) : (
+        <div className="w-full h-40 bg-slate-50 flex flex-col items-center justify-center gap-2">
+          <FileText className="w-10 h-10 text-[#2740BA]" />
+          <p className="text-xs text-gray-500 text-center px-4 truncate max-w-full">{doc.name}</p>
+        </div>
+      )}
+      <div className="px-4 py-3 flex items-center justify-between gap-2 border-t border-slate-100">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold text-gray-700 truncate">{label}</p>
+          <p className="text-[11px] text-gray-400 truncate">{doc.name}</p>
+        </div>
+        <a
+          href={doc.dataUrl}
+          download={doc.name}
+          className="shrink-0 flex items-center gap-1 text-xs font-semibold text-[#2740BA] hover:text-[#1f339e] transition-colors"
+        >
+          <Download className="w-3.5 h-3.5" /> Tải về
+        </a>
+      </div>
+    </div>
+  );
+}
+
 export default function OrgProfilePage() {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'info' | 'id'>('info');
   const [saved, setSaved] = useState(false);
   const [form, setForm] = useState({
@@ -173,6 +204,23 @@ export default function OrgProfilePage() {
                 </button>
               </div>
             </form>
+
+            {/* ── Tài liệu đính kèm ── */}
+            {(user?.documents?.businessLicense || user?.documents?.authorization) && (
+              <div className="mt-8 pt-6 border-t border-gray-100 max-w-4xl">
+                <h3 className="text-sm font-bold text-gray-700 mb-4 flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4 text-[#2740BA]" /> Tài liệu đính kèm khi đăng ký
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {user.documents.businessLicense && (
+                    <DocCard doc={user.documents.businessLicense} label="Giấy phép kinh doanh" />
+                  )}
+                  {user.documents.authorization && (
+                    <DocCard doc={user.documents.authorization} label="Giấy ủy quyền" />
+                  )}
+                </div>
+              </div>
+            )}
           )}
 
           {activeTab === 'id' && (

@@ -4,7 +4,7 @@ import {
   User, Lock, Eye, EyeOff, Phone, X,
   ChevronLeft, ChevronRight, CheckCircle2, UploadCloud, Copy, LogIn,
 } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, type FileDoc } from '../context/AuthContext';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const DISTRICTS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
@@ -78,14 +78,75 @@ function PwField({ label, value, onChange, error, placeholder }: { label: string
   );
 }
 
-function UploadZone({ label, hint }: { label: string; hint: string }) {
+function UploadZone({ label, hint, accept = '.pdf,.jpg,.jpeg,.png', onChange }: { label: string; hint: string; accept?: string; onChange?: (doc: FileDoc | null) => void }) {
+  const [file, setFile] = useState<File | null>(null);
+  const [dragging, setDragging] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFile = (f: File) => {
+    setFile(f);
+    if (onChange) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        onChange({ name: f.name, dataUrl: e.target!.result as string, mimeType: f.type });
+      };
+      reader.readAsDataURL(f);
+    }
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  };
+
+  const formatSize = (bytes: number) => {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  };
+
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
-      <div className="border-2 border-dashed border-gray-300 rounded-xl py-6 flex flex-col items-center gap-2 bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
-        <UploadCloud className="w-6 h-6 text-gray-400" />
-        <p className="text-sm text-gray-500">{hint}</p>
-      </div>
+      <input
+        ref={inputRef}
+        type="file"
+        accept={accept}
+        className="hidden"
+        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
+      />
+      {file ? (
+        <div className="border border-gray-200 rounded-xl px-4 py-3 flex items-center justify-between bg-blue-50 gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <UploadCloud className="w-5 h-5 text-[#2740BA] shrink-0" />
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-gray-800 truncate">{file.name}</p>
+              <p className="text-xs text-gray-400">{formatSize(file.size)}</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => { setFile(null); if (inputRef.current) inputRef.current.value = ''; onChange?.(null); }}
+            className="shrink-0 p-1 rounded-lg hover:bg-red-100 text-gray-400 hover:text-red-500 transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      ) : (
+        <div
+          onClick={() => inputRef.current?.click()}
+          onDragOver={e => { e.preventDefault(); setDragging(true); }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={onDrop}
+          className={`border-2 border-dashed rounded-xl py-6 flex flex-col items-center gap-2 transition-colors cursor-pointer
+            ${dragging ? 'border-[#2740BA] bg-blue-50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'}`}
+        >
+          <UploadCloud className={`w-6 h-6 ${dragging ? 'text-[#2740BA]' : 'text-gray-400'}`} />
+          <p className="text-sm text-gray-500">{hint}</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -225,10 +286,13 @@ function LoginForm({ onSwitchToRegister, guideUrl }: { onSwitchToRegister: () =>
 
 // ─── Register Form ─────────────────────────────────────────────────────────────
 function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
+  const { saveRegistrationDocs } = useAuth();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<RegForm>(initReg);
   const [errors, setErrors] = useState<RegErrors>({});
   const [touched, setTouched] = useState(false);
+  const [licenseDoc, setLicenseDoc] = useState<import('../context/AuthContext').FileDoc | null>(null);
+  const [authDoc, setAuthDoc] = useState<import('../context/AuthContext').FileDoc | null>(null);
 
   const set = (key: keyof RegForm) => (val: string) => setForm(f => ({ ...f, [key]: val }));
   const e = touched ? errors : {};
@@ -315,7 +379,7 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
               value={form.email} onChange={ev => set('email')(ev.target.value)} />
           </Field>
           <div className="sm:col-span-2">
-            <UploadZone label="Giấy phép kinh doanh (bản scan)" hint="Kéo thả hoặc bấm để tải lên (PDF, JPG, PNG)" />
+            <UploadZone label="Giấy phép kinh doanh (bản scan)" hint="Kéo thả hoặc bấm để tải lên (PDF, JPG, PNG)" onChange={setLicenseDoc} />
           </div>
         </div>
       )}
@@ -352,7 +416,7 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
             <p className="text-xs text-gray-400 mt-2">Email và mật khẩu này sẽ dùng để đăng nhập sau khi được phê duyệt.</p>
           </div>
           <div className="sm:col-span-2">
-            <UploadZone label="Giấy ủy quyền (nếu có)" hint="Tải lên giấy ủy quyền (PDF, JPG)" />
+            <UploadZone label="Giấy ủy quyền (nếu có)" hint="Tải lên giấy ủy quyền (PDF, JPG)" onChange={setAuthDoc} />
           </div>
         </div>
       )}
@@ -378,6 +442,10 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
 
           <button
             onClick={() => {
+              saveRegistrationDocs(form.repEmail, {
+                ...(licenseDoc ? { businessLicense: licenseDoc } : {}),
+                ...(authDoc ? { authorization: authDoc } : {}),
+              });
               localStorage.setItem('pendingLoginEmail', form.repEmail);
               onSwitchToLogin();
             }}

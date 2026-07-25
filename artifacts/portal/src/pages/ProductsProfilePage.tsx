@@ -2,25 +2,29 @@ import React, { useState } from 'react';
 import { Link } from 'wouter';
 import {
   ArrowLeft, Plus, ShieldCheck, AlertCircle, Eye, Pencil, Trash2, Package,
-  X, UploadCloud, CheckCircle2, ImagePlus,
+  X, UploadCloud, CheckCircle2, ImagePlus, FileText, Check, LayoutGrid, Search
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const WITH_TXNG = [
-  { id: 'my1', name: 'Bưởi Tân Triều', category: 'Trái cây', cert: 'VietGAP', traceCode: 'TXNG-VCU-001-2024', img: 'https://picsum.photos/seed/buoi/80/80', updatedAt: '15/10/2024', status: 'approved' },
-  { id: 'my2', name: 'Rau muống hữu cơ', category: 'Nông sản', cert: 'VietGAP', traceCode: 'TXNG-XL-002-2024', img: 'https://picsum.photos/seed/raumuong/80/80', updatedAt: '10/08/2024', status: 'approved' },
-  { id: 'my3', name: 'Mật ong rừng nguyên chất', category: 'Thực phẩm', cert: 'OCOP', traceCode: 'TXNG-VCU-003-2024', img: 'https://picsum.photos/seed/matong/80/80', updatedAt: '01/06/2024', status: 'approved' },
+  { id: 'my1', name: 'Bưởi Tân Triều', category: 'Trái cây', cert: 'VietGAP', traceCode: 'TXNG-VCU-001-2024', img: 'https://picsum.photos/seed/buoi/400/300', updatedAt: '15/10/2024', status: 'approved' },
+  { id: 'my2', name: 'Rau muống hữu cơ', category: 'Nông sản', cert: 'VietGAP', traceCode: 'TXNG-XL-002-2024', img: 'https://picsum.photos/seed/raumuong/400/300', updatedAt: '10/08/2024', status: 'approved' },
+  { id: 'my3', name: 'Mật ong rừng nguyên chất', category: 'Thực phẩm', cert: 'OCOP', traceCode: 'TXNG-VCU-003-2024', img: 'https://picsum.photos/seed/matong/400/300', updatedAt: '01/06/2024', status: 'approved' },
 ];
 
 const WITHOUT_TXNG_INIT = [
-  { id: 'p1', name: 'Xoài cát hòa lộc', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/xoai/80/80', status: 'approved' },
-  { id: 'p2', name: 'Sầu riêng Ri6', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/saurieng/80/80', status: 'pending' },
+  { id: 'p1', name: 'Xoài cát hòa lộc', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/xoai/400/300', status: 'approved' },
+  { id: 'p2', name: 'Sầu riêng Ri6', category: 'Trái cây', cert: 'VietGAP', img: 'https://picsum.photos/seed/saurieng/400/300', status: 'pending' },
 ];
 
 const certColor: Record<string, string> = {
-  'VietGAP': 'bg-emerald-100 text-emerald-700',
-  'OCOP': 'bg-orange-100 text-orange-700',
-  'HACCP': 'bg-purple-100 text-purple-700',
+  'VietGAP': 'bg-emerald-100/90 text-emerald-800 border-emerald-200',
+  'OCOP': 'bg-orange-100/90 text-orange-800 border-orange-200',
+  'HACCP': 'bg-purple-100/90 text-purple-800 border-purple-200',
+  'GlobalGAP': 'bg-blue-100/90 text-blue-800 border-blue-200',
+  'ISO 22000': 'bg-rose-100/90 text-rose-800 border-rose-200',
+  'Hữu cơ': 'bg-lime-100/90 text-lime-800 border-lime-200',
 };
 
 const PRODUCT_CATS = ['Nông sản & Rau củ', 'Trái cây', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Khác'];
@@ -31,15 +35,98 @@ const CERTS_LIST = ['VietGAP', 'GlobalGAP', 'OCOP', 'HACCP', 'ISO 22000', 'Hữu
 function StatusBadge({ status }: { status: string }) {
   if (status === 'approved') {
     return (
-      <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
-        <CheckCircle2 className="w-3 h-3" /> Đã duyệt
+      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 backdrop-blur-md">
+        <CheckCircle2 className="w-3.5 h-3.5" /> Đã duyệt
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
-      <AlertCircle className="w-3 h-3" /> Chờ duyệt
+    <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md bg-amber-500 text-white shadow-sm shadow-amber-500/20 backdrop-blur-md">
+      <AlertCircle className="w-3.5 h-3.5" /> Chờ duyệt
     </span>
+  );
+}
+
+// ─── Product Card ─────────────────────────────────────────────────────────────
+function ProductCard({ p, tab, index, onEdit, onDelete }: { p: any, tab: 'with'|'without', index: number, onEdit: () => void, onDelete: () => void }) {
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className={`bg-white rounded-2xl overflow-hidden border-2 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group flex flex-col ${tab === 'with' ? 'border-transparent hover:border-emerald-100' : 'border-transparent hover:border-amber-100'}`}
+      style={{ boxShadow: tab === 'without' ? '0 4px 20px -5px rgba(245, 158, 11, 0.1)' : '0 4px 20px -5px rgba(16, 185, 129, 0.05)' }}
+    >
+      <div className="relative h-48 w-full bg-slate-100 overflow-hidden">
+        <img src={p.img} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          <StatusBadge status={p.status} />
+          {p.cert && (
+            <span className={`inline-flex items-center text-[10px] font-bold px-2 py-1 rounded-md shadow-sm border backdrop-blur-sm ${certColor[p.cert] || 'bg-white/90 text-slate-700 border-slate-200'}`}>
+              {p.cert}
+            </span>
+          )}
+        </div>
+        <div className="absolute top-3 right-3">
+           <span className="bg-black/50 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-md">
+             {p.category}
+           </span>
+        </div>
+        {p.updatedAt && (
+          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 text-white/90 text-[11px] font-medium">
+            <Search className="w-3.5 h-3.5" />
+            Cập nhật: {p.updatedAt}
+          </div>
+        )}
+      </div>
+      
+      <div className="p-5 flex flex-col flex-1">
+        <h3 className="font-bold text-lg text-slate-800 mb-3 line-clamp-1" title={p.name}>{p.name}</h3>
+        
+        {p.traceCode ? (
+          <div className="mb-4">
+            <div className="inline-flex items-center gap-2 bg-slate-50 text-slate-700 font-mono text-xs px-3 py-1.5 rounded-lg border border-slate-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span>
+              {p.traceCode}
+            </div>
+          </div>
+        ) : (
+          <div className="mb-4">
+            <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-700 font-mono text-xs px-3 py-1.5 rounded-lg border border-amber-200 border-dashed">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-sm shadow-amber-500/50"></span>
+              Chưa cấp mã TXNG
+            </div>
+          </div>
+        )}
+
+        <div className="mt-auto pt-4 border-t border-slate-100 flex items-center gap-2 justify-end">
+          {tab === 'without' && (
+            <>
+              <button
+                onClick={onEdit}
+                className="p-2.5 rounded-xl bg-slate-50 hover:bg-[#2740BA] hover:text-white transition-colors text-slate-500 cursor-pointer"
+                title="Chỉnh sửa"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+              <button
+                onClick={onDelete}
+                className="p-2.5 rounded-xl bg-slate-50 hover:bg-red-500 hover:text-white transition-colors text-slate-500 cursor-pointer"
+                title="Xóa"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </>
+          )}
+          <Link href={`/san-pham/${p.id}`} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-200 transition-colors text-slate-700 text-sm font-bold ml-1 cursor-pointer">
+            <Eye className="w-4 h-4" /> Chi tiết
+          </Link>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -101,154 +188,187 @@ function ProductModal({
   };
 
   const inputCls = (err?: string) =>
-    `w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 placeholder:text-gray-400 transition-colors ${err ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-300 focus:ring-[#2740BA] focus:border-transparent'}`;
+    `w-full border-2 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none transition-all ${err ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/10 bg-red-50/50 text-red-900 placeholder:text-red-300' : 'border-slate-200 focus:border-[#2740BA] focus:ring-4 focus:ring-[#2740BA]/10 bg-white text-slate-800 placeholder:text-slate-400 hover:border-slate-300'}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden">
-
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm">
+      <motion.div 
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[95vh] flex flex-col overflow-hidden"
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 shrink-0">
-          <div>
-            <h2 className="text-base font-bold text-gray-800">{title}</h2>
-            <p className="text-xs text-gray-400 mt-0.5">Điền đầy đủ thông tin để đăng ký sản phẩm</p>
+        <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-slate-100 bg-slate-50/50 shrink-0">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-white border border-slate-200 shadow-sm flex items-center justify-center shrink-0">
+               <Package className="w-6 h-6 text-[#2740BA]" />
+            </div>
+            <div>
+              <h2 className="text-lg font-extrabold text-slate-800">{title}</h2>
+              <p className="text-xs font-medium text-slate-500 mt-0.5">Điền đầy đủ thông tin để hoàn tất hồ sơ</p>
+            </div>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
+          <button onClick={onClose} className="p-2 rounded-full hover:bg-slate-200 text-slate-400 hover:text-slate-600 transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Body — scrollable */}
-        <div className="flex-1 overflow-y-auto">
-          {/* Section: Thông tin cơ bản */}
-          <div className="px-6 pt-5 pb-4">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Thông tin cơ bản</p>
-
-            {/* Name — full width */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Tên sản phẩm <span className="text-red-500">*</span>
-              </label>
-              <input
-                className={inputCls(errors.name)}
-                placeholder="VD: Bưởi da xanh VietGAP"
-                value={form.name}
-                onChange={e => { set('name', e.target.value); setErrors(er => ({ ...er, name: undefined })); }}
-              />
-              {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name}</p>}
-            </div>
-
-            {/* Category + Unit — 2 cols */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Danh mục <span className="text-red-500">*</span></label>
-                <select className={inputCls() + ' bg-white'} value={form.category} onChange={e => set('category', e.target.value)}>
-                  {PRODUCT_CATS.map(c => <option key={c}>{c}</option>)}
-                </select>
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto px-6 sm:px-8 py-8">
+          <div className="space-y-8">
+            {/* Section: Basic Info */}
+            <section>
+              <div className="flex items-center gap-2 mb-5">
+                <FileText className="w-4 h-4 text-[#2740BA]" />
+                <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Thông tin cơ bản</h3>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Đơn vị tính <span className="text-red-500">*</span></label>
-                <div className="flex gap-2">
-                  <input
-                    className={inputCls(errors.unit)}
-                    placeholder="kg, hộp, thùng..."
-                    value={form.unit}
-                    list="unit-suggestions"
-                    onChange={e => { set('unit', e.target.value); setErrors(er => ({ ...er, unit: undefined })); }}
-                  />
-                  <datalist id="unit-suggestions">
-                    {UNITS.map(u => <option key={u} value={u} />)}
-                  </datalist>
-                </div>
-                {errors.unit && <p className="mt-1 text-xs text-red-600">{errors.unit}</p>}
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-100" />
-
-          {/* Section: Chứng nhận */}
-          <div className="px-6 py-4">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Chứng nhận chất lượng</p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-              {CERTS_LIST.map(c => (
-                <label key={c} className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border cursor-pointer transition-colors text-sm font-medium select-none ${form.certs.includes(c) ? 'bg-[#2740BA]/5 border-[#2740BA]/40 text-[#2740BA]' : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}>
-                  <input type="checkbox" checked={form.certs.includes(c)} onChange={() => toggleCert(c)}
-                    className="rounded text-[#2740BA] focus:ring-[#2740BA] w-4 h-4 shrink-0" />
-                  {c}
-                </label>
-              ))}
-              <label className={`flex items-center gap-2.5 px-3 py-2.5 rounded-lg border cursor-pointer transition-colors text-sm font-medium select-none ${form.certOther ? 'bg-[#2740BA]/5 border-[#2740BA]/40 text-[#2740BA]' : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}>
-                <input type="checkbox" checked={form.certOther} onChange={e => set('certOther', e.target.checked)}
-                  className="rounded text-[#2740BA] focus:ring-[#2740BA] w-4 h-4 shrink-0" />
-                Khác
-              </label>
-            </div>
-            {form.certOther && (
-              <input className={inputCls() + ' mt-3'} placeholder="Nhập tên chứng nhận khác..."
-                value={form.certOtherText} onChange={e => set('certOtherText', e.target.value)} />
-            )}
-          </div>
-
-          <div className="border-t border-gray-100" />
-
-          {/* Section: Mô tả */}
-          <div className="px-6 py-4">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Mô tả sản phẩm</p>
-            <textarea
-              className={inputCls(errors.description) + ' min-h-[96px] resize-y'}
-              placeholder="Mô tả ngắn gọn về sản phẩm, vùng trồng, quy trình sản xuất..."
-              value={form.description}
-              onChange={e => { set('description', e.target.value); setErrors(er => ({ ...er, description: undefined })); }}
-            />
-            {errors.description && <p className="mt-1 text-xs text-red-600">{errors.description}</p>}
-          </div>
-
-          <div className="border-t border-gray-100" />
-
-          {/* Section: Hình ảnh */}
-          <div className="px-6 py-4">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Hình ảnh sản phẩm</p>
-            {imagePreview ? (
-              <div className="relative w-full h-40 rounded-xl overflow-hidden border border-gray-200 bg-gray-50 group">
-                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                  <label className="cursor-pointer bg-white text-gray-800 text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
-                    Đổi ảnh
-                    <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Tên sản phẩm <span className="text-red-500">*</span>
                   </label>
-                  <button onClick={() => setImagePreview(null)} className="bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-red-600 transition-colors">
-                    Xóa
-                  </button>
+                  <input
+                    className={inputCls(errors.name)}
+                    placeholder="VD: Bưởi da xanh VietGAP"
+                    value={form.name}
+                    onChange={e => { set('name', e.target.value); setErrors(er => ({ ...er, name: undefined })); }}
+                  />
+                  {errors.name && <p className="mt-1.5 text-xs font-medium text-red-500 flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.name}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Danh mục <span className="text-red-500">*</span></label>
+                  <div className="relative">
+                    <select className={inputCls() + ' appearance-none pr-10 cursor-pointer'} value={form.category} onChange={e => set('category', e.target.value)}>
+                      {PRODUCT_CATS.map(c => <option key={c}>{c}</option>)}
+                    </select>
+                    <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-slate-400">
+                       <LayoutGrid className="w-4 h-4" />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Đơn vị tính <span className="text-red-500">*</span></label>
+                  <div className="relative">
+                    <input
+                      className={inputCls(errors.unit)}
+                      placeholder="kg, hộp, thùng..."
+                      value={form.unit}
+                      list="unit-suggestions"
+                      onChange={e => { set('unit', e.target.value); setErrors(er => ({ ...er, unit: undefined })); }}
+                    />
+                    <datalist id="unit-suggestions">
+                      {UNITS.map(u => <option key={u} value={u} />)}
+                    </datalist>
+                  </div>
+                  {errors.unit && <p className="mt-1.5 text-xs font-medium text-red-500 flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.unit}</p>}
                 </div>
               </div>
-            ) : (
-              <label className="cursor-pointer block">
-                <div className="border-2 border-dashed border-gray-200 rounded-xl py-8 flex flex-col items-center gap-2 bg-gray-50 hover:bg-gray-100 hover:border-[#2740BA]/40 transition-colors">
-                  <div className="w-12 h-12 rounded-full bg-[#2740BA]/10 flex items-center justify-center">
-                    <ImagePlus className="w-6 h-6 text-[#2740BA]" />
+            </section>
+
+            <hr className="border-slate-100" />
+
+            {/* Section: Certs */}
+            <section>
+              <div className="flex items-center gap-2 mb-5">
+                <ShieldCheck className="w-4 h-4 text-[#2740BA]" />
+                <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Chứng nhận chất lượng</h3>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {CERTS_LIST.map(c => (
+                  <label key={c} className={`flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${form.certs.includes(c) ? 'border-[#2740BA] bg-blue-50/50' : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50'}`}>
+                    <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors shrink-0 ${form.certs.includes(c) ? 'bg-[#2740BA] border-[#2740BA]' : 'border-slate-300 bg-white'}`}>
+                       {form.certs.includes(c) && <Check className="w-3.5 h-3.5 text-white" />}
+                    </div>
+                    <span className={`text-sm font-semibold ${form.certs.includes(c) ? 'text-[#2740BA]' : 'text-slate-600'}`}>{c}</span>
+                  </label>
+                ))}
+                <label className={`flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${form.certOther ? 'border-[#2740BA] bg-blue-50/50' : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50'}`}>
+                  <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors shrink-0 ${form.certOther ? 'bg-[#2740BA] border-[#2740BA]' : 'border-slate-300 bg-white'}`}>
+                     {form.certOther && <Check className="w-3.5 h-3.5 text-white" />}
                   </div>
-                  <p className="text-sm font-medium text-gray-600">Bấm để tải ảnh lên</p>
-                  <p className="text-xs text-gray-400">JPG, PNG — tối đa 5 hình</p>
+                  <span className={`text-sm font-semibold ${form.certOther ? 'text-[#2740BA]' : 'text-slate-600'}`}>Khác</span>
+                </label>
+              </div>
+              {form.certOther && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-4">
+                  <input className={inputCls()} placeholder="Nhập tên chứng nhận khác..."
+                    value={form.certOtherText} onChange={e => set('certOtherText', e.target.value)} />
+                </motion.div>
+              )}
+            </section>
+
+            <hr className="border-slate-100" />
+
+            {/* Section: Description */}
+            <section>
+              <div className="flex items-center gap-2 mb-5">
+                <FileText className="w-4 h-4 text-[#2740BA]" />
+                <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Mô tả sản phẩm</h3>
+              </div>
+              <textarea
+                className={inputCls(errors.description) + ' min-h-[120px] resize-y'}
+                placeholder="Mô tả ngắn gọn về sản phẩm, vùng trồng, quy trình sản xuất..."
+                value={form.description}
+                onChange={e => { set('description', e.target.value); setErrors(er => ({ ...er, description: undefined })); }}
+              />
+              {errors.description && <p className="mt-1.5 text-xs font-medium text-red-500 flex items-center gap-1"><AlertCircle className="w-3 h-3"/>{errors.description}</p>}
+            </section>
+
+            <hr className="border-slate-100" />
+
+            {/* Section: Image */}
+            <section>
+              <div className="flex items-center gap-2 mb-5">
+                <ImagePlus className="w-4 h-4 text-[#2740BA]" />
+                <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Hình ảnh sản phẩm</h3>
+              </div>
+              
+              {imagePreview ? (
+                <div className="relative w-full h-64 rounded-2xl overflow-hidden border-2 border-slate-200 bg-slate-50 group">
+                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
+                    <label className="cursor-pointer bg-white text-slate-800 text-sm font-bold px-6 py-3 rounded-xl hover:bg-slate-100 transition-all transform hover:scale-105 shadow-lg">
+                      Đổi ảnh khác
+                      <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                    </label>
+                    <button onClick={() => setImagePreview(null)} className="bg-red-500 text-white text-sm font-bold px-6 py-3 rounded-xl hover:bg-red-600 transition-all transform hover:scale-105 shadow-lg">
+                      Xóa ảnh
+                    </button>
+                  </div>
                 </div>
-                <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-              </label>
-            )}
+              ) : (
+                <label className="cursor-pointer block group">
+                  <div className="border-2 border-dashed border-slate-300 rounded-2xl py-14 flex flex-col items-center gap-4 bg-slate-50 group-hover:bg-blue-50/50 group-hover:border-[#2740BA]/40 transition-all">
+                    <div className="w-16 h-16 rounded-full bg-white shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <UploadCloud className="w-7 h-7 text-[#2740BA]" />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-bold text-slate-700 mb-1.5">Kéo thả hoặc bấm để tải ảnh lên</p>
+                      <p className="text-xs font-medium text-slate-400">Định dạng JPG, PNG — tối đa 5MB</p>
+                    </div>
+                  </div>
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                </label>
+              )}
+            </section>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl shrink-0">
-          <button onClick={onClose}
-            className="text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors px-4 py-2 rounded-lg hover:bg-gray-100">
+        <div className="flex items-center justify-end gap-3 px-6 sm:px-8 py-5 border-t border-slate-100 bg-slate-50 shrink-0">
+          <button onClick={onClose} className="px-6 py-3 text-sm font-bold text-slate-600 hover:bg-slate-200 rounded-xl transition-colors">
             Hủy bỏ
           </button>
-          <button onClick={handleSave}
-            className="flex items-center gap-1.5 px-6 py-2.5 bg-[#2740BA] text-white text-sm font-bold rounded-lg hover:bg-[#1f339e] transition-colors shadow-sm">
-            <CheckCircle2 className="w-4 h-4" /> Lưu hồ sơ sản phẩm
+          <button onClick={handleSave} className="px-8 py-3 text-sm font-bold text-white bg-[#E8650A] hover:bg-[#d05a08] rounded-xl transition-all shadow-md shadow-[#E8650A]/20 flex items-center gap-2 hover:-translate-y-0.5">
+            <Check className="w-4 h-4" /> Lưu hồ sơ sản phẩm
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -265,7 +385,7 @@ export default function ProductsProfilePage() {
   const addProduct = (name: string, category: string) => {
     setWithoutList(l => [...l, {
       id: `new-${Date.now()}`, name, category, cert: '', status: 'pending',
-      img: 'https://picsum.photos/seed/new/80/80',
+      img: `https://picsum.photos/seed/${Date.now()}/400/300`,
     }]);
     setActiveTab('without');
   };
@@ -276,195 +396,214 @@ export default function ProductsProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans">
-      <div className="bg-white border-b border-gray-200 px-6 lg:px-12 py-3">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link href="/" className="inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-800 text-sm">
-            <ArrowLeft className="w-4 h-4" /> Trang chủ
-          </Link>
-          <span className="text-xs text-gray-400">Hồ sơ sản phẩm</span>
+    <div className="min-h-screen bg-[#F4F6FB] font-sans pb-24">
+      {/* Header Area */}
+      <div className="bg-[#2740BA] px-6 lg:px-12 pt-6 pb-28 relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 to-transparent pointer-events-none"></div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="flex items-center gap-3 text-blue-200 text-sm font-medium mb-8">
+            <Link href="/" className="hover:text-white transition-colors flex items-center gap-1.5 cursor-pointer">
+              <ArrowLeft className="w-4 h-4" /> Trang chủ
+            </Link>
+            <span className="opacity-50">/</span>
+            <span className="text-white">Hồ sơ sản phẩm</span>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-black text-white mb-2 tracking-tight">Hồ sơ sản phẩm</h1>
+              <p className="text-blue-100 font-medium">Quản lý danh mục sản phẩm nông nghiệp và truy xuất nguồn gốc</p>
+            </div>
+            <button
+              onClick={() => setShowAdd(true)}
+              className="flex items-center justify-center gap-2 px-6 py-3.5 bg-[#E8650A] text-white text-sm font-bold rounded-xl hover:bg-[#d05a08] transition-all shadow-lg shadow-[#E8650A]/20 hover:-translate-y-0.5"
+            >
+              <Plus className="w-5 h-5" /> Thêm sản phẩm mới
+            </button>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 lg:px-12 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-xl font-extrabold text-slate-800">Hồ sơ sản phẩm</h1>
-            <p className="text-sm text-gray-500 mt-0.5">Quản lý danh sách sản phẩm đã đăng ký</p>
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto px-6 lg:px-12 -mt-16 relative z-10">
+        
+        {/* Stats Strip */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-2xl p-6 shadow-lg shadow-slate-200/40 border border-slate-100 flex items-center gap-5 transform hover:-translate-y-1 transition-transform">
+            <div className="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
+              <Package className="w-7 h-7 text-[#2740BA]" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Tổng sản phẩm</p>
+              <p className="text-3xl font-black text-slate-800">{withList.length + withoutList.length}</p>
+            </div>
           </div>
-          <button
-            onClick={() => setShowAdd(true)}
-            className="flex items-center gap-1.5 px-4 py-2.5 bg-[#2740BA] text-white text-sm font-bold rounded-lg hover:bg-[#1f339e] transition-colors shadow-sm"
-          >
-            <Plus className="w-4 h-4" /> Thêm sản phẩm
-          </button>
+          <div className="bg-white rounded-2xl p-6 shadow-lg shadow-emerald-200/40 border border-emerald-50 flex items-center gap-5 transform hover:-translate-y-1 transition-transform">
+            <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-7 h-7 text-emerald-600" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">Đã có TXNG</p>
+              <p className="text-3xl font-black text-slate-800">{withList.length}</p>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-lg shadow-amber-200/40 border border-amber-50 flex items-center gap-5 transform hover:-translate-y-1 transition-transform">
+            <div className="w-14 h-14 rounded-full bg-amber-50 flex items-center justify-center shrink-0">
+              <AlertCircle className="w-7 h-7 text-amber-500" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">Chưa có TXNG</p>
+              <p className="text-3xl font-black text-slate-800">{withoutList.length}</p>
+            </div>
+          </div>
         </div>
 
-        {/* Tab switcher */}
-        <div className="flex gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-6 w-fit shadow-sm">
+        {/* Tab Switcher */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <button
             onClick={() => setActiveTab('with')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'with' ? 'bg-emerald-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
+            className={`flex-1 sm:flex-none flex items-center justify-between sm:justify-start gap-4 px-6 py-4 rounded-2xl text-sm font-bold transition-all border-2 ${activeTab === 'with' ? 'bg-emerald-50 border-emerald-500 text-emerald-800 shadow-md shadow-emerald-100' : 'bg-white border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-700 shadow-sm'}`}
           >
-            <ShieldCheck className="w-4 h-4" />
-            Đã có truy xuất nguồn gốc
-            <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'with' ? 'bg-white/20 text-white' : 'bg-slate-100 text-gray-500'}`}>
+            <div className="flex items-center gap-3">
+              <ShieldCheck className={`w-5 h-5 ${activeTab === 'with' ? 'text-emerald-600' : 'text-slate-400'}`} />
+              Đã có truy xuất nguồn gốc
+            </div>
+            <span className={`px-3 py-1 rounded-lg text-xs ${activeTab === 'with' ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
               {withList.length}
             </span>
           </button>
           <button
             onClick={() => setActiveTab('without')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${activeTab === 'without' ? 'bg-amber-500 text-white shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
+            className={`flex-1 sm:flex-none flex items-center justify-between sm:justify-start gap-4 px-6 py-4 rounded-2xl text-sm font-bold transition-all border-2 ${activeTab === 'without' ? 'bg-amber-50 border-amber-500 text-amber-800 shadow-md shadow-amber-100' : 'bg-white border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-700 shadow-sm'}`}
           >
-            <AlertCircle className="w-4 h-4" />
-            Chưa có truy xuất nguồn gốc
-            <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${activeTab === 'without' ? 'bg-white/20 text-white' : 'bg-slate-100 text-gray-500'}`}>
+            <div className="flex items-center gap-3">
+              <AlertCircle className={`w-5 h-5 ${activeTab === 'without' ? 'text-amber-500' : 'text-slate-400'}`} />
+              Chưa có truy xuất nguồn gốc
+            </div>
+            <span className={`px-3 py-1 rounded-lg text-xs ${activeTab === 'without' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
               {withoutList.length}
             </span>
           </button>
         </div>
 
-        {/* WITH TXNG list — view only */}
+        {/* Lists */}
         {activeTab === 'with' && (
-          <div className="space-y-3">
-            {withList.length === 0 ? (
-              <EmptyState msg="Chưa có sản phẩm nào có truy xuất nguồn gốc" />
-            ) : withList.map(p => (
-              <div key={p.id} className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-4 hover:shadow-md transition-shadow">
-                <img src={p.img} alt={p.name} className="w-16 h-16 object-cover rounded-xl shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
-                    <h3 className="font-bold text-slate-800 truncate">{p.name}</h3>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-1.5">{p.category}</p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${certColor[p.cert] || 'bg-gray-100 text-gray-600'}`}>{p.cert}</span>
-                    <span className="text-[10px] text-gray-400 font-mono bg-slate-50 px-2 py-0.5 rounded">{p.traceCode}</span>
-                    <span className="text-[10px] text-gray-400">Cập nhật: {p.updatedAt}</span>
-                    <StatusBadge status={p.status} />
-                  </div>
-                </div>
-                <div className="flex items-center gap-1 shrink-0">
-                  <Link href={`/san-pham/${p.id}`}>
-                    <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-gray-500" title="Xem">
-                      <Eye className="w-4 h-4" />
-                    </button>
-                  </Link>
-                </div>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimatePresence mode="popLayout">
+              {withList.length === 0 ? (
+                <EmptyState msg="Chưa có sản phẩm nào được cấp mã truy xuất nguồn gốc." tab="with" />
+              ) : (
+                withList.map((p, index) => (
+                  <ProductCard 
+                    key={p.id} p={p} tab="with" index={index} 
+                    onEdit={() => {}} onDelete={() => {}} 
+                  />
+                ))
+              )}
+            </AnimatePresence>
           </div>
         )}
 
-        {/* WITHOUT TXNG list — with status + edit/view/delete */}
         {activeTab === 'without' && (
-          <div className="space-y-3">
-            {withoutList.length === 0 ? (
-              <EmptyState msg="Tất cả sản phẩm đã có truy xuất nguồn gốc" />
-            ) : withoutList.map(p => (
-              <div key={p.id} className="bg-white rounded-xl border border-amber-100 shadow-sm p-4 flex items-center gap-4 hover:shadow-md transition-shadow">
-                <img src={p.img} alt={p.name} className="w-16 h-16 object-cover rounded-xl shrink-0 opacity-80" />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
-                    <h3 className="font-bold text-slate-800 truncate">{p.name}</h3>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-1.5">{p.category}</p>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {p.cert && (
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${certColor[p.cert] || 'bg-gray-100 text-gray-600'}`}>{p.cert}</span>
-                    )}
-                    <StatusBadge status={p.status} />
-                  </div>
-                </div>
-                {/* Actions: Edit, View, Delete */}
-                <div className="flex items-center gap-1 shrink-0">
-                  <button
-                    onClick={() => setEditingId(p.id)}
-                    className="p-2 rounded-lg hover:bg-blue-50 transition-colors text-gray-400 hover:text-[#2740BA]"
-                    title="Chỉnh sửa"
-                  >
-                    <Pencil className="w-4 h-4" />
-                  </button>
-                  <Link href={`/san-pham/${p.id}`}>
-                    <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors text-gray-400 hover:text-gray-700" title="Xem">
-                      <Eye className="w-4 h-4" />
-                    </button>
-                  </Link>
-                  <button
-                    onClick={() => setDeleteId(p.id)}
-                    className="p-2 rounded-lg hover:bg-red-50 transition-colors text-gray-400 hover:text-red-500"
-                    title="Xóa"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AnimatePresence mode="popLayout">
+              {withoutList.length === 0 ? (
+                <EmptyState msg="Tất cả sản phẩm đã được cấp mã truy xuất nguồn gốc." tab="without" />
+              ) : (
+                withoutList.map((p, index) => (
+                  <ProductCard 
+                    key={p.id} p={p} tab="without" index={index} 
+                    onEdit={() => setEditingId(p.id)} 
+                    onDelete={() => setDeleteId(p.id)} 
+                  />
+                ))
+              )}
+            </AnimatePresence>
           </div>
         )}
       </div>
 
       {/* Add Product Modal */}
-      {showAdd && (
-        <ProductModal
-          title="Tạo hồ sơ sản phẩm mới"
-          onClose={() => setShowAdd(false)}
-          onSave={addProduct}
-        />
-      )}
+      <AnimatePresence>
+        {showAdd && (
+          <ProductModal
+            title="Tạo hồ sơ sản phẩm mới"
+            onClose={() => setShowAdd(false)}
+            onSave={addProduct}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Edit Product Modal */}
-      {editingId && (() => {
-        const p = withoutList.find(x => x.id === editingId);
-        if (!p) return null;
-        return (
-          <ProductModal
-            title={`Chỉnh sửa: ${p.name}`}
-            initial={{ name: p.name, category: p.category }}
-            onClose={() => setEditingId(null)}
-            onSave={(name, category) => {
-              setWithoutList(l => l.map(x => x.id === editingId ? { ...x, name, category } : x));
-              setEditingId(null);
-            }}
-          />
-        );
-      })()}
+      <AnimatePresence>
+        {editingId && (() => {
+          const p = withoutList.find(x => x.id === editingId);
+          if (!p) return null;
+          return (
+            <ProductModal
+              title={`Chỉnh sửa: ${p.name}`}
+              initial={{ name: p.name, category: p.category }}
+              onClose={() => setEditingId(null)}
+              onSave={(name, category) => {
+                setWithoutList(l => l.map(x => x.id === editingId ? { ...x, name, category } : x));
+                setEditingId(null);
+              }}
+            />
+          );
+        })()}
+      </AnimatePresence>
 
       {/* Delete confirm dialog */}
-      {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
-            <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
-              <Trash2 className="w-6 h-6 text-red-500" />
-            </div>
-            <h3 className="font-bold text-gray-800 mb-2">Xóa sản phẩm?</h3>
-            <p className="text-sm text-gray-500 mb-6">
-              Sản phẩm <strong>{withoutList.find(p => p.id === deleteId)?.name}</strong> sẽ bị xóa vĩnh viễn. Hành động này không thể hoàn tác.
-            </p>
-            <div className="flex gap-3">
-              <button onClick={() => setDeleteId(null)}
-                className="flex-1 py-2.5 text-sm font-semibold border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
-                Hủy
-              </button>
-              <button onClick={() => deleteWithout(deleteId)}
-                className="flex-1 py-2.5 text-sm font-bold bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
-                Xóa sản phẩm
-              </button>
-            </div>
+      <AnimatePresence>
+        {deleteId && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 10 }}
+              className="bg-white rounded-3xl shadow-2xl w-full max-w-sm p-8 text-center"
+            >
+              <div className="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-5 border-[8px] border-red-50/50">
+                <Trash2 className="w-8 h-8 text-red-500" />
+              </div>
+              <h3 className="text-xl font-extrabold text-slate-800 mb-2">Xóa sản phẩm?</h3>
+              <p className="text-sm font-medium text-slate-500 mb-8 leading-relaxed">
+                Sản phẩm <strong className="text-slate-800">{withoutList.find(p => p.id === deleteId)?.name}</strong> sẽ bị xóa khỏi danh sách. Hành động này không thể hoàn tác.
+              </p>
+              <div className="flex flex-col gap-3">
+                <button onClick={() => deleteWithout(deleteId)}
+                  className="w-full py-3.5 text-sm font-bold bg-red-500 text-white rounded-xl hover:bg-red-600 transition-all shadow-md shadow-red-500/20 hover:-translate-y-0.5">
+                  Xác nhận xóa
+                </button>
+                <button onClick={() => setDeleteId(null)}
+                  className="w-full py-3.5 text-sm font-bold text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors">
+                  Hủy bỏ
+                </button>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-function EmptyState({ msg }: { msg: string }) {
+function EmptyState({ msg, tab }: { msg: string; tab: 'with' | 'without' }) {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-14 text-center">
-      <Package className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-      <p className="text-sm text-gray-500">{msg}</p>
-    </div>
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="col-span-1 sm:col-span-2 lg:col-span-3 bg-white rounded-3xl border border-slate-200 border-dashed p-12 sm:p-16 text-center flex flex-col items-center justify-center min-h-[300px]"
+    >
+      <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-6 ${tab === 'with' ? 'bg-emerald-50' : 'bg-amber-50'}`}>
+        {tab === 'with' ? (
+          <ShieldCheck className="w-12 h-12 text-emerald-400" />
+        ) : (
+          <Package className="w-12 h-12 text-amber-400" />
+        )}
+      </div>
+      <h3 className="text-xl font-bold text-slate-800 mb-2">Không có sản phẩm nào</h3>
+      <p className="text-sm font-medium text-slate-500 max-w-xs mx-auto">{msg}</p>
+    </motion.div>
   );
 }
