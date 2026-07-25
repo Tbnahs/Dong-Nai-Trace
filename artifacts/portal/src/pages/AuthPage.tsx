@@ -50,7 +50,7 @@ function validateStep(step: number, f: RegForm): RegErrors {
 
 // ─── Shared UI helpers ────────────────────────────────────────────────────────
 const iCls = (err?: string) =>
-  `w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 placeholder:text-gray-400 transition-colors ${err ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-300 focus:ring-[#2740BA] focus:border-transparent'}`;
+  `w-full border rounded-lg px-3 py-3 sm:py-2 text-base sm:text-sm focus:outline-none focus:ring-2 placeholder:text-gray-400 transition-colors ${err ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-300 focus:ring-[#2740BA] focus:border-transparent'}`;
 
 function Field({ label, error, half, children }: { label: string; error?: string; half?: boolean; children: React.ReactNode }) {
   return (
@@ -218,7 +218,7 @@ function LoginForm({ onSwitchToRegister, guideUrl }: { onSwitchToRegister: () =>
           <div className="relative">
             <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300 pointer-events-none" />
             <input type="text" required value={username} onChange={e => setUsername(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2740BA] focus:ring-2 focus:ring-[#2740BA]/20 placeholder:text-gray-300 transition-all"
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg text-base sm:text-sm focus:outline-none focus:border-[#2740BA] focus:ring-2 focus:ring-[#2740BA]/20 placeholder:text-gray-300 transition-all"
               placeholder="Mã số doanh nghiệp / CCCD / tài khoản" />
           </div>
         </div>
@@ -236,7 +236,7 @@ function LoginForm({ onSwitchToRegister, guideUrl }: { onSwitchToRegister: () =>
             <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300 pointer-events-none" />
             <input type={showPassword ? 'text' : 'password'} required value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#2740BA] focus:ring-2 focus:ring-[#2740BA]/20 placeholder:text-gray-300 transition-all"
+              className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-lg text-base sm:text-sm focus:outline-none focus:border-[#2740BA] focus:ring-2 focus:ring-[#2740BA]/20 placeholder:text-gray-300 transition-all"
               placeholder="Nhập mật khẩu" />
             <button type="button" onClick={() => setShowPassword(s => !s)}
               className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500">
@@ -541,7 +541,7 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
       </div>
 
       {/* ── Right panel ── */}
-      <div className="flex-1 flex items-center justify-center bg-white overflow-y-auto px-8 py-6">
+      <div className="flex-1 flex items-center justify-center bg-white overflow-y-auto px-5 sm:px-8 py-6">
         <div className={`w-full ${defaultTab === 'register' ? 'max-w-xl' : 'max-w-sm'}`}>
           {/* Back */}
           <Link
@@ -554,7 +554,7 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <img src={logoUrl} alt="Logo" className="h-14 w-auto" />
+            <img src={logoUrl} alt="Logo" className="h-12 sm:h-14 w-auto" />
             <div>
               <span className="text-xl font-extrabold text-[#2740BA] block">Đồng Nai Trace</span>
               <span className="text-xs text-gray-400 uppercase tracking-widest">Sở KH&CN Đồng Nai</span>

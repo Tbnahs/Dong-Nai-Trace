@@ -183,8 +183,8 @@ export default function LandingPage() {
   return (
     <>
       {/* HERO SECTION */}
-      <section className="py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto w-full px-6 lg:px-10 flex flex-col lg:flex-row items-center gap-10">
+      <section className="py-8 sm:py-12 lg:py-16">
+        <div className="max-w-7xl mx-auto w-full px-5 sm:px-6 lg:px-10 flex flex-col lg:flex-row items-center gap-8 sm:gap-10">
           {/* Cột trái */}
           <div className="lg:w-[48%] flex flex-col items-start space-y-7">
             <h1 className="w-full text-[clamp(1.35rem,6.8vw,2.75rem)] font-extrabold uppercase leading-[1.1]">
@@ -196,63 +196,63 @@ export default function LandingPage() {
               </span>
             </h1>
 
-            <p className="text-xl text-gray-600 leading-relaxed max-w-2xl">
+            <p className="text-base sm:text-xl text-gray-600 leading-relaxed max-w-2xl">
               Nhờ ứng dụng công nghệ tiên tiến, hệ thống cho phép định danh,
               truy vết nguồn gốc sản phẩm hàng hóa tại Thành phố Đồng Nai.
             </p>
 
             <form onSubmit={handleSearch} className="w-full">
-              <div className="flex flex-col lg:flex-row gap-4">
+              <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
                 {searchType === "trace" ? (
                   <>
-                    <div className="flex-1 h-[62px] bg-white rounded-2xl border border-gray-200 shadow-md flex items-center px-6">
-                      <Barcode className="w-6 h-6 text-[#2740BA]" />
+                    <div className="flex-1 min-h-[56px] sm:h-[62px] bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-md flex items-center px-4 sm:px-6">
+                      <Barcode className="w-5 h-5 sm:w-6 sm:h-6 text-[#2740BA] shrink-0" />
 
                       <input
                         type="text"
                         value={traceCode}
                         onChange={(e) => setTraceCode(e.target.value)}
                         placeholder="Nhập mã truy xuất sản phẩm"
-                        className="ml-4 w-full bg-transparent outline-none text-lg text-gray-700 placeholder:text-gray-400"
+                        className="ml-3 sm:ml-4 w-full bg-transparent outline-none text-base sm:text-lg text-gray-700 placeholder:text-gray-400"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="h-[62px] px-10 rounded-2xl bg-[#e8650a]  text-white text-lg font-semibold transition w-full lg:w-auto"
+                      className="min-h-[52px] sm:h-[62px] px-6 sm:px-10 rounded-xl sm:rounded-2xl bg-[#e8650a] text-white text-base sm:text-lg font-semibold transition w-full lg:w-auto"
                     >
                       Tra cứu
                     </button>
                   </>
                 ) : (
                   <>
-                    <div className="flex-1 h-[62px] bg-white rounded-2xl border border-gray-200 shadow-md flex items-center px-6">
-                      <Barcode className="w-6 h-6 text-[#2740BA]" />
+                    <div className="flex-1 min-h-[56px] sm:h-[62px] bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-md flex items-center px-4 sm:px-6">
+                      <Barcode className="w-5 h-5 sm:w-6 sm:h-6 text-[#2740BA] shrink-0" />
 
                       <input
                         type="text"
                         value={gtin}
                         onChange={(e) => setGtin(e.target.value)}
                         placeholder="Nhập mã GTIN"
-                        className="ml-4 w-full bg-transparent outline-none text-lg text-gray-700 placeholder:text-gray-400"
+                        className="ml-3 sm:ml-4 w-full bg-transparent outline-none text-base sm:text-lg text-gray-700 placeholder:text-gray-400"
                       />
                     </div>
 
-                    <div className="flex-1 h-[62px] bg-white rounded-2xl border border-gray-200 shadow-md flex items-center px-6">
-                      <Package className="w-6 h-6 text-[#2740BA]" />
+                    <div className="flex-1 min-h-[56px] sm:h-[62px] bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-md flex items-center px-4 sm:px-6">
+                      <Package className="w-5 h-5 sm:w-6 sm:h-6 text-[#2740BA] shrink-0" />
 
                       <input
                         type="text"
                         value={lot}
                         onChange={(e) => setLot(e.target.value)}
                         placeholder="Nhập số lô / mẻ"
-                        className="ml-4 w-full bg-transparent outline-none text-lg text-gray-700 placeholder:text-gray-400"
+                        className="ml-3 sm:ml-4 w-full bg-transparent outline-none text-base sm:text-lg text-gray-700 placeholder:text-gray-400"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="h-[62px] px-10 rounded-2xl bg-[#2740BA] hover:bg-[#1d3396] text-white text-lg font-semibold transition w-full lg:w-auto"
+                      className="min-h-[52px] sm:h-[62px] px-6 sm:px-10 rounded-xl sm:rounded-2xl bg-[#2740BA] hover:bg-[#1d3396] text-white text-base sm:text-lg font-semibold transition w-full lg:w-auto"
                     >
                       Tra cứu
                     </button>
@@ -260,14 +260,14 @@ export default function LandingPage() {
                 )}
               </div>
 
-              <div className="flex flex-wrap items-center gap-8 mt-6 pl-2">
+              <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-8 gap-y-3 mt-4 sm:mt-6 pl-0 sm:pl-2">
                 <label className="flex items-center gap-2 cursor-pointer text-gray-700">
                   <input
                     type="radio"
                     name="searchType"
                     checked={searchType === "trace"}
                     onChange={() => setSearchType("trace")}
-                    className="w-5 h-5 accent-[#2740BA]"
+                    className="w-5 h-5 accent-[#2740BA] shrink-0"
                   />
                   Mã truy xuất sản phẩm
                 </label>
@@ -278,7 +278,7 @@ export default function LandingPage() {
                     name="searchType"
                     checked={searchType === "gtin"}
                     onChange={() => setSearchType("gtin")}
-                    className="w-5 h-5 accent-[#2740BA]"
+                    className="w-5 h-5 accent-[#2740BA] shrink-0"
                   />
                   Mã GTIN &amp; Số lô đóng gói
                 </label>
@@ -302,9 +302,9 @@ export default function LandingPage() {
 
       {/* STATS SECTION */}
       <section className="bg-white pb-12 -mt-2">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="bg-[#F5F7FA] rounded-3xl shadow-sm border border-slate-100 px-8 lg:px-12 py-10">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12">
+          <div className="bg-[#F5F7FA] rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 px-5 sm:px-8 lg:px-12 py-8 sm:py-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
               {/* Sản phẩm */}
               <div className="flex flex-col items-center text-center">
                 <Package className="w-10 h-10 text-[#E8650A] mb-4" />

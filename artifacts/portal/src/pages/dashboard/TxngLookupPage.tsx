@@ -13,13 +13,13 @@ export default function TxngLookupPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
       {/* Search Box */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 text-center">
-        <h2 className="text-2xl font-extrabold text-[#2740BA] mb-2 uppercase">Tra cứu Truy xuất nguồn gốc</h2>
-        <p className="text-gray-500 mb-6">Kiểm tra thông tin chi tiết của lô hàng bằng mã GTIN hoặc mã lô.</p>
+      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 sm:p-8 text-center">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-[#2740BA] mb-2 uppercase">Tra cứu Truy xuất nguồn gốc</h2>
+        <p className="text-sm sm:text-base text-gray-500 mb-5 sm:mb-6">Kiểm tra thông tin chi tiết của lô hàng bằng mã GTIN hoặc mã lô.</p>
         
-        <form onSubmit={handleSearch} className="max-w-2xl mx-auto flex shadow-md rounded-md overflow-hidden border border-slate-300">
+        <form onSubmit={handleSearch} className="max-w-2xl mx-auto flex flex-col sm:flex-row shadow-md rounded-md overflow-hidden border border-slate-300">
           <div className="flex-1 relative">
             <QrCode className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input 
@@ -27,10 +27,10 @@ export default function TxngLookupPage() {
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Nhập mã GTIN, mã lô/mẻ..." 
-              className="w-full pl-12 pr-4 py-3.5 focus:outline-none text-gray-700 font-medium"
+              className="w-full min-h-[52px] pl-12 pr-4 py-3.5 focus:outline-none text-base sm:text-sm text-gray-700 font-medium"
             />
           </div>
-          <button type="submit" className="bg-[#E8650A] text-white px-8 py-3.5 font-bold flex items-center gap-2 hover:bg-[#D55C08] transition-colors whitespace-nowrap">
+          <button type="submit" className="min-h-[50px] sm:min-h-0 bg-[#E8650A] text-white px-6 sm:px-8 py-3 font-bold flex items-center justify-center gap-2 hover:bg-[#D55C08] transition-colors whitespace-nowrap">
             <Search className="w-5 h-5" />
             <span>Tra cứu</span>
           </button>
@@ -45,13 +45,13 @@ export default function TxngLookupPage() {
             <span className="font-bold text-emerald-800">Sản phẩm đã được xác thực trên hệ thống Đồng Nai Trace</span>
           </div>
           
-          <div className="p-6 md:p-8">
+          <div className="p-4 sm:p-6 md:p-8">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Info */}
               <div className="flex-1 space-y-6">
                 <div>
                   <div className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Tên sản phẩm</div>
-                  <h3 className="text-2xl font-extrabold text-[#2740BA]">Rau muống hữu cơ VietGAP</h3>
+                  <h3 className="text-xl sm:text-2xl font-extrabold text-[#2740BA]">Rau muống hữu cơ VietGAP</h3>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-y-4 gap-x-6">

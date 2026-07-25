@@ -242,16 +242,16 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <main className="flex-1">{children}</main>
 
       {/* FOOTER */}
-      <footer className="bg-[#2740BA] text-white pt-16 pb-6 px-6 lg:px-12">
+      <footer className="bg-[#2740BA] text-white pt-12 sm:pt-16 pb-6 px-5 sm:px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-10 sm:mb-12">
             {/* Col 1 */}
             <div>
-              <div className="flex items-center gap-3 mb-6 bg-white p-2.5 rounded-xl inline-flex shadow-sm">
-                <img src={logoUrl} alt="Logo" className="h-10 w-auto object-contain" />
-                <span className="font-bold text-[#2740BA] text-lg pr-3">ĐỒNG NAI TRACE</span>
+              <div className="flex max-w-full items-center gap-2 sm:gap-3 mb-5 sm:mb-6 bg-white p-2 sm:p-2.5 rounded-xl inline-flex shadow-sm">
+                <img src={logoUrl} alt="Logo" className="h-9 sm:h-10 w-auto object-contain" />
+                <span className="font-bold text-[#2740BA] text-base sm:text-lg pr-1 sm:pr-3">ĐỒNG NAI TRACE</span>
               </div>
-              <p className="text-blue-100/80 text-sm leading-relaxed mb-6">
+              <p className="text-blue-100/80 text-sm leading-relaxed mb-5 sm:mb-6 max-w-xl">
                 Hệ thống Truy xuất nguồn gốc sản phẩm hàng hóa Thành phố Đồng Nai.
                 Nền tảng kết nối doanh nghiệp, cơ quan quản lý và người tiêu dùng
                 nhằm minh bạch hóa thông tin chuỗi cung ứng.
@@ -260,7 +260,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 
             {/* Col 2 */}
             <div className="lg:pl-12">
-              <h4 className="text-base font-bold uppercase mb-6 tracking-wide text-white">
+                <h4 className="text-base font-bold uppercase mb-4 sm:mb-6 tracking-wide text-white">
                 Liên kết nhanh
               </h4>
               <ul className="space-y-3.5">
@@ -285,7 +285,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 
             {/* Col 3 */}
             <div>
-              <h4 className="text-base font-bold uppercase mb-6 tracking-wide text-white">
+                <h4 className="text-base font-bold uppercase mb-4 sm:mb-6 tracking-wide text-white">
                 Liên hệ
               </h4>
               <ul className="space-y-4 text-blue-100/80 text-sm">
@@ -309,9 +309,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             </div>
           </div>
 
-          <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-blue-200/60">
+          <div className="pt-5 sm:pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 sm:gap-4 text-xs leading-relaxed text-blue-200/60">
             <p>© 2024 Sở Khoa học và Công nghệ Thành phố Đồng Nai. Tất cả quyền được bảo lưu.</p>
-            <p>Nền tảng vận hành bởi đơn vị được ủy quyền</p>
+            <p className="md:text-right">Nền tảng vận hành bởi đơn vị được ủy quyền</p>
           </div>
         </div>
       </footer>

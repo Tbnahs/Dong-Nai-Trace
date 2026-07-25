@@ -19,7 +19,7 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 py-10 sm:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact cards */}
           <div className="lg:col-span-1 space-y-5">
@@ -80,7 +80,7 @@ export default function ContactPage() {
           </div>
 
           {/* Contact form */}
-          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-8">
             <h2 className="text-xl font-bold text-[#2740BA] mb-6">
               Gửi yêu cầu hỗ trợ
             </h2>
@@ -93,7 +93,7 @@ export default function ContactPage() {
                   <input
                     type="text"
                     placeholder="Nguyễn Văn A"
-                    className="w-full h-11 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#2740BA] transition-colors"
+                    className="w-full h-12 sm:h-11 px-4 border border-gray-200 rounded-xl text-base sm:text-sm focus:outline-none focus:border-[#2740BA] transition-colors"
                   />
                 </div>
                 <div>
@@ -103,7 +103,7 @@ export default function ContactPage() {
                   <input
                     type="tel"
                     placeholder="0912 345 678"
-                    className="w-full h-11 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#2740BA] transition-colors"
+                    className="w-full h-12 sm:h-11 px-4 border border-gray-200 rounded-xl text-base sm:text-sm focus:outline-none focus:border-[#2740BA] transition-colors"
                   />
                 </div>
               </div>
@@ -114,14 +114,14 @@ export default function ContactPage() {
                 <input
                   type="email"
                   placeholder="email@example.com"
-                  className="w-full h-11 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#2740BA] transition-colors"
+                  className="w-full h-12 sm:h-11 px-4 border border-gray-200 rounded-xl text-base sm:text-sm focus:outline-none focus:border-[#2740BA] transition-colors"
                 />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                   Chủ đề
                 </label>
-                <select className="w-full h-11 px-4 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#2740BA] transition-colors text-gray-700 bg-white">
+                <select className="w-full h-12 sm:h-11 px-4 border border-gray-200 rounded-xl text-base sm:text-sm focus:outline-none focus:border-[#2740BA] transition-colors text-gray-700 bg-white">
                   <option value="">Chọn chủ đề...</option>
                   <option>Hỗ trợ đăng ký doanh nghiệp</option>
                   <option>Hỗ trợ khai báo sản phẩm</option>
@@ -137,10 +137,10 @@ export default function ContactPage() {
                 <textarea
                   rows={5}
                   placeholder="Mô tả chi tiết nội dung cần hỗ trợ..."
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-[#2740BA] transition-colors resize-none"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl text-base sm:text-sm focus:outline-none focus:border-[#2740BA] transition-colors resize-none"
                 />
               </div>
-              <button className="w-full h-12 bg-[#2740BA] text-white font-bold rounded-xl hover:bg-[#1f339e] transition-colors text-sm">
+              <button className="w-full h-11 sm:h-12 bg-[#2740BA] text-white font-bold rounded-xl hover:bg-[#1f339e] transition-colors text-sm">
                 Gửi yêu cầu
               </button>
             </div>

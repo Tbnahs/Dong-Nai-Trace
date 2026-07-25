@@ -248,56 +248,56 @@ export default function SearchResultsPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
       {/* Header search bar */}
-      <div className="bg-[#2740BA] py-6 px-6 lg:px-12">
+      <div className="bg-[#2740BA] py-4 sm:py-6 px-4 sm:px-6 lg:px-12">
         <div className="max-w-7xl mx-auto">
           <form onSubmit={handleSearch}>
             {/* Input row */}
-            <div className="flex items-center gap-3 max-w-2xl">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-2xl">
               {searchType === 'trace' ? (
-                <div className="flex-1 flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
+                <div className="w-full flex-1 flex items-center gap-3 bg-white rounded-full px-4 sm:px-5 py-3.5 shadow-sm">
                   <Barcode className="w-5 h-5 text-gray-400 shrink-0" />
                   <input
                     type="text"
                     value={traceCode}
                     onChange={e => setTraceCode(e.target.value)}
                     placeholder="Nhập mã truy xuất sản phẩm"
-                    className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+                    className="flex-1 min-w-0 bg-transparent outline-none text-base sm:text-sm text-gray-700 placeholder:text-gray-400"
                   />
                 </div>
               ) : (
                 <>
-                  <div className="flex-1 flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm rounded-tl-[16px] rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px]">
+                  <div className="w-full flex-1 flex items-center gap-3 bg-white rounded-full px-4 sm:px-5 py-3.5 shadow-sm rounded-tl-[16px] rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px]">
                     <Barcode className="w-5 h-5 text-gray-400 shrink-0" />
                     <input
                       type="text"
                       value={gtin}
                       onChange={e => setGtin(e.target.value)}
                       placeholder="Nhập mã GTIN"
-                      className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+                      className="w-full min-w-0 bg-transparent outline-none text-base sm:text-sm text-gray-700 placeholder:text-gray-400"
                     />
                   </div>
-                  <div className="flex-1 flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm rounded-tl-[16px] rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px]">
+                  <div className="w-full flex-1 flex items-center gap-3 bg-white rounded-full px-4 sm:px-5 py-3.5 shadow-sm rounded-tl-[16px] rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px]">
                     <Package className="w-5 h-5 text-gray-400 shrink-0" />
                     <input
                       type="text"
                       value={lot}
                       onChange={e => setLot(e.target.value)}
                       placeholder="Nhập số lô"
-                      className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+                      className="w-full min-w-0 bg-transparent outline-none text-base sm:text-sm text-gray-700 placeholder:text-gray-400"
                     />
                   </div>
                 </>
               )}
               <button
                 type="submit"
-                className="shrink-0 border-2 border-white font-bold px-7 py-3 rounded-full transition-colors shadow-sm whitespace-nowrap bg-[#e8650a] text-[#FFFF] border-t-[#e8650a] border-r-[#e8650a] border-b-[#e8650a] border-l-[#e8650a] rounded-tl-[16px] rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px]"
+                className="w-full sm:w-auto shrink-0 border-2 border-white font-bold px-5 sm:px-7 py-3 rounded-full transition-colors shadow-sm whitespace-nowrap bg-[#e8650a] text-[#FFFF] border-t-[#e8650a] border-r-[#e8650a] border-b-[#e8650a] border-l-[#e8650a] rounded-tl-[16px] rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px]"
               >
                 Tra cứu
               </button>
             </div>
 
             {/* Radio row */}
-            <div className="flex items-center gap-6 mt-3">
+            <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-2 mt-3">
               {[
                 { value: 'trace', label: 'Mã truy xuất sản phẩm' },
                 { value: 'gtin',  label: 'Mã GTIN & Số lô đóng gói' },
@@ -323,12 +323,12 @@ export default function SearchResultsPage() {
           </form>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8">
         {/* Tab switcher */}
-        <div className="flex gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-6 w-fit shadow-sm">
+        <div className="flex gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-6 w-full sm:w-fit shadow-sm">
           <button
             onClick={() => setActiveTab('product')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+            className={`flex-1 sm:flex-none justify-center flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'product'
                 ? 'bg-[#2740BA] text-white shadow-sm'
                 : 'text-gray-500 hover:text-gray-800'
@@ -344,7 +344,7 @@ export default function SearchResultsPage() {
           </button>
           <button
             onClick={() => setActiveTab('business')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all ${
+            className={`flex-1 sm:flex-none justify-center flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'business'
                 ? 'bg-[#2740BA] text-white shadow-sm'
                 : 'text-gray-500 hover:text-gray-800'
