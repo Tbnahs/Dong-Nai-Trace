@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { MapPin, Phone, Mail, ChevronRight, User, Package, Bell, LogOut, ChevronDown } from "lucide-react";
+import { MapPin, Phone, Mail, ChevronRight, User, Package, Bell, LogOut, ChevronDown, Menu, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 const NAV_LINKS = [
@@ -15,6 +15,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   const [location] = useLocation();
   const { isLoggedIn, user, logout } = useAuth();
   const [avatarOpen, setAvatarOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const logoUrl = import.meta.env.BASE_URL + "images/logo-skhcn.png";
 
@@ -46,6 +47,15 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               </span>
             </div>
           </Link>
+
+          {/* Hamburger — mobile only */}
+          <button
+            className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+            onClick={() => setMobileMenuOpen((o) => !o)}
+            aria-label="Menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6 text-[#2740BA]" /> : <Menu className="w-6 h-6 text-[#2740BA]" />}
+          </button>
 
           <div className="hidden lg:flex items-center gap-6">
             {isLoggedIn && user ? (
@@ -128,9 +138,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </div>
         </div>
 
-        {/* Tầng 2 – nav */}
-        <nav className="bg-[#2740BA] text-white px-6 lg:px-12">
-          <ul className="flex items-center gap-8 text-sm font-medium uppercase overflow-x-auto whitespace-nowrap">
+        {/* Tầng 2 – nav (desktop only) */}
+        <nav className="hidden lg:block bg-[#2740BA] text-white px-6 lg:px-12">
+          <ul className="flex items-center gap-8 text-sm font-medium uppercase">
             {NAV_LINKS.map(({ label, href }) => {
               const isActive = location === href || (href !== "/" && location.startsWith(href));
               return (
@@ -148,6 +158,84 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             })}
           </ul>
         </nav>
+
+        {/* Mobile nav drawer */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg">
+            <ul className="flex flex-col">
+              {NAV_LINKS.map(({ label, href }) => {
+                const isActive = location === href || (href !== "/" && location.startsWith(href));
+                return (
+                  <li key={label}>
+                    <Link
+                      href={href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`block px-6 py-4 text-sm font-semibold border-l-4 transition-colors ${
+                        isActive
+                          ? "border-[#2740BA] text-[#2740BA] bg-blue-50"
+                          : "border-transparent text-slate-700 hover:bg-slate-50 hover:text-[#2740BA]"
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+            {/* Mobile auth buttons */}
+            <div className="px-6 py-4 border-t border-gray-100 flex flex-col gap-3">
+              {isLoggedIn && user ? (
+                <>
+                  <div className="flex items-center gap-3 mb-1">
+                    <div className="w-9 h-9 rounded-full bg-[#2740BA] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                      {user.initials}
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-800 leading-tight">{user.name}</p>
+                      <p className="text-xs text-gray-400">{user.type}</p>
+                    </div>
+                  </div>
+                  {[
+                    { icon: User,    label: "Hồ sơ doanh nghiệp", href: "/ho-so-doanh-nghiep" },
+                    { icon: Package, label: "Hồ sơ sản phẩm",     href: "/ho-so-san-pham" },
+                    { icon: Bell,    label: "Thông báo",           href: "/thong-bao" },
+                  ].map(({ icon: Icon, label, href }) => (
+                    <Link key={href} href={href} onClick={() => setMobileMenuOpen(false)}>
+                      <div className="flex items-center gap-3 py-2 text-slate-700">
+                        <Icon className="w-4 h-4 text-[#2740BA]" />
+                        <span className="text-sm font-medium">{label}</span>
+                      </div>
+                    </Link>
+                  ))}
+                  <button
+                    onClick={() => { logout(); setMobileMenuOpen(false); }}
+                    className="flex items-center gap-3 py-2 text-red-500"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span className="text-sm font-medium">Đăng xuất</span>
+                  </button>
+                </>
+              ) : (
+                <div className="flex gap-3">
+                  <Link
+                    href="/dang-ky"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex-1 py-2.5 border border-[#2740BA] text-[#2740BA] font-semibold text-sm rounded-lg text-center hover:bg-blue-50 transition-colors"
+                  >
+                    Đăng ký
+                  </Link>
+                  <Link
+                    href="/dang-nhap"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex-1 py-2.5 bg-[#2740BA] text-white font-semibold text-sm rounded-lg text-center hover:bg-[#1f339e] transition-colors"
+                  >
+                    Đăng nhập
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </header>
 
       {/* PAGE CONTENT */}

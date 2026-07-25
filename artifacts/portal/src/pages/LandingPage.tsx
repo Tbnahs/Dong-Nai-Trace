@@ -113,7 +113,7 @@ export default function LandingPage() {
 
                     <button
                       type="submit"
-                      className="h-[62px] px-10 rounded-2xl bg-[#E8650A] hover:bg-[#1d3396] text-white text-lg font-semibold transition"
+                      className="h-[62px] px-10 rounded-2xl bg-[#2740BA] hover:bg-[#1d3396] text-white text-lg font-semibold transition w-full lg:w-auto"
                     >
                       Tra cứu
                     </button>
@@ -146,7 +146,7 @@ export default function LandingPage() {
 
                     <button
                       type="submit"
-                      className="h-[62px] px-10 rounded-2xl bg-[#2740BA] hover:bg-[#1d3396] text-white text-lg font-semibold transition"
+                      className="h-[62px] px-10 rounded-2xl bg-[#2740BA] hover:bg-[#1d3396] text-white text-lg font-semibold transition w-full lg:w-auto"
                     >
                       Tra cứu
                     </button>

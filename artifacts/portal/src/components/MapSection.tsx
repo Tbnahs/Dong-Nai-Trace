@@ -287,7 +287,7 @@ export default function MapSection() {
         </div>
 
         {/* Ward dropdown */}
-        <div className="relative md:ml-auto min-w-[220px]">
+        <div className="relative md:ml-auto w-full md:w-auto md:min-w-[220px]">
           <button
             onClick={() => setDropdownOpen((o) => !o)}
             className="w-full flex items-center justify-between gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm text-sm font-medium text-slate-700 hover:border-[#2740BA] transition-colors"
@@ -325,10 +325,10 @@ export default function MapSection() {
         </div>
       </div>
       {/* Map + Panel */}
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4 h-[560px]">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4">
 
         {/* ── Map 60% ── */}
-        <div className="lg:w-[60%] h-full rounded-2xl overflow-hidden shadow-md border border-gray-200 relative" style={{ zIndex: 0, isolation: "isolate" }}>
+        <div className="lg:w-[60%] h-[300px] lg:h-[560px] rounded-2xl overflow-hidden shadow-md border border-gray-200 relative" style={{ zIndex: 0, isolation: "isolate" }}>
           <div ref={mapRef} className="w-full h-full" />
 
           {/* Selected ward chip */}
@@ -344,7 +344,7 @@ export default function MapSection() {
         </div>
 
         {/* ── Panel 40% ── */}
-        <div className="lg:w-[40%] h-full bg-white rounded-2xl shadow-md border border-gray-200 flex flex-col overflow-hidden">
+        <div className="lg:w-[40%] h-[400px] lg:h-[560px] bg-white rounded-2xl shadow-md border border-gray-200 flex flex-col overflow-hidden">
           {/* Tabs */}
           <div className="flex border-b border-gray-100">
             {(["business", "product"] as const).map((tab) => {
