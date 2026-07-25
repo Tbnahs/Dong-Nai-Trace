@@ -470,6 +470,17 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
       {/* ── Right panel ── */}
       <div className="flex-1 flex items-start justify-center bg-gray-50 overflow-y-auto">
         <div className="w-full max-w-lg px-6 py-10">
+          {/* Back to home */}
+          <div className="mb-6">
+            <a
+              href={import.meta.env.BASE_URL}
+              className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#2740BA] transition-colors font-medium"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+              Về trang chủ
+            </a>
+          </div>
+
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-6">
             <img src={logoUrl} alt="Logo" className="h-12 w-auto mx-auto mb-1" />
