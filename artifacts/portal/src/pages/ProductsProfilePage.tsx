@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Plus, Search, Pencil, Trash2, Package, X, UploadCloud,
   CheckCircle2, AlertCircle, ShieldCheck, FileText, ImagePlus,
-  Check, ChevronDown,
+  Check, ChevronDown, Eye, Tag, Ruler, Calendar, QrCode,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -62,6 +62,119 @@ function StatusBadge({ status }: { status: string }) {
     <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md bg-amber-50 text-amber-700 border border-amber-200">
       <AlertCircle className="w-3.5 h-3.5" /> Chờ duyệt
     </span>
+  );
+}
+
+// ─── Detail Drawer ────────────────────────────────────────────────────────────
+function ProductDetailDrawer({ product, onClose, onEdit }: { product: Product; onClose: () => void; onEdit: () => void }) {
+  return (
+    <>
+      {/* Backdrop */}
+      <motion.div
+        key="backdrop"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[1050] bg-slate-900/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      {/* Panel */}
+      <motion.div
+        key="drawer"
+        initial={{ x: '100%' }}
+        animate={{ x: 0 }}
+        exit={{ x: '100%' }}
+        transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+        className="fixed right-0 top-0 bottom-0 z-[1100] w-full max-w-md bg-white shadow-2xl flex flex-col overflow-hidden"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 shrink-0">
+          <h2 className="text-base font-extrabold text-slate-800">Chi tiết sản phẩm</h2>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onEdit}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-[#2740BA] bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+            >
+              <Pencil className="w-3.5 h-3.5" /> Chỉnh sửa
+            </button>
+            <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Product image */}
+          <div className="relative h-52 w-full bg-slate-100 shrink-0">
+            <img src={product.img} alt={product.name} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4">
+              <h3 className="text-xl font-extrabold text-white leading-tight drop-shadow">{product.name}</h3>
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                <StatusBadge status={product.status} />
+                {product.certs.map(c => (
+                  <span key={c} className="inline-flex rounded-md bg-white/20 backdrop-blur-sm border border-white/30 px-2 py-0.5 text-[10px] font-bold text-white">{c}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="px-6 py-6 space-y-5">
+            {/* Info rows */}
+            <div className="grid grid-cols-2 gap-3">
+              <InfoRow icon={Tag} label="Danh mục" value={product.category} />
+              <InfoRow icon={Ruler} label="Đơn vị tính" value={product.unit || '—'} />
+              <InfoRow icon={Calendar} label="Cập nhật" value={product.updatedAt} />
+              <InfoRow icon={QrCode} label="Mã TXNG" value={product.traceCode || 'Chưa cấp'} highlight={!!product.traceCode} />
+            </div>
+
+            {/* Description */}
+            {product.description && (
+              <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <FileText className="w-3.5 h-3.5" /> Mô tả
+                </p>
+                <p className="text-sm text-slate-700 leading-relaxed">{product.description}</p>
+              </div>
+            )}
+
+            {/* Certs */}
+            {product.certs.length > 0 && (
+              <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
+                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5" /> Chứng nhận chất lượng
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {product.certs.map(c => (
+                    <span key={c} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-700">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> {c}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ID */}
+            <div className="rounded-xl bg-slate-50 border border-slate-100 p-4">
+              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">ID sản phẩm</p>
+              <p className="font-mono text-sm text-slate-600">{product.id}</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </>
+  );
+}
+
+function InfoRow({ icon: Icon, label, value, highlight }: { icon: React.ElementType; label: string; value: string; highlight?: boolean }) {
+  return (
+    <div className="rounded-xl bg-slate-50 border border-slate-100 p-3.5">
+      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1 mb-1">
+        <Icon className="w-3 h-3" /> {label}
+      </p>
+      <p className={`text-sm font-bold truncate ${highlight ? 'text-emerald-700 font-mono' : 'text-slate-800'}`}>{value}</p>
+    </div>
   );
 }
 
@@ -312,6 +425,7 @@ export default function ProductsProfilePage() {
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [viewId, setViewId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'approved' | 'pending'>('all');
   const [catFilter, setCatFilter] = useState('all');
@@ -367,7 +481,7 @@ export default function ProductsProfilePage() {
 
       {/* Page header */}
       <div className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-6">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-xl font-extrabold text-slate-800 tracking-tight">Quản lý sản phẩm</h1>
             <p className="text-sm text-slate-500 mt-0.5">{products.length} sản phẩm trong danh sách</p>
@@ -382,7 +496,7 @@ export default function ProductsProfilePage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Tabs */}
         <div className="flex gap-3 mb-5">
@@ -511,6 +625,13 @@ export default function ProductsProfilePage() {
                           <td className="px-6 py-4">
                             <div className="flex items-center justify-end gap-1.5">
                               <button
+                                onClick={() => setViewId(p.id)}
+                                className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors"
+                                title="Xem chi tiết"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </button>
+                              <button
                                 onClick={() => setEditingId(p.id)}
                                 className="rounded-lg p-2 text-slate-400 hover:bg-blue-100 hover:text-[#2740BA] transition-colors"
                                 title="Chỉnh sửa"
@@ -568,6 +689,9 @@ export default function ProductsProfilePage() {
                       <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
                         <span className="text-[11px] font-semibold text-slate-400">Cập nhật {p.updatedAt}</span>
                         <div className="flex items-center gap-1.5">
+                          <button onClick={() => setViewId(p.id)} className="rounded-lg bg-slate-100 p-2 text-slate-500 hover:bg-slate-200 transition-colors">
+                            <Eye className="h-4 w-4" />
+                          </button>
                           <button onClick={() => setEditingId(p.id)} className="rounded-lg bg-slate-100 p-2 text-slate-500 hover:bg-blue-100 hover:text-[#2740BA] transition-colors">
                             <Pencil className="h-4 w-4" />
                           </button>
@@ -584,6 +708,21 @@ export default function ProductsProfilePage() {
           )}
         </div>
       </div>
+
+      {/* Detail drawer */}
+      <AnimatePresence>
+        {viewId && (() => {
+          const p = products.find(x => x.id === viewId);
+          if (!p) return null;
+          return (
+            <ProductDetailDrawer
+              product={p}
+              onClose={() => setViewId(null)}
+              onEdit={() => { setViewId(null); setEditingId(p.id); }}
+            />
+          );
+        })()}
+      </AnimatePresence>
 
       {/* Add modal */}
       <AnimatePresence>
