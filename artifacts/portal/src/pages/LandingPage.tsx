@@ -254,7 +254,7 @@ export default function LandingPage() {
                 Danh mục
               </p>
               <h2 className="text-2xl lg:text-3xl font-extrabold text-[#2740BA] uppercase">
-                Sản phẩm đáng chú ý
+                Danh mục đáng chú ý
               </h2>
             </div>
             <button className="px-5 py-2 border border-[#2740BA] text-[#2740BA] text-sm font-semibold rounded hover:bg-[#2740BA] hover:text-white transition-colors whitespace-nowrap">
@@ -264,38 +264,38 @@ export default function LandingPage() {
 
           {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {[
+            [
               {
                 name: "Nông sản & Rau củ",
-                img: "https://picsum.photos/seed/vegetable/600/360",
+                img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=360&fit=crop",
               },
               {
                 name: "Phân bón & Vật tư nông nghiệp",
-                img: "https://picsum.photos/seed/fertilizer/600/360",
+                img: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=360&fit=crop",
               },
               {
                 name: "Thủy sản",
-                img: "https://picsum.photos/seed/seafood/600/360",
+                img: "https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=600&h=360&fit=crop",
               },
               {
                 name: "Thịt & Chăn nuôi",
-                img: "https://picsum.photos/seed/livestock/600/360",
+                img: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=600&h=360&fit=crop",
               },
               {
                 name: "Thực phẩm chế biến",
-                img: "https://picsum.photos/seed/processed/600/360",
+                img: "https://images.unsplash.com/photo-1606787619248-f301830a5a57?w=600&h=360&fit=crop",
               },
               {
                 name: "Dược liệu",
-                img: "https://picsum.photos/seed/herbs/600/360",
+                img: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=600&h=360&fit=crop",
               },
               {
                 name: "Thủ công mỹ nghệ",
-                img: "https://picsum.photos/seed/handicraft/600/360",
+                img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=360&fit=crop",
               },
               {
                 name: "Công nghiệp chế biến",
-                img: "https://picsum.photos/seed/industry/600/360",
+                img: "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=600&h=360&fit=crop",
               },
             ].map((cat, idx) => (
               <div
