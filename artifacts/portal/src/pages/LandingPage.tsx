@@ -264,7 +264,7 @@ export default function LandingPage() {
 
           {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            [
+            {[
               {
                 name: "Nông sản & Rau củ",
                 img: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=360&fit=crop",
