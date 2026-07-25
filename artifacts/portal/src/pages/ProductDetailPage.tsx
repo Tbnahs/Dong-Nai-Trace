@@ -298,8 +298,8 @@ export default function ProductDetailPage() {
                   { label: 'Xuất xứ', value: product.origin },
                   { label: 'Thành phần', value: product.ingredients },
                 ].map((row, i) => (
-                  <div key={i} className="flex items-start gap-4 py-3 border-b border-slate-100 last:border-0">
-                    <span className="text-sm text-gray-500 w-44 shrink-0">{row.label}</span>
+                  <div key={i} className="flex items-start gap-3 py-3 border-b border-slate-100 last:border-0">
+                    <span className="text-sm text-gray-500 w-32 sm:w-44 shrink-0">{row.label}</span>
                     <span className="text-sm font-medium text-gray-800">{row.value}</span>
                   </div>
                 ))}

@@ -30,7 +30,7 @@ export default function NotificationsPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
-      <div className="bg-white border-b border-gray-200 px-6 lg:px-12 py-3">
+      <div className="bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-12 py-3">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <Link href="/" className="inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-800 text-sm">
             <ArrowLeft className="w-4 h-4" /> Trang chủ
@@ -39,7 +39,7 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-6 lg:px-12 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <Bell className="w-6 h-6 text-[#2740BA]" />
