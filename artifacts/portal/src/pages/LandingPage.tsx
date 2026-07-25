@@ -205,8 +205,8 @@ export default function LandingPage() {
 
               {/* Sản phẩm */}
               <div className="flex flex-col items-center text-center">
-                <Package className="w-10 h-10 text-[#2740BA] mb-4" />
-                <span className="text-5xl font-extrabold text-[#2740BA]">
+                <Package className="w-10 h-10 text-[#E8650A] mb-4" />
+                <span className="text-5xl font-extrabold text-[#E8650A]">
                   4.892
                 </span>
                 <span className="mt-2 text-sm font-semibold text-gray-500 uppercase">
@@ -216,8 +216,8 @@ export default function LandingPage() {
 
               {/* Doanh nghiệp */}
               <div className="flex flex-col items-center text-center">
-                <Building2 className="w-10 h-10 text-[#2740BA] mb-4" />
-                <span className="text-5xl font-extrabold text-[#2740BA]">
+                <Building2 className="w-10 h-10 text-[#E8650A] mb-4" />
+                <span className="text-5xl font-extrabold text-[#E8650A]">
                   1.247
                 </span>
                 <span className="mt-2 text-sm font-semibold text-gray-500 uppercase">
@@ -227,8 +227,8 @@ export default function LandingPage() {
 
               {/* Mã định danh */}
               <div className="flex flex-col items-center text-center">
-                <LinkIcon className="w-10 h-10 text-[#2740BA] mb-4" />
-                <span className="text-5xl font-extrabold text-[#2740BA]">
+                <LinkIcon className="w-10 h-10 text-[#E8650A] mb-4" />
+                <span className="text-5xl font-extrabold text-[#E8650A]">
                   23.104
                 </span>
                 <span className="mt-2 text-sm font-semibold text-gray-500 uppercase">
@@ -260,7 +260,7 @@ export default function LandingPage() {
                 Danh mục đáng chú ý
               </h2>
             </div>
-            <Link href="/tra-cuu" className="px-5 py-2 border border-[#2740BA] text-[#2740BA] text-sm font-semibold rounded hover:bg-[#2740BA] hover:text-white transition-colors whitespace-nowrap">
+            <Link href="/tra-cuu" className="px-5 py-2 border border-[#E8650A] text-[#E8650A] text-sm font-semibold rounded hover:bg-[#E8650A] hover:text-white transition-colors whitespace-nowrap">
               Xem thêm
             </Link>
           </div>
@@ -319,7 +319,7 @@ export default function LandingPage() {
                   <span className="text-sm font-semibold text-slate-800 group-hover:text-[#2740BA] transition-colors">
                     {cat.name}
                   </span>
-                  <span className="text-[#2740BA] font-bold text-lg leading-none">
+                  <span className="text-[#E8650A] font-bold text-lg leading-none">
                     →
                   </span>
                 </div>
@@ -338,7 +338,7 @@ export default function LandingPage() {
             </h2>
             <div className="space-y-6">
               <div className="flex gap-4 items-start">
-                <div className="mt-1 min-w-6 w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                <div className="mt-1 min-w-6 w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center text-[#E8650A]">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div>
@@ -352,7 +352,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="flex gap-4 items-start">
-                <div className="mt-1 min-w-6 w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                <div className="mt-1 min-w-6 w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center text-[#E8650A]">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div>
@@ -366,7 +366,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="flex gap-4 items-start">
-                <div className="mt-1 min-w-6 w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                <div className="mt-1 min-w-6 w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center text-[#E8650A]">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div>
