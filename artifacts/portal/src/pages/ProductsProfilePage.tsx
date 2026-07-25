@@ -308,6 +308,7 @@ function ProductModal({
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function ProductsProfilePage() {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
+  const [activeTab, setActiveTab] = useState<'with' | 'without'>('with');
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -315,9 +316,13 @@ export default function ProductsProfilePage() {
   const [statusFilter, setStatusFilter] = useState<'all' | 'approved' | 'pending'>('all');
   const [catFilter, setCatFilter] = useState('all');
 
-  const categories = Array.from(new Set(products.map(p => p.category)));
+  const withCount = products.filter(p => !!p.traceCode).length;
+  const withoutCount = products.filter(p => !p.traceCode).length;
 
-  const filtered = products.filter(p => {
+  const tabProducts = products.filter(p => activeTab === 'with' ? !!p.traceCode : !p.traceCode);
+  const categories = Array.from(new Set(tabProducts.map(p => p.category)));
+
+  const filtered = tabProducts.filter(p => {
     const q = search.trim().toLowerCase();
     const matchQ = !q || `${p.name} ${p.category} ${p.traceCode ?? ''}`.toLowerCase().includes(q);
     const matchS = statusFilter === 'all' || p.status === statusFilter;
@@ -378,6 +383,27 @@ export default function ProductsProfilePage() {
 
       {/* Content */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Tabs */}
+        <div className="flex gap-3 mb-5">
+          <button
+            onClick={() => { setActiveTab('with'); setSearch(''); setStatusFilter('all'); setCatFilter('all'); }}
+            className={`flex items-center gap-3 px-5 py-3 rounded-xl text-sm font-bold transition-all border-2 ${activeTab === 'with' ? 'bg-emerald-50 border-emerald-400 text-emerald-800 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
+          >
+            <ShieldCheck className={`w-4 h-4 ${activeTab === 'with' ? 'text-emerald-600' : 'text-slate-400'}`} />
+            Đã có truy xuất nguồn gốc
+            <span className={`px-2.5 py-0.5 rounded-lg text-xs font-bold ${activeTab === 'with' ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}`}>{withCount}</span>
+          </button>
+          <button
+            onClick={() => { setActiveTab('without'); setSearch(''); setStatusFilter('all'); setCatFilter('all'); }}
+            className={`flex items-center gap-3 px-5 py-3 rounded-xl text-sm font-bold transition-all border-2 ${activeTab === 'without' ? 'bg-amber-50 border-amber-400 text-amber-800 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
+          >
+            <AlertCircle className={`w-4 h-4 ${activeTab === 'without' ? 'text-amber-500' : 'text-slate-400'}`} />
+            Chưa có truy xuất nguồn gốc
+            <span className={`px-2.5 py-0.5 rounded-lg text-xs font-bold ${activeTab === 'without' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-500'}`}>{withoutCount}</span>
+          </button>
+        </div>
+
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
 
           {/* Toolbar */}
