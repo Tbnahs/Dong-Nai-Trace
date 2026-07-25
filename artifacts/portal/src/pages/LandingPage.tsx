@@ -252,7 +252,7 @@ export default function LandingPage() {
 
                     <button
                       type="submit"
-                      className="min-h-[52px] sm:h-[62px] px-6 sm:px-10 rounded-xl sm:rounded-2xl bg-[#2740BA] hover:bg-[#1d3396] text-white text-base sm:text-lg font-semibold transition w-full lg:w-auto"
+                      className="min-h-[52px] sm:h-[62px] px-6 sm:px-10 rounded-xl sm:rounded-2xl hover:bg-[#1d3396] text-white text-base sm:text-lg font-semibold transition w-full lg:w-auto bg-[#e8650a]"
                     >
                       Tra cứu
                     </button>
@@ -300,41 +300,40 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
       {/* STATS SECTION */}
       <section className="bg-white pb-12 -mt-2">
         <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-10">
           <div className="bg-[#F5F7FA] rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 px-5 sm:px-8 lg:px-12 py-8 sm:py-10">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
+            <div className="grid grid-cols-3 gap-4 md:gap-10">
               {/* Sản phẩm */}
               <div className="flex flex-col items-center text-center">
-                <Package className="w-10 h-10 text-[#E8650A] mb-4" />
-                <span className="text-5xl font-extrabold text-[#E8650A]">
+                <Package className="w-7 h-7 md:w-10 md:h-10 text-[#E8650A] mb-2 md:mb-4" />
+                <span className="text-2xl md:text-5xl font-extrabold text-[#E8650A]">
                   4.892
                 </span>
-                <span className="mt-2 text-sm font-semibold text-gray-500 uppercase">
+                <span className="mt-1 md:mt-2 text-[10px] md:text-sm font-semibold text-gray-500 uppercase leading-tight">
                   Sản phẩm đã đăng ký
                 </span>
               </div>
 
               {/* Doanh nghiệp */}
               <div className="flex flex-col items-center text-center">
-                <Building2 className="w-10 h-10 text-[#E8650A] mb-4" />
-                <span className="text-5xl font-extrabold text-[#E8650A]">
+                <Building2 className="w-7 h-7 md:w-10 md:h-10 text-[#E8650A] mb-2 md:mb-4" />
+                <span className="text-2xl md:text-5xl font-extrabold text-[#E8650A]">
                   1.247
                 </span>
-                <span className="mt-2 text-sm font-semibold text-gray-500 uppercase">
+                <span className="mt-1 md:mt-2 text-[10px] md:text-sm font-semibold text-gray-500 uppercase leading-tight">
                   Doanh nghiệp tham gia
                 </span>
               </div>
 
               {/* Mã định danh */}
               <div className="flex flex-col items-center text-center">
-                <LinkIcon className="w-10 h-10 text-[#E8650A] mb-4" />
-                <span className="text-5xl font-extrabold text-[#E8650A]">
+                <LinkIcon className="w-7 h-7 md:w-10 md:h-10 text-[#E8650A] mb-2 md:mb-4" />
+                <span className="text-2xl md:text-5xl font-extrabold text-[#E8650A]">
                   23.104
                 </span>
-                <span className="mt-2 text-sm font-semibold text-gray-500 uppercase">
+                <span className="mt-1 md:mt-2 text-[10px] md:text-sm font-semibold text-gray-500 uppercase leading-tight">
                   Cấp mã định danh
                 </span>
               </div>
@@ -344,7 +343,6 @@ export default function LandingPage() {
       </section>
       {/* BẢN ĐỒ SECTION */}
       <MapSection />
-
       {/* DANH MỤC NGÀNH HÀNG */}
       <section className="py-16 px-4 md:px-6 lg:px-10 bg-white">
         <div className="max-w-[1280px] mx-auto">
@@ -367,7 +365,7 @@ export default function LandingPage() {
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
             {[
               {
                 name: "Nông sản & Rau củ",
@@ -418,7 +416,7 @@ export default function LandingPage() {
                 </div>
                 {/* Footer */}
                 <div className="flex items-center justify-between px-4 py-3 bg-white">
-                  <span className="text-sm font-semibold text-slate-800 group-hover:text-[#2740BA] transition-colors">
+                  <span className="text-xs md:text-sm font-semibold text-slate-800 group-hover:text-[#2740BA] transition-colors leading-tight line-clamp-2">
                     {cat.name}
                   </span>
                   <span className="text-[#E8650A] font-bold text-lg leading-none">
@@ -430,7 +428,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
       {/* HƯỚNG DẪN DOANH NGHIỆP */}
       <section className="py-16 md:py-20 px-4 md:px-6 lg:px-10 bg-white overflow-hidden">
         <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
@@ -494,7 +491,7 @@ export default function LandingPage() {
             </a>
           </div>
 
-          <div className="lg:w-1/2 relative w-full flex justify-center">
+          <div className="lg:w-1/2 relative w-full flex justify-center overflow-hidden md:overflow-visible">
             <div className="absolute inset-0 bg-[#F8FAFC] rounded-[3rem] -rotate-3 transform z-0"></div>
 
             <div className="bg-white border border-slate-100 rounded-2xl shadow-xl w-full max-w-md p-6 relative z-10 mt-8 mb-8">
@@ -544,7 +541,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="absolute top-10 -left-6 bg-white p-3 rounded-xl shadow-lg border border-slate-100 z-20 flex items-center gap-3 animate-[bounce_4s_infinite]">
+            <div className="hidden md:flex absolute top-10 -left-6 bg-white p-3 rounded-xl shadow-lg border border-slate-100 z-20 items-center gap-3 animate-[bounce_4s_infinite]">
               <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-[#2740BA]">
                 <FileEdit className="w-5 h-5" />
               </div>

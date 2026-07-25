@@ -254,7 +254,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       {/* FOOTER */}
       <footer className="bg-[#2740BA] text-white pt-12 md:pt-16 pb-8 px-4 md:px-6 lg:px-10">
         <div className="max-w-[1280px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-10 sm:mb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12 mb-10 md:mb-12">
             {/* Col 1 */}
             <div>
               <div className="flex max-w-full items-center gap-2 sm:gap-3 mb-5 sm:mb-6 bg-white p-2 sm:p-2.5 rounded-xl inline-flex shadow-sm">

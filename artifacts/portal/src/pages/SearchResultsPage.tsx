@@ -412,7 +412,7 @@ export default function SearchResultsPage() {
               filteredProducts.length === 0 ? (
                 <EmptyState entity="sản phẩm" onClear={clearFilters} hasFilters={hasActiveFilters} />
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-5">
                   {filteredProducts.map(p => {
                     const isHighlighted = highlighted === p.id;
                     return (
@@ -455,7 +455,7 @@ export default function SearchResultsPage() {
               filteredBusinesses.length === 0 ? (
                 <EmptyState entity="doanh nghiệp" onClear={clearFilters} hasFilters={hasActiveFilters} />
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+                <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-5">
                   {filteredBusinesses.map(b => {
                     const isHighlighted = highlighted === b.id;
                     return (
