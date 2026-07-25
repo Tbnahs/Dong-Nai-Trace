@@ -156,14 +156,14 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 py-5 sm:py-8">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-10 py-5 md:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
 
           {/* ── LEFT COLUMN ── */}
           <div className="space-y-4">
             {/* Product Image */}
             <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
-              <img src={product.img} alt={product.name} className="w-full h-72 lg:h-80 object-cover" />
+              <img src={product.img} alt={product.name} loading="lazy" className="w-full h-72 lg:h-80 object-cover" />
             </div>
 
             {/* QR Code */}
@@ -212,7 +212,7 @@ export default function ProductDetailPage() {
             </p>
 
             {/* 4-column stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4 border-y border-slate-100 mb-5">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-4 border-y border-slate-100 mb-5">
               {[
                 { icon: <MapPin className="w-4 h-4 text-gray-400" />, label: 'Nguồn gốc', value: product.origin },
                 { icon: <Package className="w-4 h-4 text-gray-400" />, label: 'Quy cách', value: product.packaging },

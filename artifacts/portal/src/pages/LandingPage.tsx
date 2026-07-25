@@ -183,8 +183,8 @@ export default function LandingPage() {
   return (
     <>
       {/* HERO SECTION */}
-      <section className="py-8 sm:py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto w-full px-5 sm:px-6 lg:px-10 flex flex-col lg:flex-row items-center gap-8 sm:gap-10">
+      <section className="py-8 md:py-12 lg:py-16">
+        <div className="max-w-[1280px] mx-auto w-full px-4 md:px-6 lg:px-10 flex flex-col lg:flex-row items-center gap-8 md:gap-10">
           {/* Cột trái */}
           <div className="lg:w-[48%] flex flex-col items-start space-y-7">
             <h1 className="w-full text-[clamp(1.35rem,6.8vw,2.75rem)] font-extrabold uppercase leading-[1.1]">
@@ -291,7 +291,8 @@ export default function LandingPage() {
             <img
               src={heroGuide}
               alt="Đồng Nai Trace"
-              className="w-full object-contain
+              loading="lazy"
+              className="w-full max-h-[420px] object-contain
                          hover:scale-[1.03]
                          transition-transform duration-700
                          animate-[float_6s_ease-in-out_infinite]"
@@ -302,7 +303,7 @@ export default function LandingPage() {
 
       {/* STATS SECTION */}
       <section className="bg-white pb-12 -mt-2">
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-10">
           <div className="bg-[#F5F7FA] rounded-2xl sm:rounded-3xl shadow-sm border border-slate-100 px-5 sm:px-8 lg:px-12 py-8 sm:py-10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
               {/* Sản phẩm */}
@@ -345,8 +346,8 @@ export default function LandingPage() {
       <MapSection />
 
       {/* DANH MỤC NGÀNH HÀNG */}
-      <section className="py-16 px-6 lg:px-12 bg-white">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-16 px-4 md:px-6 lg:px-10 bg-white">
+        <div className="max-w-[1280px] mx-auto">
           {/* Header */}
           <div className="flex items-end justify-between mb-8">
             <div>
@@ -366,7 +367,7 @@ export default function LandingPage() {
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {[
               {
                 name: "Nông sản & Rau củ",
@@ -411,6 +412,7 @@ export default function LandingPage() {
                   <img
                     src={cat.img}
                     alt={cat.name}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -430,8 +432,8 @@ export default function LandingPage() {
       </section>
 
       {/* HƯỚNG DẪN DOANH NGHIỆP */}
-      <section className="py-20 px-6 lg:px-12 bg-white overflow-hidden">
-        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+      <section className="py-16 md:py-20 px-4 md:px-6 lg:px-10 bg-white overflow-hidden">
+        <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="lg:w-1/2">
             <h2 className="text-3xl lg:text-4xl font-extrabold text-[#2740BA] mb-8 uppercase">
               Hướng dẫn doanh nghiệp

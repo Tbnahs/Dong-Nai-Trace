@@ -4,8 +4,8 @@ export default function ContactPage() {
   return (
     <div className="min-h-[70vh] bg-[#F5F7FA]">
       {/* Hero */}
-      <div className="bg-[#2740BA] text-white py-12 px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto">
+      <div className="bg-[#2740BA] text-white py-10 md:py-12 px-4 md:px-6 lg:px-10">
+        <div className="max-w-[1280px] mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-2">
             Liên hệ
           </p>
@@ -19,7 +19,7 @@ export default function ContactPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 py-10 sm:py-16">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-10 py-10 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact cards */}
           <div className="lg:col-span-1 space-y-5">
@@ -85,7 +85,7 @@ export default function ContactPage() {
               Gửi yêu cầu hỗ trợ
             </h2>
             <div className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                     Họ và tên

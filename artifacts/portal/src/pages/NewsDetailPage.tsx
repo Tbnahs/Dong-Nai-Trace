@@ -178,7 +178,7 @@ export default function NewsDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 lg:px-8 py-10">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-10">
         {/* Back link */}
         <Link href="/tin-tuc" className="inline-flex items-center gap-1.5 text-sm text-[#2740BA] font-semibold hover:underline mb-6">
           <ChevronLeft className="w-4 h-4" /> Quay lại Tin tức

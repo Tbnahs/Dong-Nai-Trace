@@ -300,9 +300,33 @@
   --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0);
 }
 
+@keyframes slideDown {
+  from { transform: translateY(-6px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.drawer-enter {
+  animation: slideDown 0.22s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer-enter,
+  [class*="animate-"],
+  [style*="animation"] {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100%;
   }
 
   body {

@@ -31,11 +31,11 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-slate-800 font-sans flex flex-col">
+    <div className="min-h-screen bg-white text-slate-800 font-sans flex flex-col overflow-x-hidden">
       {/* HEADER */}
       <header className="w-full flex flex-col sticky top-0 bg-white shadow-sm" style={{ zIndex: 1001 }}>
         {/* Tầng 1 */}
-        <div className="flex justify-between items-center py-3 px-6 lg:px-12 border-b border-gray-100">
+        <div className="flex justify-between items-center py-3 px-4 md:px-6 lg:px-10 border-b border-gray-100">
           <Link href="/" className="flex items-center gap-3 cursor-pointer">
             <img src={logoUrl} alt="Logo" className="h-12 w-auto object-contain" />
             <div className="flex flex-col">
@@ -139,7 +139,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         </div>
 
         {/* Tầng 2 – nav (desktop only) */}
-        <nav className="hidden lg:block bg-[#2740BA] text-white px-6 lg:px-12">
+        <nav className="hidden lg:block bg-[#2740BA] text-white px-4 md:px-6 lg:px-10">
           <ul className="flex items-center gap-8 text-sm font-medium uppercase">
             {NAV_LINKS.map(({ label, href }) => {
               const isActive = location === href || (href !== "/" && location.startsWith(href));
@@ -161,7 +161,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
 
         {/* Mobile nav drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg">
+          <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg drawer-enter">
             <ul className="flex flex-col">
               {NAV_LINKS.map(({ label, href }) => {
                 const isActive = location === href || (href !== "/" && location.startsWith(href));
@@ -238,12 +238,22 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         )}
       </header>
 
+      {/* Backdrop — closes mobile menu on outside click */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-transparent lg:hidden"
+          style={{ zIndex: 1000 }}
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* PAGE CONTENT */}
       <main className="flex-1">{children}</main>
 
       {/* FOOTER */}
-      <footer className="bg-[#2740BA] text-white pt-12 sm:pt-16 pb-6 px-5 sm:px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto">
+      <footer className="bg-[#2740BA] text-white pt-12 md:pt-16 pb-8 px-4 md:px-6 lg:px-10">
+        <div className="max-w-[1280px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-10 sm:mb-12">
             {/* Col 1 */}
             <div>

@@ -248,8 +248,8 @@ export default function SearchResultsPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
       {/* Header search bar */}
-      <div className="bg-[#2740BA] py-4 sm:py-6 px-4 sm:px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto">
+      <div className="bg-[#2740BA] py-4 md:py-6 px-4 md:px-6 lg:px-10">
+        <div className="max-w-[1280px] mx-auto">
           <form onSubmit={handleSearch}>
             {/* Input row */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 max-w-2xl">
@@ -323,7 +323,7 @@ export default function SearchResultsPage() {
           </form>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-6 sm:py-8">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-10 py-6 md:py-8">
         {/* Tab switcher */}
         <div className="flex gap-1 bg-white border border-slate-200 rounded-xl p-1 mb-6 w-full sm:w-fit shadow-sm">
           <button
@@ -412,7 +412,7 @@ export default function SearchResultsPage() {
               filteredProducts.length === 0 ? (
                 <EmptyState entity="sản phẩm" onClear={clearFilters} hasFilters={hasActiveFilters} />
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                   {filteredProducts.map(p => {
                     const isHighlighted = highlighted === p.id;
                     return (
@@ -424,7 +424,7 @@ export default function SearchResultsPage() {
                           style={isHighlighted ? { animation: 'highlight-pulse 2s ease-out forwards' } : undefined}
                         >
                           <div className="h-44 overflow-hidden">
-                            <img src={p.img} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <img src={p.img} alt={p.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                           </div>
                           <div className="p-4 flex-1 flex flex-col">
                             <div className="flex items-start justify-between gap-2 mb-2">
@@ -455,7 +455,7 @@ export default function SearchResultsPage() {
               filteredBusinesses.length === 0 ? (
                 <EmptyState entity="doanh nghiệp" onClear={clearFilters} hasFilters={hasActiveFilters} />
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
                   {filteredBusinesses.map(b => {
                     const isHighlighted = highlighted === b.id;
                     return (
@@ -467,7 +467,7 @@ export default function SearchResultsPage() {
                         style={isHighlighted ? { animation: 'highlight-pulse 2s ease-out forwards' } : undefined}
                       >
                         <div className="h-44 overflow-hidden">
-                          <img src={b.img} alt={b.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                          <img src={b.img} alt={b.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         </div>
                         <div className="p-4 flex-1 flex flex-col">
                           <div className="flex items-start justify-between gap-2 mb-2">

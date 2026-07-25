@@ -272,9 +272,9 @@ export default function MapSection() {
   }, [selectedWard, mapDataReady]);
 
   return (
-    <section className="py-16 px-4 lg:px-10 bg-[#F5F7FA]">
+    <section className="py-16 px-4 md:px-6 lg:px-10 bg-[#F5F7FA]">
       {/* Header */}
-      <div className="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row md:items-end gap-4">
+      <div className="max-w-[1280px] mx-auto mb-8 flex flex-col md:flex-row md:items-end gap-4">
         <div>
           <span className="text-xs font-bold text-[#2740BA] uppercase tracking-widest">
             Bản đồ
@@ -325,7 +325,7 @@ export default function MapSection() {
         </div>
       </div>
       {/* Map + Panel */}
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4">
+      <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row gap-4">
 
         {/* ── Map 60% ── */}
         <div className="lg:w-[60%] h-[300px] lg:h-[560px] rounded-2xl overflow-hidden shadow-md border border-gray-200 relative" style={{ zIndex: 0, isolation: "isolate" }}>

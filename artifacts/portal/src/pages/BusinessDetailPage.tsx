@@ -66,8 +66,8 @@ export default function BusinessDetailPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
       {/* Topbar */}
-      <div className="bg-white border-b border-gray-200 px-6 lg:px-12 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+      <div className="bg-white border-b border-gray-200 px-4 md:px-6 lg:px-10 py-3">
+        <div className="max-w-[1280px] mx-auto flex items-center justify-between">
           <Link href="/tra-cuu?tab=business" className="inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-800 text-sm transition-colors">
             <ArrowLeft className="w-4 h-4" /> Quay lại danh sách
           </Link>
@@ -75,13 +75,13 @@ export default function BusinessDetailPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-12 py-8">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-10 py-6 md:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8">
 
           {/* LEFT */}
           <div className="space-y-4">
             <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
-              <img src={biz.img} alt={biz.name} className="w-full h-56 object-cover" />
+              <img src={biz.img} alt={biz.name} loading="lazy" className="w-full h-56 object-cover" />
             </div>
 
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">

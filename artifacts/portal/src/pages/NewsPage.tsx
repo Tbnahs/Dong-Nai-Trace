@@ -95,8 +95,8 @@ export default function NewsPage() {
   return (
     <div className="bg-[#F5F7FA] min-h-screen">
       {/* Hero banner */}
-      <div className="bg-[#2740BA] text-white py-12 px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto">
+      <div className="bg-[#2740BA] text-white py-10 md:py-12 px-4 md:px-6 lg:px-10">
+        <div className="max-w-[1280px] mx-auto">
           <p className="text-xs font-bold uppercase tracking-widest text-blue-300 mb-2">
             Cập nhật mới nhất
           </p>
@@ -108,7 +108,7 @@ export default function NewsPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 py-10">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-10 py-8 md:py-10">
         {/* Search + filter bar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
           <div className="relative flex-1 max-w-sm">
@@ -146,6 +146,7 @@ export default function NewsPage() {
                 <img
                   src={featured.img}
                   alt={featured.title}
+                  loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
@@ -179,7 +180,7 @@ export default function NewsPage() {
 
         {/* News grid */}
         {rest.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {rest.map((news) => (
               <Link key={news.id} href={`/tin-tuc/${news.id}`}>
                 <div className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all overflow-hidden flex flex-col group cursor-pointer h-full">
@@ -187,6 +188,7 @@ export default function NewsPage() {
                     <img
                       src={news.img}
                       alt={news.title}
+                      loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
