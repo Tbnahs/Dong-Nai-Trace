@@ -4,7 +4,7 @@ import {
   CheckCircle2, AlertCircle, ShieldCheck, FileText, ImagePlus,
   Check, ChevronDown, Eye, Tag, Ruler, Calendar, QrCode, ArrowLeft,
   Download, Share2, MapPin, Leaf, Truck, Store, FlaskConical, Info,
-  Building2,
+  Building2, Copy,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -696,6 +696,7 @@ export default function ProductsProfilePage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [viewId, setViewId] = useState<string | null>(null);
+  const [copiedTraceId, setCopiedTraceId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'approved' | 'pending'>('all');
   const [catFilter, setCatFilter] = useState('all');
@@ -713,6 +714,31 @@ export default function ProductsProfilePage() {
     const matchC = catFilter === 'all' || p.category === catFilter;
     return matchQ && matchS && matchC;
   });
+
+  const handleCopyTraceCode = async (traceCode: string, productId: string) => {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(traceCode);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = traceCode;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
+
+      setCopiedTraceId(productId);
+      window.setTimeout(() => {
+        setCopiedTraceId(current => current === productId ? null : current);
+      }, 2200);
+    } catch {
+      setCopiedTraceId(null);
+    }
+  };
 
   const handleAdd = (form: ProductForm) => {
     setProducts(prev => [{
@@ -882,7 +908,22 @@ export default function ProductsProfilePage() {
                           </td>
                           <td className="px-4 py-4">
                             {p.traceCode
-                              ? <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[11px] font-mono font-bold text-emerald-700 whitespace-nowrap"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />{p.traceCode}</span>
+                              ? (
+                                <div className="inline-flex items-center gap-1 rounded-lg border border-emerald-100 bg-emerald-50 pl-2.5 pr-1 py-1">
+                                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-emerald-700 whitespace-nowrap">
+                                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />{p.traceCode}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleCopyTraceCode(p.traceCode!, p.id)}
+                                    className={`rounded-md p-1 transition-colors ${copiedTraceId === p.id ? 'text-emerald-700' : 'text-emerald-500 hover:bg-emerald-100 hover:text-emerald-800'}`}
+                                    title={copiedTraceId === p.id ? 'Đã sao chép mã TXNG' : 'Sao chép mã TXNG'}
+                                    aria-label={copiedTraceId === p.id ? 'Đã sao chép mã TXNG' : `Sao chép mã TXNG ${p.traceCode}`}
+                                  >
+                                    {copiedTraceId === p.id ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                                  </button>
+                                </div>
+                              )
                               : <span className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-600 whitespace-nowrap"><span className="h-1.5 w-1.5 rounded-full bg-amber-400" />Chưa cấp</span>
                             }
                           </td>
@@ -947,7 +988,20 @@ export default function ProductsProfilePage() {
                             ))}
                           </div>
                           {p.traceCode
-                            ? <p className="mt-1.5 text-[11px] font-mono font-bold text-emerald-700">{p.traceCode}</p>
+                            ? (
+                              <div className="mt-1.5 flex items-center gap-1.5">
+                                <p className="text-[11px] font-mono font-bold text-emerald-700">{p.traceCode}</p>
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopyTraceCode(p.traceCode!, p.id)}
+                                  className={`rounded-md p-1 transition-colors ${copiedTraceId === p.id ? 'text-emerald-700' : 'text-emerald-500 hover:bg-emerald-50 hover:text-emerald-800'}`}
+                                  title={copiedTraceId === p.id ? 'Đã sao chép mã TXNG' : 'Sao chép mã TXNG'}
+                                  aria-label={copiedTraceId === p.id ? 'Đã sao chép mã TXNG' : `Sao chép mã TXNG ${p.traceCode}`}
+                                >
+                                  {copiedTraceId === p.id ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                                </button>
+                              </div>
+                            )
                             : <p className="mt-1.5 text-[11px] font-semibold text-amber-600">Chưa cấp mã TXNG</p>
                           }
                         </div>
