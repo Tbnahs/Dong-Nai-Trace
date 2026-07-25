@@ -488,11 +488,18 @@ export default function LandingPage() {
               href="huong-dan.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-10 font-bold text-[#E8650A] hover:text-[#D55C08] flex items-center gap-2 group transition-colors"
+              className="hidden md:flex mt-10 font-bold text-[#E8650A] hover:text-[#D55C08] items-center gap-2 group transition-colors"
             >
               Hướng dẫn đăng ký tại đây{" "}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </a>
+            <Link
+              href="/dang-ky"
+              className="flex md:hidden mt-6 font-bold text-[#E8650A] hover:text-[#D55C08] items-center gap-2 group transition-colors"
+            >
+              Đăng ký tại đây{" "}
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
 
           <div className="hidden md:flex lg:w-1/2 relative w-full justify-center overflow-hidden md:overflow-visible">
