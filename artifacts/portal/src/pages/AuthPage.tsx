@@ -130,7 +130,11 @@ function PdfModal({ url, onClose }: { url: string; onClose: () => void }) {
 function LoginForm({ onSwitchToRegister, guideUrl }: { onSwitchToRegister: () => void; guideUrl: string }) {
   const { login } = useAuth();
   const [, setLocation] = useLocation();
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(() => {
+    const saved = localStorage.getItem('pendingLoginEmail') ?? '';
+    if (saved) localStorage.removeItem('pendingLoginEmail');
+    return saved;
+  });
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
@@ -384,7 +388,11 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
             ⚠️ Lưu lại thông tin tài khoản ngay bây giờ. Trang này sẽ không hiển thị lại mật khẩu.
           </p>
 
-          <button onClick={onSwitchToLogin}
+          <button
+            onClick={() => {
+              localStorage.setItem('pendingLoginEmail', form.repEmail);
+              onSwitchToLogin();
+            }}
             className="flex items-center gap-2 px-6 py-2.5 bg-[#2740BA] text-white rounded-lg text-sm font-bold hover:bg-[#1f339e] transition-colors shadow-sm">
             <LogIn className="w-4 h-4" /> Xác nhận &amp; Đăng nhập
           </button>
