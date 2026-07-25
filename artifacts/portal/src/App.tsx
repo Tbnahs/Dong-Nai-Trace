@@ -22,23 +22,30 @@ const queryClient = new QueryClient();
 
 function Router() {
   return (
-    <PublicLayout>
-      <Switch>
-        <Route path="/" component={LandingPage} />
-        <Route path="/dang-nhap">{() => <AuthPage defaultTab="login" />}</Route>
-        <Route path="/dang-ky">{() => <AuthPage defaultTab="register" />}</Route>
-        <Route path="/tra-cuu" component={SearchResultsPage} />
-        <Route path="/san-pham/:id" component={ProductDetailPage} />
-        <Route path="/doanh-nghiep/:id" component={BusinessDetailPage} />
-        <Route path="/ho-so-doanh-nghiep" component={OrgProfilePage} />
-        <Route path="/ho-so-san-pham" component={ProductsProfilePage} />
-        <Route path="/thong-bao" component={NotificationsPage} />
-        <Route path="/tin-tuc" component={NewsPage} />
-        <Route path="/tin-tuc/:id" component={NewsDetailPage} />
-        <Route path="/lien-he" component={ContactPage} />
-        <Route component={NotFound} />
-      </Switch>
-    </PublicLayout>
+    <Switch>
+      {/* Auth pages — no header/footer */}
+      <Route path="/dang-nhap">{() => <AuthPage defaultTab="login" />}</Route>
+      <Route path="/dang-ky">{() => <AuthPage defaultTab="register" />}</Route>
+
+      {/* All other pages — wrapped in PublicLayout */}
+      <Route>
+        <PublicLayout>
+          <Switch>
+            <Route path="/" component={LandingPage} />
+            <Route path="/tra-cuu" component={SearchResultsPage} />
+            <Route path="/san-pham/:id" component={ProductDetailPage} />
+            <Route path="/doanh-nghiep/:id" component={BusinessDetailPage} />
+            <Route path="/ho-so-doanh-nghiep" component={OrgProfilePage} />
+            <Route path="/ho-so-san-pham" component={ProductsProfilePage} />
+            <Route path="/thong-bao" component={NotificationsPage} />
+            <Route path="/tin-tuc" component={NewsPage} />
+            <Route path="/tin-tuc/:id" component={NewsDetailPage} />
+            <Route path="/lien-he" component={ContactPage} />
+            <Route component={NotFound} />
+          </Switch>
+        </PublicLayout>
+      </Route>
+    </Switch>
   );
 }
 
