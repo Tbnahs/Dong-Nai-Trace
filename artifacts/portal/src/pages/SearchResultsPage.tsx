@@ -266,7 +266,7 @@ export default function SearchResultsPage() {
                 </div>
               ) : (
                 <>
-                  <div className="flex-1 flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm">
+                  <div className="flex-1 flex items-center gap-3 bg-white rounded-full px-5 py-3 shadow-sm rounded-tl-[16px] rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px]">
                     <Barcode className="w-5 h-5 text-gray-400 shrink-0" />
                     <input
                       type="text"
