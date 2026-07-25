@@ -4,6 +4,7 @@ import hero3d from "../assets/hero-3d.png";
 import heroGuide from "../assets/hero-guide.png";
 import MapSection from "../components/MapSection";
 import { Link, useLocation } from "wouter";
+import { lookupByTraceCode, lookupByGtin } from "../lib/productLookup";
 import {
   CheckCircle2,
   Search,
@@ -22,34 +23,124 @@ import {
 
 // ─── Featured demo data (subset from danh mục) ───────────────────────────────
 const FEATURED_BUSINESSES = [
-  { id: 'b1',  name: 'HTX Nông nghiệp Xanh',          type: 'Hợp tác xã',   district: 'Vĩnh Cửu',  products: 5,  cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=260&fit=crop' },
-  { id: 'b4',  name: 'Trang trại Sạch Đồng Nai',       type: 'Trang trại',   district: 'Biên Hòa',  products: 12, cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=260&fit=crop' },
-  { id: 'b2',  name: 'Công ty Thủy sản Đồng Nai',      type: 'Doanh nghiệp', district: 'Long Thành', products: 8, cert: 'HACCP',     img: 'https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=400&h=260&fit=crop' },
-  { id: 'b6',  name: 'Công ty TNHH Thủy sản Nam Phát', type: 'Doanh nghiệp', district: 'Nhơn Trạch', products: 7, cert: 'GlobalGAP', img: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=260&fit=crop' },
-  { id: 'b5',  name: 'HTX Hồ Tiêu Long Khánh',         type: 'Hợp tác xã',   district: 'Long Khánh', products: 4, cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=260&fit=crop' },
-  { id: 'b10', name: 'Công ty TNHH Thực phẩm Bình An', type: 'Doanh nghiệp', district: 'Biên Hòa',  products: 9, cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=260&fit=crop' },
+  {
+    id: "b1",
+    name: "HTX Nông nghiệp Xanh",
+    type: "Hợp tác xã",
+    district: "Vĩnh Cửu",
+    products: 5,
+    cert: "VietGAP",
+    img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=260&fit=crop",
+  },
+  {
+    id: "b4",
+    name: "Trang trại Sạch Đồng Nai",
+    type: "Trang trại",
+    district: "Biên Hòa",
+    products: 12,
+    cert: "VietGAP",
+    img: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=260&fit=crop",
+  },
+  {
+    id: "b2",
+    name: "Công ty Thủy sản Đồng Nai",
+    type: "Doanh nghiệp",
+    district: "Long Thành",
+    products: 8,
+    cert: "HACCP",
+    img: "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=400&h=260&fit=crop",
+  },
+  {
+    id: "b6",
+    name: "Công ty TNHH Thủy sản Nam Phát",
+    type: "Doanh nghiệp",
+    district: "Nhơn Trạch",
+    products: 7,
+    cert: "GlobalGAP",
+    img: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=260&fit=crop",
+  },
+  {
+    id: "b5",
+    name: "HTX Hồ Tiêu Long Khánh",
+    type: "Hợp tác xã",
+    district: "Long Khánh",
+    products: 4,
+    cert: "OCOP",
+    img: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=260&fit=crop",
+  },
+  {
+    id: "b10",
+    name: "Công ty TNHH Thực phẩm Bình An",
+    type: "Doanh nghiệp",
+    district: "Biên Hòa",
+    products: 9,
+    cert: "ISO 22000",
+    img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=260&fit=crop",
+  },
 ];
 
 const FEATURED_PRODUCTS = [
-  { id: 'sp001', name: 'Bưởi Tân Triều',          org: 'HTX Nông nghiệp Xanh',          district: 'Vĩnh Cửu',  cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=400&h=260&fit=crop' },
-  { id: 'sp003', name: 'Tôm sú đông lạnh',         org: 'Công ty Thủy sản Đồng Nai',     district: 'Long Thành', cert: 'HACCP',    img: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400&h=260&fit=crop' },
-  { id: 'sp006', name: 'Dưa hấu không hạt',        org: 'HTX Dưa hấu Định Quán',         district: 'Định Quán', cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1563114773-84221bd62daa?w=400&h=260&fit=crop' },
-  { id: 'sp007', name: 'Mật ong rừng nguyên chất', org: 'Trang trại Ong Rừng Đồng Nai',  district: 'Tân Phú',   cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=260&fit=crop' },
-  { id: 'sp010', name: 'Tiêu sọ Long Khánh',       org: 'HTX Hồ Tiêu Long Khánh',        district: 'Long Khánh', cert: 'OCOP',     img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&h=260&fit=crop' },
-  { id: 'sp005', name: 'Nước mắm truyền thống',    org: 'Cơ sở Nước mắm Hương Đồng',    district: 'Xuân Lộc',  cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=260&fit=crop' },
+  {
+    id: "sp001",
+    name: "Bưởi Tân Triều",
+    org: "HTX Nông nghiệp Xanh",
+    district: "Vĩnh Cửu",
+    cert: "VietGAP",
+    img: "https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=400&h=260&fit=crop",
+  },
+  {
+    id: "sp003",
+    name: "Tôm sú đông lạnh",
+    org: "Công ty Thủy sản Đồng Nai",
+    district: "Long Thành",
+    cert: "HACCP",
+    img: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400&h=260&fit=crop",
+  },
+  {
+    id: "sp006",
+    name: "Dưa hấu không hạt",
+    org: "HTX Dưa hấu Định Quán",
+    district: "Định Quán",
+    cert: "OCOP",
+    img: "https://images.unsplash.com/photo-1563114773-84221bd62daa?w=400&h=260&fit=crop",
+  },
+  {
+    id: "sp007",
+    name: "Mật ong rừng nguyên chất",
+    org: "Trang trại Ong Rừng Đồng Nai",
+    district: "Tân Phú",
+    cert: "OCOP",
+    img: "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=260&fit=crop",
+  },
+  {
+    id: "sp010",
+    name: "Tiêu sọ Long Khánh",
+    org: "HTX Hồ Tiêu Long Khánh",
+    district: "Long Khánh",
+    cert: "OCOP",
+    img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&h=260&fit=crop",
+  },
+  {
+    id: "sp005",
+    name: "Nước mắm truyền thống",
+    org: "Cơ sở Nước mắm Hương Đồng",
+    district: "Xuân Lộc",
+    cert: "ISO 22000",
+    img: "https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=260&fit=crop",
+  },
 ];
 
 const certColor: Record<string, string> = {
-  'VietGAP':   'bg-emerald-100 text-emerald-700',
-  'GlobalGAP': 'bg-blue-100 text-blue-700',
-  'OCOP':      'bg-orange-100 text-orange-700',
-  'HACCP':     'bg-purple-100 text-purple-700',
-  'ISO 22000': 'bg-sky-100 text-sky-700',
+  VietGAP: "bg-emerald-100 text-emerald-700",
+  GlobalGAP: "bg-blue-100 text-blue-700",
+  OCOP: "bg-orange-100 text-orange-700",
+  HACCP: "bg-purple-100 text-purple-700",
+  "ISO 22000": "bg-sky-100 text-sky-700",
 };
 const typeColor: Record<string, string> = {
-  'Hợp tác xã':  'bg-blue-100 text-[#2740BA]',
-  'Doanh nghiệp':'bg-green-100 text-green-700',
-  'Trang trại':  'bg-lime-100 text-lime-700',
+  "Hợp tác xã": "bg-blue-100 text-[#2740BA]",
+  "Doanh nghiệp": "bg-green-100 text-green-700",
+  "Trang trại": "bg-lime-100 text-lime-700",
 };
 
 export default function LandingPage() {
@@ -64,6 +155,23 @@ export default function LandingPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (searchType === "trace" && traceCode.trim()) {
+      const id = lookupByTraceCode(traceCode.trim());
+      if (id) { setLocation(`/san-pham/${id}`); return; }
+      // No exact match → go to search results with the typed code as query
+      setLocation(`/tra-cuu?q=${encodeURIComponent(traceCode.trim())}`);
+      return;
+    }
+
+    if (searchType === "gtin" && gtin.trim()) {
+      const id = lookupByGtin(gtin.trim(), lot.trim() || undefined);
+      if (id) { setLocation(`/san-pham/${id}`); return; }
+      setLocation(`/tra-cuu?q=${encodeURIComponent(gtin.trim())}`);
+      return;
+    }
+
+    // Fallback: general text search
     setLocation(
       "/tra-cuu" +
         (searchQuery.trim()
@@ -77,7 +185,6 @@ export default function LandingPage() {
       {/* HERO SECTION */}
       <section className="py-12 lg:py-16">
         <div className="max-w-7xl mx-auto w-full px-6 lg:px-10 flex flex-col lg:flex-row items-center gap-10">
-
           {/* Cột trái */}
           <div className="lg:w-[48%] flex flex-col items-start space-y-7">
             <h1 className="w-full text-[clamp(1.35rem,6.8vw,2.75rem)] font-extrabold uppercase leading-[1.1]">
@@ -96,7 +203,6 @@ export default function LandingPage() {
 
             <form onSubmit={handleSearch} className="w-full">
               <div className="flex flex-col lg:flex-row gap-4">
-
                 {searchType === "trace" ? (
                   <>
                     <div className="flex-1 h-[62px] bg-white rounded-2xl border border-gray-200 shadow-md flex items-center px-6">
@@ -113,7 +219,7 @@ export default function LandingPage() {
 
                     <button
                       type="submit"
-                      className="h-[62px] px-10 rounded-2xl bg-[#2740BA] hover:bg-[#1d3396] text-white text-lg font-semibold transition w-full lg:w-auto"
+                      className="h-[62px] px-10 rounded-2xl bg-[#e8650a]  text-white text-lg font-semibold transition w-full lg:w-auto"
                     >
                       Tra cứu
                     </button>
@@ -191,18 +297,14 @@ export default function LandingPage() {
                          animate-[float_6s_ease-in-out_infinite]"
             />
           </div>
-
         </div>
       </section>
 
       {/* STATS SECTION */}
       <section className="bg-white pb-12 -mt-2">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-
           <div className="bg-[#F5F7FA] rounded-3xl shadow-sm border border-slate-100 px-8 lg:px-12 py-10">
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-
               {/* Sản phẩm */}
               <div className="flex flex-col items-center text-center">
                 <Package className="w-10 h-10 text-[#E8650A] mb-4" />
@@ -235,17 +337,12 @@ export default function LandingPage() {
                   Cấp mã định danh
                 </span>
               </div>
-
             </div>
-
           </div>
-
         </div>
       </section>
       {/* BẢN ĐỒ SECTION */}
       <MapSection />
-
-
 
       {/* DANH MỤC NGÀNH HÀNG */}
       <section className="py-16 px-6 lg:px-12 bg-white">
@@ -260,7 +357,10 @@ export default function LandingPage() {
                 Danh mục đáng chú ý
               </h2>
             </div>
-            <Link href="/tra-cuu" className="px-5 py-2 border border-[#E8650A] text-[#E8650A] text-sm font-semibold rounded hover:bg-[#E8650A] hover:text-white transition-colors whitespace-nowrap">
+            <Link
+              href="/tra-cuu"
+              className="px-5 py-2 border border-[#E8650A] text-[#E8650A] text-sm font-semibold rounded hover:bg-[#E8650A] hover:text-white transition-colors whitespace-nowrap"
+            >
               Xem thêm
             </Link>
           </div>
@@ -458,7 +558,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
     </>
   );
 }

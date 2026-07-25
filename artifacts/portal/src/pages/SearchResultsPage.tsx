@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useSearch, useLocation } from 'wouter';
+import { lookupByTraceCode, lookupByGtin } from '../lib/productLookup';
 import {
   Search, ShieldCheck, ChevronDown, ChevronRight,
   SlidersHorizontal, X, ArrowLeft, Building2, Package, MapPin, Phone, Barcode
@@ -139,9 +140,28 @@ export default function SearchResultsPage() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const q = searchType === 'trace' ? traceCode : `${gtin} ${lot}`.trim();
-    setQuery(q || inputVal);
-    setInputVal(q || inputVal);
+
+    if (searchType === 'trace' && traceCode.trim()) {
+      const id = lookupByTraceCode(traceCode.trim());
+      if (id) { setLocation(`/san-pham/${id}`); return; }
+      // No exact match — show filtered results
+      setQuery(traceCode.trim());
+      setInputVal(traceCode.trim());
+      return;
+    }
+
+    if (searchType === 'gtin' && (gtin.trim() || lot.trim())) {
+      const id = lookupByGtin(gtin.trim(), lot.trim() || undefined);
+      if (id) { setLocation(`/san-pham/${id}`); return; }
+      // No exact match — show filtered results
+      const q = `${gtin} ${lot}`.trim();
+      setQuery(q);
+      setInputVal(q);
+      return;
+    }
+
+    // General keyword search
+    setQuery(inputVal);
   };
 
   const clearFilters = () => {
@@ -270,7 +290,7 @@ export default function SearchResultsPage() {
               )}
               <button
                 type="submit"
-                className="shrink-0 border-2 border-white font-bold px-7 py-3 rounded-full hover:bg-[#1f339e] transition-colors shadow-sm whitespace-nowrap bg-[#e8650a] text-[#FFFF] border-t-[#e8650a] border-r-[#e8650a] border-b-[#e8650a] border-l-[#e8650a]"
+                className="shrink-0 border-2 border-white font-bold px-7 py-3 rounded-full  transition-colors shadow-sm whitespace-nowrap bg-[#e8650a] text-[#FFFF] border-t-[#e8650a] border-r-[#e8650a] border-b-[#e8650a] border-l-[#e8650a]"
               >
                 Tra cứu
               </button>
