@@ -378,13 +378,15 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <Link
-              href="/dang-ky"
+            <a
+              href="huong-dan.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="mt-10 font-bold text-[#E8650A] hover:text-[#D55C08] flex items-center gap-2 group transition-colors"
             >
               Hướng dẫn đăng ký tại đây{" "}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            </a>
           </div>
 
           <div className="lg:w-1/2 relative w-full flex justify-center">
