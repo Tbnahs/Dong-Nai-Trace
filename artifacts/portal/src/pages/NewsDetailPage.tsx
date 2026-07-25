@@ -196,7 +196,7 @@ export default function NewsDetailPage() {
           </div>
 
           {/* Title */}
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-slate-800 leading-snug mb-4">
+          <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-slate-800 leading-snug mb-4">
             {article.title}
           </h1>
 

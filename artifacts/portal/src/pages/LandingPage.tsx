@@ -187,7 +187,7 @@ export default function LandingPage() {
         <div className="max-w-[1280px] mx-auto w-full px-4 md:px-6 lg:px-10 flex flex-col lg:flex-row items-center gap-8 md:gap-10">
           {/* Cột trái */}
           <div className="lg:w-[48%] flex flex-col items-start space-y-7">
-            <h1 className="w-full text-[clamp(1.35rem,6.8vw,2.75rem)] font-extrabold uppercase leading-[1.1]">
+            <h1 className="w-full text-[clamp(1.15rem,5.5vw,2.75rem)] font-extrabold uppercase leading-[1.15]">
               <span className="block whitespace-nowrap text-[#2740BA]">
                 TRUY XUẤT NGUỒN GỐC
               </span>
@@ -352,13 +352,13 @@ export default function LandingPage() {
               <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
                 Danh mục
               </p>
-              <h2 className="text-2xl lg:text-3xl font-extrabold text-[#2740BA] uppercase">
+              <h2 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-[#2740BA] uppercase">
                 Danh mục đáng chú ý
               </h2>
             </div>
             <Link
               href="/tra-cuu"
-              className="px-5 py-2 border border-[#E8650A] text-[#E8650A] text-sm font-semibold rounded hover:bg-[#E8650A] hover:text-white transition-colors whitespace-nowrap"
+              className="px-3 py-1 md:px-5 md:py-2 border border-[#E8650A] text-[#E8650A] text-xs md:text-sm font-semibold rounded hover:bg-[#E8650A] hover:text-white transition-colors whitespace-nowrap"
             >
               Xem thêm
             </Link>
@@ -406,7 +406,7 @@ export default function LandingPage() {
                 className="group cursor-pointer rounded overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow bg-white block"
               >
                 {/* Photo */}
-                <div className="overflow-hidden h-[200px]">
+                <div className="overflow-hidden h-[90px] md:h-[160px] lg:h-[200px]">
                   <img
                     src={cat.img}
                     alt={cat.name}
@@ -414,14 +414,12 @@ export default function LandingPage() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
-                {/* Footer */}
-                <div className="flex items-center justify-between px-4 py-3 bg-white">
-                  <span className="text-xs md:text-sm font-semibold text-slate-800 group-hover:text-[#2740BA] transition-colors leading-tight line-clamp-2">
+                {/* Label */}
+                <div className="px-2 py-1.5 md:px-4 md:py-3 bg-white flex items-center justify-between gap-1">
+                  <span className="text-[10px] md:text-sm font-semibold text-slate-800 group-hover:text-[#2740BA] transition-colors leading-tight line-clamp-2">
                     {cat.name}
                   </span>
-                  <span className="text-[#E8650A] font-bold text-lg leading-none">
-                    →
-                  </span>
+                  <span className="text-[#E8650A] font-bold text-sm md:text-lg leading-none shrink-0">→</span>
                 </div>
               </Link>
             ))}
@@ -432,7 +430,7 @@ export default function LandingPage() {
       <section className="py-16 md:py-20 px-4 md:px-6 lg:px-10 bg-white overflow-hidden">
         <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
           <div className="lg:w-1/2">
-            <h2 className="text-3xl lg:text-4xl font-extrabold text-[#2740BA] mb-8 uppercase">
+            <h2 className="text-xl md:text-3xl lg:text-4xl font-extrabold text-[#2740BA] mb-5 md:mb-8 uppercase">
               Hướng dẫn doanh nghiệp
             </h2>
             <div className="space-y-6">

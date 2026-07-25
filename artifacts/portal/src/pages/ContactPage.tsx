@@ -9,7 +9,7 @@ export default function ContactPage() {
           <p className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-2">
             Liên hệ
           </p>
-          <h1 className="text-3xl lg:text-4xl font-extrabold uppercase">
+          <h1 className="text-xl md:text-3xl lg:text-4xl font-extrabold uppercase">
             Kênh Hỗ Trợ & Liên Hệ
           </h1>
           <p className="mt-3 text-blue-100/80 max-w-xl">

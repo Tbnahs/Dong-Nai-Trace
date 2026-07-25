@@ -130,7 +130,7 @@ export default function BusinessDetailPage() {
                 {biz.type}
               </span>
 
-              <h1 className="text-2xl lg:text-3xl font-extrabold text-slate-800 leading-tight mb-2">{biz.name}</h1>
+              <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-slate-800 leading-tight mb-2">{biz.name}</h1>
 
               <div className="flex items-center gap-2 mb-5">
                 <MapPin className="w-4 h-4 text-gray-400" />

@@ -100,7 +100,7 @@ export default function NewsPage() {
           <p className="text-xs font-bold uppercase tracking-widest text-blue-300 mb-2">
             Cập nhật mới nhất
           </p>
-          <h1 className="text-3xl lg:text-4xl font-extrabold uppercase mb-3">Tin Tức</h1>
+          <h1 className="text-xl md:text-3xl lg:text-4xl font-extrabold uppercase mb-3">Tin Tức</h1>
           <p className="text-blue-100/80 text-sm max-w-xl">
             Thông tin chính sách, sự kiện và hướng dẫn mới nhất về hệ thống truy xuất nguồn gốc
             nông sản tỉnh Đồng Nai.

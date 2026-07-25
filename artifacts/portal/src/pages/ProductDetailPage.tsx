@@ -196,7 +196,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Name */}
-            <h1 className="text-2xl lg:text-3xl font-extrabold text-slate-800 leading-tight mb-2">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-extrabold text-slate-800 leading-tight mb-2">
               {product.name}
             </h1>
 
