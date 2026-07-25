@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation, Link } from 'wouter';
 import {
   User, Lock, Eye, EyeOff, Phone, X,
   ChevronLeft, ChevronRight, CheckCircle2, UploadCloud, Copy, LogIn,
@@ -275,7 +275,7 @@ function LoginForm({ onSwitchToRegister, guideUrl }: { onSwitchToRegister: () =>
           <div className="w-6 h-6 rounded-full bg-[#2740BA] flex items-center justify-center shrink-0">
             <Phone className="w-3 h-3 text-white" />
           </div>
-          <span>Hotline: <strong className="text-[#2740BA]">0961.042.442</strong></span>
+          <span>Hotline: <strong className="text-[#2740BA]">0900.000.000</strong></span>
         </div>
       </div>
 
@@ -544,13 +544,13 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
       <div className="flex-1 flex items-center justify-center bg-white overflow-y-auto px-8 py-6">
         <div className={`w-full ${defaultTab === 'register' ? 'max-w-xl' : 'max-w-sm'}`}>
           {/* Back */}
-          <a
-            href={import.meta.env.BASE_URL}
+          <Link
+            href="/"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-[#2740BA] transition-colors mb-10"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
             Về trang chủ
-          </a>
+          </Link>
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-8">
