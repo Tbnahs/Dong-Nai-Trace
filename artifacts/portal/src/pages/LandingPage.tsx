@@ -257,9 +257,9 @@ export default function LandingPage() {
                 Danh mục đáng chú ý
               </h2>
             </div>
-            <button className="px-5 py-2 border border-[#2740BA] text-[#2740BA] text-sm font-semibold rounded hover:bg-[#2740BA] hover:text-white transition-colors whitespace-nowrap">
+            <Link href="/tra-cuu" className="px-5 py-2 border border-[#2740BA] text-[#2740BA] text-sm font-semibold rounded hover:bg-[#2740BA] hover:text-white transition-colors whitespace-nowrap">
               Xem thêm
-            </button>
+            </Link>
           </div>
 
           {/* Grid */}

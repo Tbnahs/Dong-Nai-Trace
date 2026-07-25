@@ -119,16 +119,11 @@ export default function MapSection() {
         shadowUrl:     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
-      // Bounding box of Đồng Nai province
-      const DN_BOUNDS = L.latLngBounds([10.35, 106.45], [11.65, 107.90]);
-
       const map = L.map(mapRef.current!, {
         center:             [11.05, 107.17],
         zoom:               9,
-        minZoom:            9,
+        minZoom:            8,
         maxZoom:            13,
-        maxBounds:          DN_BOUNDS,
-        maxBoundsViscosity: 1.0,
         zoomControl:        true,
         attributionControl: false,
       });
@@ -414,16 +409,40 @@ function EmptyState({ label }: { label: string }) {
 }
 
 // ─── GeoJSON style helpers ────────────────────────────────────────────────────
+
+// Harmonious choropleth palette — 12 distinct, balanced hues
+const WARD_PALETTE = [
+  "#5B9BD5", // cornflower blue
+  "#52B788", // emerald green
+  "#F4A261", // sandy orange
+  "#9B72CF", // amethyst
+  "#E76F51", // terracotta
+  "#2EC4B6", // caribbean teal
+  "#E9C46A", // saffron
+  "#70A9D6", // sky blue
+  "#A7C957", // apple green
+  "#C77DFF", // orchid
+  "#F4978E", // salmon rose
+  "#4DBDBA", // medium aquamarine
+];
+
+function wardFillColor(code: string | number): string {
+  const n = typeof code === "number" ? code : parseInt(String(code), 10);
+  const idx = isNaN(n)
+    ? String(code).split("").reduce((a, c) => a + c.charCodeAt(0), 0)
+    : n;
+  return WARD_PALETTE[idx % WARD_PALETTE.length];
+}
+
 function styleFeature(selectedCode: string | null) {
   return (feature: any) => {
-    const code = feature?.properties?.code ?? feature?.id;
-    const isSelected = selectedCode && code === selectedCode;
-    const hasData = [...BUSINESSES, ...PRODUCTS].some((x) => x.wardCode === code);
+    const code = feature?.properties?.code ?? feature?.id ?? "";
+    const isSelected = selectedCode && String(code) === String(selectedCode);
     return {
-      fillColor:   isSelected ? "#2740BA" : hasData ? "#93aff5" : "#dde6ff",
-      fillOpacity: isSelected ? 0.75 : hasData ? 0.45 : 0.2,
-      color:       isSelected ? "#1a2d8c" : "#2740BA",
-      weight:      isSelected ? 2.5 : 0.8,
+      fillColor:   isSelected ? "#1B2A6B" : wardFillColor(code),
+      fillOpacity: isSelected ? 0.88 : 0.52,
+      color:       "#ffffff",
+      weight:      isSelected ? 2.5 : 1.0,
     };
   };
 }
