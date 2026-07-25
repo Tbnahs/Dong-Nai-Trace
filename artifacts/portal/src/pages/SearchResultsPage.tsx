@@ -290,7 +290,7 @@ export default function SearchResultsPage() {
               )}
               <button
                 type="submit"
-                className="shrink-0 border-2 border-white font-bold px-7 py-3 rounded-full  transition-colors shadow-sm whitespace-nowrap bg-[#e8650a] text-[#FFFF] border-t-[#e8650a] border-r-[#e8650a] border-b-[#e8650a] border-l-[#e8650a]"
+                className="shrink-0 border-2 border-white font-bold px-7 py-3 rounded-full transition-colors shadow-sm whitespace-nowrap bg-[#e8650a] text-[#FFFF] border-t-[#e8650a] border-r-[#e8650a] border-b-[#e8650a] border-l-[#e8650a] rounded-tl-[16px] rounded-tr-[16px] rounded-br-[16px] rounded-bl-[16px]"
               >
                 Tra cứu
               </button>
