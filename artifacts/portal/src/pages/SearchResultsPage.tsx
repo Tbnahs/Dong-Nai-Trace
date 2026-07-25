@@ -7,37 +7,37 @@ import {
 
 // ─── Products ─────────────────────────────────────────────────────────────────
 export const MOCK_PRODUCTS = [
-  { id: 'sp001', name: 'Bưởi Tân Triều', org: 'HTX Nông nghiệp Xanh', category: 'Nông sản & Rau củ', district: 'Vĩnh Cửu', status: 'published', cert: 'VietGAP', img: 'https://picsum.photos/seed/buoi/300/200' },
-  { id: 'sp002', name: 'Rau muống hữu cơ VietGAP', org: 'Trang trại Sạch Đồng Nai', category: 'Nông sản & Rau củ', district: 'Biên Hòa', status: 'published', cert: 'VietGAP', img: 'https://picsum.photos/seed/raumuong/300/200' },
-  { id: 'sp003', name: 'Tôm sú đông lạnh', org: 'Công ty Thủy sản Đồng Nai', category: 'Thủy sản', district: 'Long Thành', status: 'published', cert: 'HACCP', img: 'https://picsum.photos/seed/tomsu/300/200' },
-  { id: 'sp004', name: 'Cá tra phi lê', org: 'Công ty TNHH Thủy sản Nam Phát', category: 'Thủy sản', district: 'Nhơn Trạch', status: 'published', cert: 'GlobalGAP', img: 'https://picsum.photos/seed/catra/300/200' },
-  { id: 'sp005', name: 'Nước mắm truyền thống', org: 'Cơ sở Nước mắm Hương Đồng', category: 'Thực phẩm chế biến', district: 'Xuân Lộc', status: 'published', cert: 'ISO 22000', img: 'https://picsum.photos/seed/nuocmam/300/200' },
-  { id: 'sp006', name: 'Dưa hấu không hạt', org: 'HTX Dưa hấu Định Quán', category: 'Nông sản & Rau củ', district: 'Định Quán', status: 'published', cert: 'OCOP', img: 'https://picsum.photos/seed/duahau/300/200' },
-  { id: 'sp007', name: 'Mật ong rừng nguyên chất', org: 'Trang trại Ong Rừng Đồng Nai', category: 'Thực phẩm chế biến', district: 'Tân Phú', status: 'published', cert: 'OCOP', img: 'https://picsum.photos/seed/matong/300/200' },
-  { id: 'sp008', name: 'Gạo hữu cơ Định Quán', org: 'HTX Nông sản Định Quán', category: 'Nông sản & Rau củ', district: 'Định Quán', status: 'published', cert: 'VietGAP', img: 'https://picsum.photos/seed/gao/300/200' },
-  { id: 'sp009', name: 'Chả giò chiên giòn', org: 'Công ty TNHH Thực phẩm Bình An', category: 'Thực phẩm chế biến', district: 'Biên Hòa', status: 'published', cert: 'ISO 22000', img: 'https://picsum.photos/seed/chagi/300/200' },
-  { id: 'sp010', name: 'Tiêu sọ Long Khánh', org: 'HTX Hồ Tiêu Long Khánh', category: 'Nông sản & Rau củ', district: 'Long Khánh', status: 'published', cert: 'OCOP', img: 'https://picsum.photos/seed/tieu/300/200' },
-  { id: 'sp011', name: 'Bò khô Long Khánh', org: 'Cơ sở Đặc sản Long Khánh', category: 'Thực phẩm chế biến', district: 'Long Khánh', status: 'published', cert: 'HACCP', img: 'https://picsum.photos/seed/bokho/300/200' },
-  { id: 'sp012', name: 'Dệt thổ cẩm thủ công', org: 'Làng nghề Trị An', category: 'Thủ công mỹ nghệ', district: 'Vĩnh Cửu', status: 'published', cert: '', img: 'https://picsum.photos/seed/thoicam/300/200' },
+  { id: 'sp001', name: 'Bưởi Tân Triều', org: 'HTX Nông nghiệp Xanh', category: 'Nông sản & Rau củ', district: 'Vĩnh Cửu', status: 'published', cert: 'VietGAP', img: 'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=300&h=200&fit=crop' },
+  { id: 'sp002', name: 'Rau muống hữu cơ VietGAP', org: 'Trang trại Sạch Đồng Nai', category: 'Nông sản & Rau củ', district: 'Biên Hòa', status: 'published', cert: 'VietGAP', img: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=300&h=200&fit=crop' },
+  { id: 'sp003', name: 'Tôm sú đông lạnh', org: 'Công ty Thủy sản Đồng Nai', category: 'Thủy sản', district: 'Long Thành', status: 'published', cert: 'HACCP', img: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=300&h=200&fit=crop' },
+  { id: 'sp004', name: 'Cá tra phi lê', org: 'Công ty TNHH Thủy sản Nam Phát', category: 'Thủy sản', district: 'Nhơn Trạch', status: 'published', cert: 'GlobalGAP', img: 'https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=300&h=200&fit=crop' },
+  { id: 'sp005', name: 'Nước mắm truyền thống', org: 'Cơ sở Nước mắm Hương Đồng', category: 'Thực phẩm chế biến', district: 'Xuân Lộc', status: 'published', cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=300&h=200&fit=crop' },
+  { id: 'sp006', name: 'Dưa hấu không hạt', org: 'HTX Dưa hấu Định Quán', category: 'Nông sản & Rau củ', district: 'Định Quán', status: 'published', cert: 'OCOP', img: 'https://images.unsplash.com/photo-1563114773-84221bd62daa?w=300&h=200&fit=crop' },
+  { id: 'sp007', name: 'Mật ong rừng nguyên chất', org: 'Trang trại Ong Rừng Đồng Nai', category: 'Thực phẩm chế biến', district: 'Tân Phú', status: 'published', cert: 'OCOP', img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=300&h=200&fit=crop' },
+  { id: 'sp008', name: 'Gạo hữu cơ Định Quán', org: 'HTX Nông sản Định Quán', category: 'Nông sản & Rau củ', district: 'Định Quán', status: 'published', cert: 'VietGAP', img: 'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=300&h=200&fit=crop' },
+  { id: 'sp009', name: 'Chả giò chiên giòn', org: 'Công ty TNHH Thực phẩm Bình An', category: 'Thực phẩm chế biến', district: 'Biên Hòa', status: 'published', cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=300&h=200&fit=crop' },
+  { id: 'sp010', name: 'Tiêu sọ Long Khánh', org: 'HTX Hồ Tiêu Long Khánh', category: 'Nông sản & Rau củ', district: 'Long Khánh', status: 'published', cert: 'OCOP', img: 'https://images.unsplash.com/photo-1599909533731-a4f31a68a3dd?w=300&h=200&fit=crop' },
+  { id: 'sp011', name: 'Bò khô Long Khánh', org: 'Cơ sở Đặc sản Long Khánh', category: 'Thực phẩm chế biến', district: 'Long Khánh', status: 'published', cert: 'HACCP', img: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=300&h=200&fit=crop' },
+  { id: 'sp012', name: 'Dệt thổ cẩm thủ công', org: 'Làng nghề Trị An', category: 'Thủ công mỹ nghệ', district: 'Vĩnh Cửu', status: 'published', cert: '', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop' },
 ];
 
 // ─── Businesses ───────────────────────────────────────────────────────────────
 export const MOCK_BUSINESSES = [
-  { id: 'b1',  name: 'HTX Nông nghiệp Xanh',             type: 'Hợp tác xã',       district: 'Vĩnh Cửu',   phone: '0251 890 123', products: 5,  cert: 'VietGAP',   img: 'https://picsum.photos/seed/biz1/300/200' },
-  { id: 'b2',  name: 'Công ty Thủy sản Đồng Nai',         type: 'Doanh nghiệp',     district: 'Long Thành',  phone: '0251 234 567', products: 8,  cert: 'HACCP',     img: 'https://picsum.photos/seed/biz2/300/200' },
-  { id: 'b3',  name: 'HTX Dưa hấu Định Quán',             type: 'Hợp tác xã',       district: 'Định Quán',   phone: '0251 345 678', products: 3,  cert: 'OCOP',      img: 'https://picsum.photos/seed/biz3/300/200' },
-  { id: 'b4',  name: 'Trang trại Sạch Đồng Nai',          type: 'Trang trại',       district: 'Biên Hòa',    phone: '0251 456 789', products: 12, cert: 'VietGAP',   img: 'https://picsum.photos/seed/biz4/300/200' },
-  { id: 'b5',  name: 'HTX Hồ Tiêu Long Khánh',            type: 'Hợp tác xã',       district: 'Long Khánh',  phone: '0251 567 890', products: 4,  cert: 'OCOP',      img: 'https://picsum.photos/seed/biz5/300/200' },
-  { id: 'b6',  name: 'Công ty TNHH Thủy sản Nam Phát',    type: 'Doanh nghiệp',     district: 'Nhơn Trạch',  phone: '0251 678 901', products: 7,  cert: 'GlobalGAP', img: 'https://picsum.photos/seed/biz6/300/200' },
-  { id: 'b7',  name: 'Cơ sở Nước mắm Hương Đồng',         type: 'Cơ sở sản xuất',  district: 'Xuân Lộc',    phone: '0251 789 012', products: 2,  cert: 'ISO 22000', img: 'https://picsum.photos/seed/biz7/300/200' },
-  { id: 'b8',  name: 'Trang trại Ong Rừng Đồng Nai',      type: 'Trang trại',       district: 'Tân Phú',     phone: '0251 890 234', products: 3,  cert: 'OCOP',      img: 'https://picsum.photos/seed/biz8/300/200' },
-  { id: 'b9',  name: 'HTX Nông sản Định Quán',             type: 'Hợp tác xã',       district: 'Định Quán',   phone: '0251 901 234', products: 6,  cert: 'VietGAP',   img: 'https://picsum.photos/seed/biz9/300/200' },
-  { id: 'b10', name: 'Công ty TNHH Thực phẩm Bình An',    type: 'Doanh nghiệp',     district: 'Biên Hòa',    phone: '0251 012 345', products: 9,  cert: 'ISO 22000', img: 'https://picsum.photos/seed/biz10/300/200' },
-  { id: 'b11', name: 'Cơ sở Đặc sản Long Khánh',          type: 'Cơ sở sản xuất',  district: 'Long Khánh',  phone: '0251 111 222', products: 4,  cert: 'HACCP',     img: 'https://picsum.photos/seed/biz11/300/200' },
-  { id: 'b12', name: 'Làng nghề Trị An',                   type: 'Làng nghề',        district: 'Vĩnh Cửu',   phone: '0251 222 333', products: 6,  cert: '',          img: 'https://picsum.photos/seed/biz12/300/200' },
+  { id: 'b1',  name: 'HTX Nông nghiệp Xanh',             type: 'Hợp tác xã',       district: 'Vĩnh Cửu',   phone: '0251 890 123', products: 5,  cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=300&h=200&fit=crop' },
+  { id: 'b2',  name: 'Công ty Thủy sản Đồng Nai',         type: 'Doanh nghiệp',     district: 'Long Thành',  phone: '0251 234 567', products: 8,  cert: 'HACCP',     img: 'https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=300&h=200&fit=crop' },
+  { id: 'b3',  name: 'HTX Dưa hấu Định Quán',             type: 'Hợp tác xã',       district: 'Định Quán',   phone: '0251 345 678', products: 3,  cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1563114773-84221bd62daa?w=300&h=200&fit=crop' },
+  { id: 'b4',  name: 'Trang trại Sạch Đồng Nai',          type: 'Trang trại',       district: 'Biên Hòa',    phone: '0251 456 789', products: 12, cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=300&h=200&fit=crop' },
+  { id: 'b5',  name: 'HTX Hồ Tiêu Long Khánh',            type: 'Hợp tác xã',       district: 'Long Khánh',  phone: '0251 567 890', products: 4,  cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&h=200&fit=crop' },
+  { id: 'b6',  name: 'Công ty TNHH Thủy sản Nam Phát',    type: 'Doanh nghiệp',     district: 'Nhơn Trạch',  phone: '0251 678 901', products: 7,  cert: 'GlobalGAP', img: 'https://images.unsplash.com/photo-1534361960057-19f073e29f93?w=300&h=200&fit=crop' },
+  { id: 'b7',  name: 'Cơ sở Nước mắm Hương Đồng',         type: 'Cơ sở sản xuất',  district: 'Xuân Lộc',    phone: '0251 789 012', products: 2,  cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=300&h=200&fit=crop' },
+  { id: 'b8',  name: 'Trang trại Ong Rừng Đồng Nai',      type: 'Trang trại',       district: 'Tân Phú',     phone: '0251 890 234', products: 3,  cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1558642891-54be180ea339?w=300&h=200&fit=crop' },
+  { id: 'b9',  name: 'HTX Nông sản Định Quán',             type: 'Hợp tác xã',       district: 'Định Quán',   phone: '0251 901 234', products: 6,  cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=300&h=200&fit=crop' },
+  { id: 'b10', name: 'Công ty TNHH Thực phẩm Bình An',    type: 'Doanh nghiệp',     district: 'Biên Hòa',    phone: '0251 012 345', products: 9,  cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=300&h=200&fit=crop' },
+  { id: 'b11', name: 'Cơ sở Đặc sản Long Khánh',          type: 'Cơ sở sản xuất',  district: 'Long Khánh',  phone: '0251 111 222', products: 4,  cert: 'HACCP',     img: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=300&h=200&fit=crop' },
+  { id: 'b12', name: 'Làng nghề Trị An',                   type: 'Làng nghề',        district: 'Vĩnh Cửu',   phone: '0251 222 333', products: 6,  cert: '',          img: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=300&h=200&fit=crop' },
 ];
 
-const CATEGORIES  = ['Tất cả', 'Nông sản & Rau củ', 'Thủy sản', 'Thực phẩm chế biến', 'Thủ công mỹ nghệ', 'Dược liệu'];
+const CATEGORIES  = ['Tất cả', 'Nông sản & Rau củ', 'Phân bón & Vật tư nông nghiệp', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Công nghiệp chế biến'];
 const DISTRICTS   = ['Tất cả', 'Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú'];
 const CERTS       = ['Tất cả', 'VietGAP', 'GlobalGAP', 'OCOP', 'HACCP', 'ISO 22000'];
 const ORG_TYPES   = ['Tất cả', 'Hợp tác xã', 'Doanh nghiệp', 'Trang trại', 'Cơ sở sản xuất', 'Làng nghề'];
@@ -72,7 +72,7 @@ export default function SearchResultsPage() {
 
   const [query, setQuery]               = useState(params.get('q') || '');
   const [inputVal, setInputVal]         = useState(params.get('q') || '');
-  const [categoryFilter, setCategoryFilter] = useState('Tất cả');
+  const [categoryFilter, setCategoryFilter] = useState(params.get('category') || 'Tất cả');
   const [districtFilter, setDistrictFilter] = useState('Tất cả');
   const [certFilter, setCertFilter]         = useState('Tất cả');
   const [orgTypeFilter, setOrgTypeFilter]   = useState('Tất cả');

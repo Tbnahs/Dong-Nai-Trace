@@ -2,6 +2,11 @@
 @import 'leaflet/dist/leaflet.css';
 
 /* Remove black focus rectangle on Leaflet clickable regions */
+/* Map background — white, no tiles */
+.leaflet-container {
+  background: #ffffff;
+}
+
 .leaflet-interactive:focus {
   outline: none;
 }

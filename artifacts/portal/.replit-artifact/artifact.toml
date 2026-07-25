@@ -1,5 +1,5 @@
 kind = "web"
-previewPath = "/portal/"
+previewPath = "/"
 title = "Đồng Nai Trace — Portal"
 version = "1.0.0"
 id = "artifacts/portal"
@@ -7,7 +7,7 @@ router = "path"
 
 [[services]]
 name = "web"
-paths = [ "/portal/" ]
+paths = [ "/" ]
 localPort = 25265
 
 [services.development]
@@ -24,4 +24,4 @@ to = "/index.html"
 
 [services.env]
 PORT = "25265"
-BASE_PATH = "/portal/"
+BASE_PATH = "/"

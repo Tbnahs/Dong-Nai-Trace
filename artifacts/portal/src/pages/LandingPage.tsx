@@ -22,21 +22,21 @@ import {
 
 // ─── Featured demo data (subset from danh mục) ───────────────────────────────
 const FEATURED_BUSINESSES = [
-  { id: 'b1',  name: 'HTX Nông nghiệp Xanh',          type: 'Hợp tác xã',   district: 'Vĩnh Cửu',  products: 5,  cert: 'VietGAP',   img: 'https://picsum.photos/seed/biz1/400/260' },
-  { id: 'b4',  name: 'Trang trại Sạch Đồng Nai',       type: 'Trang trại',   district: 'Biên Hòa',  products: 12, cert: 'VietGAP',   img: 'https://picsum.photos/seed/biz4/400/260' },
-  { id: 'b2',  name: 'Công ty Thủy sản Đồng Nai',      type: 'Doanh nghiệp', district: 'Long Thành', products: 8, cert: 'HACCP',     img: 'https://picsum.photos/seed/biz2/400/260' },
-  { id: 'b6',  name: 'Công ty TNHH Thủy sản Nam Phát', type: 'Doanh nghiệp', district: 'Nhơn Trạch', products: 7, cert: 'GlobalGAP', img: 'https://picsum.photos/seed/biz6/400/260' },
-  { id: 'b5',  name: 'HTX Hồ Tiêu Long Khánh',         type: 'Hợp tác xã',   district: 'Long Khánh', products: 4, cert: 'OCOP',      img: 'https://picsum.photos/seed/biz5/400/260' },
-  { id: 'b10', name: 'Công ty TNHH Thực phẩm Bình An', type: 'Doanh nghiệp', district: 'Biên Hòa',  products: 9, cert: 'ISO 22000', img: 'https://picsum.photos/seed/biz10/400/260' },
+  { id: 'b1',  name: 'HTX Nông nghiệp Xanh',          type: 'Hợp tác xã',   district: 'Vĩnh Cửu',  products: 5,  cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=260&fit=crop' },
+  { id: 'b4',  name: 'Trang trại Sạch Đồng Nai',       type: 'Trang trại',   district: 'Biên Hòa',  products: 12, cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=260&fit=crop' },
+  { id: 'b2',  name: 'Công ty Thủy sản Đồng Nai',      type: 'Doanh nghiệp', district: 'Long Thành', products: 8, cert: 'HACCP',     img: 'https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=400&h=260&fit=crop' },
+  { id: 'b6',  name: 'Công ty TNHH Thủy sản Nam Phát', type: 'Doanh nghiệp', district: 'Nhơn Trạch', products: 7, cert: 'GlobalGAP', img: 'https://images.unsplash.com/photo-1534361960057-19f073e29f93?w=400&h=260&fit=crop' },
+  { id: 'b5',  name: 'HTX Hồ Tiêu Long Khánh',         type: 'Hợp tác xã',   district: 'Long Khánh', products: 4, cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=260&fit=crop' },
+  { id: 'b10', name: 'Công ty TNHH Thực phẩm Bình An', type: 'Doanh nghiệp', district: 'Biên Hòa',  products: 9, cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=260&fit=crop' },
 ];
 
 const FEATURED_PRODUCTS = [
-  { id: 'sp001', name: 'Bưởi Tân Triều',          org: 'HTX Nông nghiệp Xanh',          district: 'Vĩnh Cửu',  cert: 'VietGAP',   img: 'https://picsum.photos/seed/buoi/400/260' },
-  { id: 'sp003', name: 'Tôm sú đông lạnh',         org: 'Công ty Thủy sản Đồng Nai',     district: 'Long Thành', cert: 'HACCP',    img: 'https://picsum.photos/seed/tomsu/400/260' },
-  { id: 'sp006', name: 'Dưa hấu không hạt',        org: 'HTX Dưa hấu Định Quán',         district: 'Định Quán', cert: 'OCOP',      img: 'https://picsum.photos/seed/duahau/400/260' },
-  { id: 'sp007', name: 'Mật ong rừng nguyên chất', org: 'Trang trại Ong Rừng Đồng Nai',  district: 'Tân Phú',   cert: 'OCOP',      img: 'https://picsum.photos/seed/matong/400/260' },
-  { id: 'sp010', name: 'Tiêu sọ Long Khánh',       org: 'HTX Hồ Tiêu Long Khánh',        district: 'Long Khánh', cert: 'OCOP',     img: 'https://picsum.photos/seed/tieu/400/260' },
-  { id: 'sp005', name: 'Nước mắm truyền thống',    org: 'Cơ sở Nước mắm Hương Đồng',    district: 'Xuân Lộc',  cert: 'ISO 22000', img: 'https://picsum.photos/seed/nuocmam/400/260' },
+  { id: 'sp001', name: 'Bưởi Tân Triều',          org: 'HTX Nông nghiệp Xanh',          district: 'Vĩnh Cửu',  cert: 'VietGAP',   img: 'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=400&h=260&fit=crop' },
+  { id: 'sp003', name: 'Tôm sú đông lạnh',         org: 'Công ty Thủy sản Đồng Nai',     district: 'Long Thành', cert: 'HACCP',    img: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400&h=260&fit=crop' },
+  { id: 'sp006', name: 'Dưa hấu không hạt',        org: 'HTX Dưa hấu Định Quán',         district: 'Định Quán', cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1563114773-84221bd62daa?w=400&h=260&fit=crop' },
+  { id: 'sp007', name: 'Mật ong rừng nguyên chất', org: 'Trang trại Ong Rừng Đồng Nai',  district: 'Tân Phú',   cert: 'OCOP',      img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=400&h=260&fit=crop' },
+  { id: 'sp010', name: 'Tiêu sọ Long Khánh',       org: 'HTX Hồ Tiêu Long Khánh',        district: 'Long Khánh', cert: 'OCOP',     img: 'https://images.unsplash.com/photo-1599909533731-a4f31a68a3dd?w=400&h=260&fit=crop' },
+  { id: 'sp005', name: 'Nước mắm truyền thống',    org: 'Cơ sở Nước mắm Hương Đồng',    district: 'Xuân Lộc',  cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=260&fit=crop' },
 ];
 
 const certColor: Record<string, string> = {
@@ -271,36 +271,37 @@ export default function LandingPage() {
               },
               {
                 name: "Phân bón & Vật tư nông nghiệp",
-                img: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=360&fit=crop",
+                img: "https://images.unsplash.com/photo-1592982537447-6f2a6a0c1b0a?w=600&h=360&fit=crop",
               },
               {
                 name: "Thủy sản",
-                img: "https://images.unsplash.com/photo-1559737558-2f5a35f4523b?w=600&h=360&fit=crop",
+                img: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=600&h=360&fit=crop",
               },
               {
                 name: "Thịt & Chăn nuôi",
-                img: "https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=600&h=360&fit=crop",
+                img: "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=600&h=360&fit=crop",
               },
               {
                 name: "Thực phẩm chế biến",
-                img: "https://images.unsplash.com/photo-1606787619248-f301830a5a57?w=600&h=360&fit=crop",
+                img: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=600&h=360&fit=crop",
               },
               {
                 name: "Dược liệu",
-                img: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=600&h=360&fit=crop",
+                img: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&h=360&fit=crop",
               },
               {
                 name: "Thủ công mỹ nghệ",
-                img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=360&fit=crop",
+                img: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&h=360&fit=crop",
               },
               {
                 name: "Công nghiệp chế biến",
-                img: "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=600&h=360&fit=crop",
+                img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&h=360&fit=crop",
               },
             ].map((cat, idx) => (
-              <div
+              <Link
                 key={idx}
-                className="group cursor-pointer rounded overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow bg-white"
+                href={`/tra-cuu?category=${encodeURIComponent(cat.name)}`}
+                className="group cursor-pointer rounded overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow bg-white block"
               >
                 {/* Photo */}
                 <div className="overflow-hidden h-[200px]">
@@ -319,7 +320,7 @@ export default function LandingPage() {
                     →
                   </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

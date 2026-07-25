@@ -50,12 +50,12 @@ function validateStep(step: number, f: RegForm): RegErrors {
 
 // ─── Shared UI helpers ────────────────────────────────────────────────────────
 const iCls = (err?: string) =>
-  `w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 placeholder:text-gray-400 transition-colors ${err ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-300 focus:ring-[#2740BA] focus:border-transparent'}`;
+  `w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 placeholder:text-gray-400 transition-colors ${err ? 'border-red-400 focus:ring-red-300 bg-red-50' : 'border-gray-300 focus:ring-[#2740BA] focus:border-transparent'}`;
 
 function Field({ label, error, half, children }: { label: string; error?: string; half?: boolean; children: React.ReactNode }) {
   return (
     <div className={half ? '' : 'sm:col-span-2'}>
-      <label className="block text-sm font-medium text-gray-700 mb-1.5">{label}</label>
+      <label className="block text-xs font-medium text-gray-700 mb-1">{label}</label>
       {children}
       {error && <p className="mt-1 text-xs text-red-600 font-medium">{error}</p>}
     </div>
@@ -245,15 +245,15 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
     <div>
       {/* Header */}
       {step < 3 && (
-        <div className="mb-6">
-          <h2 className="text-xl font-extrabold text-gray-800">Đăng ký tài khoản doanh nghiệp</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Cung cấp thông tin để tham gia hệ thống truy xuất</p>
+        <div className="mb-4">
+          <h2 className="text-lg font-extrabold text-gray-800">Đăng ký tài khoản doanh nghiệp</h2>
+          <p className="text-xs text-gray-500 mt-0.5">Cung cấp thông tin để tham gia hệ thống truy xuất</p>
         </div>
       )}
 
       {/* Stepper */}
       {step < 3 && (
-        <div className="flex items-start gap-0 mb-6">
+        <div className="flex items-start gap-0 mb-4">
           {REG_STEPS.map((s, i) => {
             const num = i + 1;
             const done = step > num;
@@ -279,7 +279,7 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
 
       {/* Step 1 */}
       {step === 1 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
           <Field label="Tên doanh nghiệp / tổ chức *" error={e.orgName} half>
             <input className={iCls(e.orgName)} placeholder="VD: HTX Nông nghiệp Xuân Lộc"
               value={form.orgName} onChange={ev => set('orgName')(ev.target.value)} />
@@ -322,7 +322,7 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
 
       {/* Step 2 */}
       {step === 2 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
           <Field label="Họ và tên người đại diện *" error={e.repName} half>
             <input className={iCls(e.repName)} placeholder="VD: Nguyễn Văn A"
               value={form.repName} onChange={ev => set('repName')(ev.target.value)} />
@@ -389,7 +389,7 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
 
       {/* Nav buttons */}
       {step < 3 && (
-        <div className="mt-6 flex justify-between items-center pt-5 border-t border-gray-100">
+        <div className="mt-4 flex justify-between items-center pt-4 border-t border-gray-100">
           {step > 1 ? (
             <button onClick={handleBack} className="flex items-center gap-1 text-sm font-semibold text-gray-600 hover:text-gray-900 transition-colors">
               <ChevronLeft className="w-4 h-4" /> Quay lại
@@ -428,13 +428,13 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
 
         {/* Top — Logo */}
         <div className="relative z-10 p-12">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/15 backdrop-blur-sm rounded-xl flex items-center justify-center ring-1 ring-white/20">
-              <img src={logoUrl} alt="Logo" className="w-7 h-7 object-contain" />
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-white/15 backdrop-blur-sm rounded-2xl flex items-center justify-center ring-1 ring-white/20">
+              <img src={logoUrl} alt="Logo" className="w-11 h-11 object-contain" />
             </div>
             <div>
-              <span className="text-white font-extrabold text-base tracking-tight block">Đồng Nai Trace</span>
-              <span className="text-blue-200/60 text-[10px] uppercase tracking-widest">Sở KH&CN Đồng Nai</span>
+              <span className="text-white font-extrabold text-2xl tracking-tight block">Đồng Nai Trace</span>
+              <span className="text-blue-200/70 text-sm uppercase tracking-widest">Sở KH&CN Đồng Nai</span>
             </div>
           </div>
         </div>
@@ -459,8 +459,8 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
       </div>
 
       {/* ── Right panel ── */}
-      <div className="flex-1 flex items-center justify-center bg-white overflow-y-auto px-10 py-12">
-        <div className="w-full max-w-sm">
+      <div className="flex-1 flex items-center justify-center bg-white overflow-y-auto px-8 py-6">
+        <div className={`w-full ${defaultTab === 'register' ? 'max-w-xl' : 'max-w-sm'}`}>
           {/* Back */}
           <a
             href={import.meta.env.BASE_URL}
@@ -472,8 +472,11 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-3 mb-8">
-            <img src={logoUrl} alt="Logo" className="h-9 w-auto" />
-            <span className="text-sm font-extrabold text-[#2740BA]">Đồng Nai Trace</span>
+            <img src={logoUrl} alt="Logo" className="h-14 w-auto" />
+            <div>
+              <span className="text-xl font-extrabold text-[#2740BA] block">Đồng Nai Trace</span>
+              <span className="text-xs text-gray-400 uppercase tracking-widest">Sở KH&CN Đồng Nai</span>
+            </div>
           </div>
 
           {defaultTab === 'login' ? (

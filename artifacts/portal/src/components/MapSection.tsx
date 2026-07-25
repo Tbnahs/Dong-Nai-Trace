@@ -119,17 +119,21 @@ export default function MapSection() {
         shadowUrl:     "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
+      // Bounding box of Đồng Nai province
+      const DN_BOUNDS = L.latLngBounds([10.35, 106.45], [11.65, 107.90]);
+
       const map = L.map(mapRef.current!, {
-        center:          [11.05, 107.17],
-        zoom:            9,
-        zoomControl:     true,
+        center:             [11.05, 107.17],
+        zoom:               9,
+        minZoom:            9,
+        maxZoom:            13,
+        maxBounds:          DN_BOUNDS,
+        maxBoundsViscosity: 1.0,
+        zoomControl:        true,
         attributionControl: false,
       });
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 18,
-      }).addTo(map);
-
+      // No tile layer — white background, province only
       leafletMap.current = map;
 
       // ── Helper: place / replace marker and fly to it ──────────────────────
@@ -168,8 +172,8 @@ export default function MapSection() {
         placeMarker(e.latlng);
       });
 
-      // Load GeoJSON
-      fetch("/portal/geojson/dongnai_wards.geojson")
+      // Load GeoJSON (BASE_PATH is now "/")
+      fetch(import.meta.env.BASE_URL + "geojson/dongnai_wards.geojson")
         .then((r) => r.json())
         .then((data) => {
           const layer = L.geoJSON(data, {
@@ -203,6 +207,8 @@ export default function MapSection() {
             },
           }).addTo(map);
           geoLayer.current = layer;
+          // Fit map tightly to Đồng Nai after GeoJSON loads
+          map.fitBounds(layer.getBounds(), { padding: [16, 16] });
         });
     });
 

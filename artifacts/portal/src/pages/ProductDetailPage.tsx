@@ -18,7 +18,7 @@ const PRODUCTS: Record<string, any> = {
     updateDate: '15/10/2024',
     orgShort: 'HTX Nông nghiệp Xanh',
     description: 'Bưởi Tân Triều là đặc sản nổi tiếng của vùng đất Vĩnh Cửu, Đồng Nai. Được trồng theo quy trình VietGAP, không sử dụng hóa chất độc hại, đảm bảo an toàn cho người tiêu dùng.',
-    img: 'https://picsum.photos/seed/buoi/600/500',
+    img: 'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=600&h=500&fit=crop',
     gtin: '8934113001234',
     lotCode: 'L-20241015-01',
     weight: '1.0 – 1.5 kg/quả',
@@ -44,7 +44,7 @@ const PRODUCTS: Record<string, any> = {
     updateDate: '15/7/2024',
     orgShort: 'HTX Nông nghiệp Xuân Lộc',
     description: 'Rau muống được trồng theo tiêu chuẩn VietGAP, không sử dụng thuốc bảo vệ thực vật, đảm bảo an toàn thực phẩm.',
-    img: 'https://picsum.photos/seed/raumuong/600/500',
+    img: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=600&h=500&fit=crop',
     gtin: '8934567890123',
     lotCode: 'L-20240715-02',
     weight: '300g/bó',
@@ -68,7 +68,7 @@ const PRODUCTS: Record<string, any> = {
     updateDate: '10/8/2024',
     orgShort: 'Cty Thủy sản Đồng Nai',
     description: 'Tôm sú nuôi theo tiêu chuẩn HACCP, đông lạnh ngay sau thu hoạch, đảm bảo chất lượng và vệ sinh an toàn thực phẩm.',
-    img: 'https://picsum.photos/seed/tomsu/600/500',
+    img: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=600&h=500&fit=crop',
     gtin: '8934000003000',
     lotCode: 'L-20240810-03',
     weight: '500g/hộp',
@@ -86,12 +86,12 @@ const PRODUCTS: Record<string, any> = {
 };
 
 // Map-section product IDs fall back to a generic entry
-const buildGeneric = (id: string, name: string, cert: string, origin: string, orgName: string) => ({
+const buildGeneric = (id: string, name: string, cert: string, origin: string, orgName: string, img: string) => ({
   name, traceCode: `TXNG-DN-${id.toUpperCase()}-2024`, cert,
   certColor: cert === 'VietGAP' ? 'text-emerald-600 bg-emerald-50' : cert.includes('OCOP') ? 'text-orange-600 bg-orange-50' : 'text-blue-600 bg-blue-50',
   origin, packaging: 'Theo tiêu chuẩn sản phẩm', updateDate: '01/01/2024', orgShort: orgName,
   description: `${name} được sản xuất tại ${origin}, đáp ứng tiêu chuẩn chất lượng ${cert}.`,
-  img: `https://picsum.photos/seed/${id}/600/500`,
+  img,
   gtin: `89340000${id.replace(/\D/g,'')}`, lotCode: `L-2024-${id.toUpperCase()}`, weight: 'Xem nhãn', expiry: 'Xem nhãn',
   ingredients: `${name} tự nhiên 100%`,
   certs: [{ name: cert, issuer: 'Sở NN&PTNT tỉnh Đồng Nai', date: '01/01/2024', expiry: '31/12/2025' }],
@@ -105,20 +105,20 @@ const buildGeneric = (id: string, name: string, cert: string, origin: string, or
 
 // Add generic entries for map-section product IDs
 const MAP_PRODUCTS: Record<string, any> = {
-  p1:  buildGeneric('p1',  'Xoài Cát Hòa Lộc',       'VietGAP',  'Bình Phước, Đồng Nai',  'HTX Nông nghiệp Bình Phước'),
-  p3:  buildGeneric('p3',  'Chuối tiêu hồng',          'GlobalGAP','Đồng Xoài, Đồng Nai',   'Cty TNHH Xuất khẩu Đồng Xoài'),
-  p4:  buildGeneric('p4',  'Rau muống hữu cơ',         'Hữu cơ',   'Phước Long, Đồng Nai',  'Trang trại Phước Long Xanh'),
-  p5:  buildGeneric('p5',  'Cà chua bi VietGAP',       'VietGAP',  'Bình Tân, Đồng Nai',    'HTX Rau sạch Bình Tân'),
-  p6:  buildGeneric('p6',  'Tiêu đen Lộc Ninh',        'OCOP 4★',  'Lộc Ninh, Đồng Nai',   'HTX Rau sạch Lộc Ninh'),
-  p7:  buildGeneric('p7',  'Điều rang muối Long Hà',   'ISO 22000','Long Hà, Đồng Nai',     'HTX Cây ăn trái Long Hà'),
-  p8:  buildGeneric('p8',  'Nấm linh chi Lộc Tấn',    'VietGAP',  'Lộc Tấn, Đồng Nai',    'Cty TNHH Nông sản Lộc Tấn'),
-  p9:  buildGeneric('p9',  'Mật ong rừng Trị An',      'OCOP 3★',  'Trị An, Vĩnh Cửu',     'HTX Bưởi Vĩnh Cửu'),
-  p10: buildGeneric('p10', 'Thanh long ruột đỏ',       'GlobalGAP','Xuân Lộc, Đồng Nai',   'HTX Thanh long Xuân Lộc'),
-  p11: buildGeneric('p11', 'Sầu riêng Ri6 Hưng Thịnh','VietGAP',  'Hưng Thịnh, Đồng Nai', 'Cty CP Nông sản Hưng Thịnh'),
-  p12: buildGeneric('p12', 'Xoài Đài Loan Dầu Giây',  'VietGAP',  'Dầu Giây, Đồng Nai',   'HTX Xoài Đầu Giây'),
-  p13: buildGeneric('p13', 'Rau thủy canh Nhơn Trạch','Hữu cơ',   'Nhơn Trạch, Đồng Nai', 'Trang trại Nhơn Trạch Green'),
-  p14: buildGeneric('p14', 'Cam sành Cẩm Mỹ',         'OCOP 4★',  'Cẩm Mỹ, Đồng Nai',    'Cty CP Nông nghiệp Cam Mỹ'),
-  p15: buildGeneric('p15', 'Tôm thẻ chân trắng',      'ASC',      'Biên Hòa, Đồng Nai',   'Cty TNHH Chế biến Biên Hòa'),
+  p1:  buildGeneric('p1',  'Xoài Cát Hòa Lộc',       'VietGAP',  'Bình Phước, Đồng Nai',  'HTX Nông nghiệp Bình Phước',  'https://images.unsplash.com/photo-1553279768-865429fa0078?w=600&h=500&fit=crop'),
+  p3:  buildGeneric('p3',  'Chuối tiêu hồng',          'GlobalGAP','Đồng Xoài, Đồng Nai',   'Cty TNHH Xuất khẩu Đồng Xoài','https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=600&h=500&fit=crop'),
+  p4:  buildGeneric('p4',  'Rau muống hữu cơ',         'Hữu cơ',   'Phước Long, Đồng Nai',  'Trang trại Phước Long Xanh',  'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=600&h=500&fit=crop'),
+  p5:  buildGeneric('p5',  'Cà chua bi VietGAP',       'VietGAP',  'Bình Tân, Đồng Nai',    'HTX Rau sạch Bình Tân',       'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&h=500&fit=crop'),
+  p6:  buildGeneric('p6',  'Tiêu đen Lộc Ninh',        'OCOP 4★',  'Lộc Ninh, Đồng Nai',   'HTX Rau sạch Lộc Ninh',       'https://images.unsplash.com/photo-1599909533731-a4f31a68a3dd?w=600&h=500&fit=crop'),
+  p7:  buildGeneric('p7',  'Điều rang muối Long Hà',   'ISO 22000','Long Hà, Đồng Nai',     'HTX Cây ăn trái Long Hà',     'https://images.unsplash.com/photo-1574226516831-e1dff420e562?w=600&h=500&fit=crop'),
+  p8:  buildGeneric('p8',  'Nấm linh chi Lộc Tấn',    'VietGAP',  'Lộc Tấn, Đồng Nai',    'Cty TNHH Nông sản Lộc Tấn',   'https://images.unsplash.com/photo-1607305387299-a3d9611cd469?w=600&h=500&fit=crop'),
+  p9:  buildGeneric('p9',  'Mật ong rừng Trị An',      'OCOP 3★',  'Trị An, Vĩnh Cửu',     'HTX Bưởi Vĩnh Cửu',           'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&h=500&fit=crop'),
+  p10: buildGeneric('p10', 'Thanh long ruột đỏ',       'GlobalGAP','Xuân Lộc, Đồng Nai',   'HTX Thanh long Xuân Lộc',     'https://images.unsplash.com/photo-1558642669-822d2db4b1ae?w=600&h=500&fit=crop'),
+  p11: buildGeneric('p11', 'Sầu riêng Ri6 Hưng Thịnh','VietGAP',  'Hưng Thịnh, Đồng Nai', 'Cty CP Nông sản Hưng Thịnh',  'https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=600&h=500&fit=crop'),
+  p12: buildGeneric('p12', 'Xoài Đài Loan Dầu Giây',  'VietGAP',  'Dầu Giây, Đồng Nai',   'HTX Xoài Đầu Giây',           'https://images.unsplash.com/photo-1553279768-865429fa0078?w=600&h=500&fit=crop'),
+  p13: buildGeneric('p13', 'Rau thủy canh Nhơn Trạch','Hữu cơ',   'Nhơn Trạch, Đồng Nai', 'Trang trại Nhơn Trạch Green', 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=600&h=500&fit=crop'),
+  p14: buildGeneric('p14', 'Cam sành Cẩm Mỹ',         'OCOP 4★',  'Cẩm Mỹ, Đồng Nai',    'Cty CP Nông nghiệp Cam Mỹ',   'https://images.unsplash.com/photo-1582979512210-7df77551e49e?w=600&h=500&fit=crop'),
+  p15: buildGeneric('p15', 'Tôm thẻ chân trắng',      'ASC',      'Biên Hòa, Đồng Nai',   'Cty TNHH Chế biến Biên Hòa',  'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=600&h=500&fit=crop'),
 };
 
 const ALL_PRODUCTS: Record<string, any> = { ...PRODUCTS, ...MAP_PRODUCTS };
