@@ -88,17 +88,20 @@ export default function SearchResultsPage() {
   // ── Scroll-to and flash-highlight on mount ──────────────────────────────────
   useEffect(() => {
     if (!highlighted) return;
+    let clearTimer: ReturnType<typeof setTimeout> | undefined;
     const timer = setTimeout(() => {
       const el = document.getElementById(`item-${highlighted}`);
       if (el) {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         // Remove highlight after animation completes
-        const clearTimer = setTimeout(() => setHighlighted(null), 2500);
-        return () => clearTimeout(clearTimer);
+        clearTimer = setTimeout(() => setHighlighted(null), 2500);
       }
     }, 350);
-    return () => clearTimeout(timer);
-  }, []); // run once on mount
+    return () => {
+      clearTimeout(timer);
+      if (clearTimer) clearTimeout(clearTimer);
+    };
+  }, [highlighted]);
 
   // ── Filter logic ────────────────────────────────────────────────────────────
   const filteredProducts = useMemo(() => {
@@ -405,7 +408,7 @@ export default function SearchResultsPage() {
                           <div className="p-4 flex-1 flex flex-col">
                             <div className="flex items-start justify-between gap-2 mb-2">
                               <h4 className="font-bold text-[#2740BA] group-hover:text-[#E8650A] transition-colors leading-tight">{p.name}</h4>
-                              <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" title="Đã xác thực" />
+                              <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" aria-label="Đã xác thực" />
                             </div>
                             <p className="text-sm text-gray-500 mb-3 flex-1">{p.org}</p>
                             <div className="flex items-center justify-between">
@@ -448,7 +451,7 @@ export default function SearchResultsPage() {
                         <div className="p-4 flex-1 flex flex-col">
                           <div className="flex items-start justify-between gap-2 mb-2">
                             <h4 className="font-bold text-[#2740BA] group-hover:text-[#E8650A] transition-colors leading-tight">{b.name}</h4>
-                            <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" title="Đã xác thực" />
+                            <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" aria-label="Đã xác thực" />
                           </div>
                           <div className="flex items-center gap-1.5 mb-1">
                             <MapPin className="w-3.5 h-3.5 text-gray-400" />

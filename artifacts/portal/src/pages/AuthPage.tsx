@@ -4,7 +4,7 @@ import {
   User, Lock, Eye, EyeOff, Phone, X,
   ChevronLeft, ChevronRight, CheckCircle2, UploadCloud, Copy, LogIn,
 } from 'lucide-react';
-import { useAuth, type FileDoc } from '../context/AuthContext';
+import { useAuth, type FileDoc, type OrgProfile } from '../context/AuthContext';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const DISTRICTS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
@@ -286,7 +286,7 @@ function LoginForm({ onSwitchToRegister, guideUrl }: { onSwitchToRegister: () =>
 
 // ─── Register Form ─────────────────────────────────────────────────────────────
 function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
-  const { saveRegistrationDocs } = useAuth();
+  const { saveRegistrationProfile } = useAuth();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<RegForm>(initReg);
   const [errors, setErrors] = useState<RegErrors>({});
@@ -442,7 +442,21 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
 
           <button
             onClick={() => {
-              saveRegistrationDocs(form.repEmail, {
+              const profile: OrgProfile = {
+                name: form.orgName,
+                taxCode: form.taxCode,
+                type: form.orgType,
+                industry: form.industry,
+                address: form.address,
+                district: form.district,
+                phone: form.phone,
+                email: form.email,
+                representative: form.repName,
+                representativePhone: form.repPhone,
+                representativeEmail: form.repEmail,
+                cccd: form.cccd,
+              };
+              saveRegistrationProfile(form.repEmail, profile, {
                 ...(licenseDoc ? { businessLicense: licenseDoc } : {}),
                 ...(authDoc ? { authorization: authDoc } : {}),
               });

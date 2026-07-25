@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { 
-  Edit2, CheckCircle2, Save, X, FileText, Download, 
+  Edit2, CheckCircle2, Save, X, FileText, Download, UploadCloud,
   ImageIcon, Building2, MapPin, Phone, Mail, 
-  ShieldCheck, Briefcase, FileSignature, Map 
+  ShieldCheck, Briefcase, FileSignature, Map, UserRound, CreditCard
 } from 'lucide-react';
-import { useAuth, type FileDoc } from '../context/AuthContext';
+import { useAuth, type FileDoc, type OrgProfile } from '../context/AuthContext';
+
+const DISTRICTS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
+const ORG_TYPES = ['Doanh nghiệp', 'Hợp tác xã (HTX)', 'Trang trại', 'Cơ sở sản xuất', 'Hộ kinh doanh'];
 
 function DocCard({ doc, label }: { doc: FileDoc; label: string }) {
   const isImage = doc.mimeType.startsWith('image/');
@@ -41,6 +44,83 @@ function DocCard({ doc, label }: { doc: FileDoc; label: string }) {
   );
 }
 
+function UploadField({
+  label,
+  doc,
+  onChange,
+}: {
+  label: string;
+  doc?: FileDoc;
+  onChange: (doc: FileDoc | undefined) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const readFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = event => {
+      onChange({
+        name: file.name,
+        dataUrl: event.target?.result as string,
+        mimeType: file.type || 'application/octet-stream',
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+      <input
+        ref={inputRef}
+        type="file"
+        accept=".pdf,.jpg,.jpeg,.png"
+        className="hidden"
+        onChange={event => {
+          const file = event.target.files?.[0];
+          if (file) readFile(file);
+          event.target.value = '';
+        }}
+      />
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <p className="text-sm font-bold text-slate-700">{label}</p>
+        {doc && (
+          <button
+            type="button"
+            onClick={() => onChange(undefined)}
+            className="text-xs font-semibold text-red-500 hover:text-red-700"
+          >
+            Xóa file
+          </button>
+        )}
+      </div>
+      {doc ? (
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-blue-100 bg-white px-3 py-2.5">
+          <div className="flex min-w-0 items-center gap-2">
+            <FileText className="h-5 w-5 shrink-0 text-[#2740BA]" />
+            <span className="truncate text-sm font-medium text-slate-700">{doc.name}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="shrink-0 rounded-lg border border-[#2740BA] px-3 py-1.5 text-xs font-bold text-[#2740BA] hover:bg-blue-50"
+          >
+            Thay file
+          </button>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="flex w-full flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-slate-300 bg-white px-4 py-5 text-center hover:border-[#2740BA] hover:bg-blue-50/40"
+        >
+          <UploadCloud className="h-6 w-6 text-[#2740BA]" />
+          <span className="text-sm font-semibold text-slate-600">Tải file lên</span>
+          <span className="text-xs text-slate-400">PDF, JPG, PNG</span>
+        </button>
+      )}
+    </div>
+  );
+}
+
 function Field({ 
   label, 
   value, 
@@ -57,6 +137,7 @@ function Field({
   isEditing: boolean;
   icon: React.ElementType;
   fullWidth?: boolean;
+  options?: string[];
 }) {
   return (
     <div className={`flex flex-col gap-2 ${fullWidth ? 'sm:col-span-2' : ''}`}>
@@ -95,22 +176,67 @@ function Field({
   );
 }
 
+function SelectField({
+  label,
+  value,
+  options,
+  onChange,
+  icon: Icon,
+  fullWidth = false,
+}: {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+  icon: React.ElementType;
+  fullWidth?: boolean;
+}) {
+  return (
+    <div className={`flex flex-col gap-2 ${fullWidth ? 'sm:col-span-2' : ''}`}>
+      <label className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+        <Icon className="w-3.5 h-3.5" /> {label}
+      </label>
+      <select
+        value={value}
+        onChange={event => onChange(event.target.value)}
+        className="h-11 w-full rounded-lg border border-slate-300 bg-white px-3.5 text-sm font-medium text-slate-900 shadow-sm outline-none focus:border-[#2740BA] focus:ring-1 focus:ring-[#2740BA]"
+      >
+        {options.map(option => <option key={option}>{option}</option>)}
+      </select>
+    </div>
+  );
+}
+
 export default function OrgProfilePage() {
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
   const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({
+  const fallbackProfile: OrgProfile = {
     name: user?.name ?? 'HTX Nông nghiệp Xanh',
-    type: 'Hợp tác xã',
-    tax: '3601234567',
+    taxCode: '3601234567',
+    type: 'Hợp tác xã (HTX)',
     industry: 'Nông sản & Rau củ',
     address: 'Xã Tân Triều, Vĩnh Cửu',
     district: 'Vĩnh Cửu',
     phone: '0251 890 123',
     email: user?.email ?? 'admin@htx.vn',
-  });
+    representative: 'Nguyễn Văn A',
+    representativePhone: '0901234567',
+    representativeEmail: user?.email ?? 'admin@htx.vn',
+    cccd: '',
+  };
+  const [form, setForm] = useState<OrgProfile>(() => ({ ...fallbackProfile, ...user?.profile }));
+  const [documents, setDocuments] = useState(user?.documents ?? {});
   const [saved, setSaved] = useState(false);
 
+  useEffect(() => {
+    if (user) {
+      setForm({ ...fallbackProfile, ...user.profile });
+      setDocuments(user.documents);
+    }
+  }, [user]);
+
   const handleSave = () => {
+    updateProfile(form, documents);
     setEditing(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -118,24 +244,31 @@ export default function OrgProfilePage() {
 
   const legalFields = [
     { label: 'Tên doanh nghiệp / tổ chức', key: 'name', icon: Building2, fullWidth: true },
-    { label: 'Mã số thuế', key: 'tax', icon: FileSignature },
-    { label: 'Loại hình', key: 'type', icon: Briefcase },
+    { label: 'Mã số thuế', key: 'taxCode', icon: FileSignature },
+    { label: 'Loại hình', key: 'type', icon: Briefcase, options: ORG_TYPES },
     { label: 'Ngành nghề', key: 'industry', icon: ShieldCheck, fullWidth: true },
   ];
 
   const contactFields = [
     { label: 'Địa chỉ', key: 'address', icon: MapPin, fullWidth: true },
-    { label: 'Huyện / Thị xã', key: 'district', icon: Map },
+    { label: 'Huyện / Thị xã', key: 'district', icon: Map, options: DISTRICTS },
     { label: 'Số điện thoại', key: 'phone', icon: Phone },
     { label: 'Email', key: 'email', icon: Mail },
   ];
 
-  const sectionVariants = {
+  const representativeFields = [
+    { label: 'Họ và tên người đại diện', key: 'representative', icon: UserRound },
+    { label: 'Số điện thoại liên hệ', key: 'representativePhone', icon: Phone },
+    { label: 'Email đăng nhập', key: 'representativeEmail', icon: Mail },
+    { label: 'CCCD / CMND', key: 'cccd', icon: CreditCard },
+  ];
+
+  const sectionVariants: Variants = {
     hidden: { opacity: 0, y: 15 },
     visible: (i: number) => ({
       opacity: 1,
       y: 0,
-      transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" }
+      transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" as const }
     })
   };
 
@@ -242,7 +375,30 @@ export default function OrgProfilePage() {
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-              {legalFields.map(f => (
+              {legalFields.map(f => f.options ? (
+                editing ? (
+                  <SelectField
+                    key={f.key}
+                    label={f.label}
+                    value={(form as any)[f.key]}
+                    options={f.options}
+                    onChange={(val) => setForm(prev => ({ ...prev, [f.key]: val }))}
+                    icon={f.icon}
+                    fullWidth={f.fullWidth}
+                  />
+                ) : (
+                  <Field
+                    key={f.key}
+                    label={f.label}
+                    value={(form as any)[f.key]}
+                    editValue={(form as any)[f.key]}
+                    onChange={() => {}}
+                    isEditing={false}
+                    icon={f.icon}
+                    fullWidth={f.fullWidth}
+                  />
+                )
+              ) : (
                 <Field 
                   key={f.key}
                   label={f.label}
@@ -273,7 +429,30 @@ export default function OrgProfilePage() {
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-              {contactFields.map(f => (
+              {contactFields.map(f => f.options ? (
+                editing ? (
+                  <SelectField
+                    key={f.key}
+                    label={f.label}
+                    value={(form as any)[f.key]}
+                    options={f.options}
+                    onChange={(val) => setForm(prev => ({ ...prev, [f.key]: val }))}
+                    icon={f.icon}
+                    fullWidth={f.fullWidth}
+                  />
+                ) : (
+                  <Field
+                    key={f.key}
+                    label={f.label}
+                    value={(form as any)[f.key]}
+                    editValue={(form as any)[f.key]}
+                    onChange={() => {}}
+                    isEditing={false}
+                    icon={f.icon}
+                    fullWidth={f.fullWidth}
+                  />
+                )
+              ) : (
                 <Field 
                   key={f.key}
                   label={f.label}
@@ -288,10 +467,39 @@ export default function OrgProfilePage() {
             </div>
           </motion.section>
 
+          {/* Representative Info Card */}
+          <motion.section
+            custom={3} initial="hidden" animate="visible" variants={sectionVariants}
+            className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8"
+          >
+            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-[#2740BA]">
+                <UserRound className="w-5 h-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-800">Người đại diện</h2>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">Thông tin liên hệ và định danh người đại diện</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
+              {representativeFields.map(f => (
+                <Field
+                  key={f.key}
+                  label={f.label}
+                  value={(form as any)[f.key] || 'Chưa cập nhật'}
+                  editValue={(form as any)[f.key]}
+                  onChange={(val) => setForm(prev => ({ ...prev, [f.key]: val }))}
+                  isEditing={editing}
+                  icon={f.icon}
+                />
+              ))}
+            </div>
+          </motion.section>
+
           {/* Certifications and Docs inside a grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <motion.section 
-              custom={3} initial="hidden" animate="visible" variants={sectionVariants}
+              custom={4} initial="hidden" animate="visible" variants={sectionVariants}
               className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8 lg:col-span-1 flex flex-col"
             >
                <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
@@ -317,9 +525,9 @@ export default function OrgProfilePage() {
               </div>
             </motion.section>
 
-            {(user?.documents?.businessLicense || user?.documents?.authorization) && (
+            {(editing || documents.businessLicense || documents.authorization) && (
               <motion.section 
-                custom={4} initial="hidden" animate="visible" variants={sectionVariants}
+                custom={5} initial="hidden" animate="visible" variants={sectionVariants}
                 className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8 lg:col-span-2"
               >
                 <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100">
@@ -332,14 +540,25 @@ export default function OrgProfilePage() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  {user.documents.businessLicense && (
-                    <DocCard doc={user.documents.businessLicense} label="Giấy phép kinh doanh" />
-                  )}
-                  {user.documents.authorization && (
-                    <DocCard doc={user.documents.authorization} label="Giấy ủy quyền" />
-                  )}
-                </div>
+                {editing ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <UploadField
+                      label="Giấy phép kinh doanh"
+                      doc={documents.businessLicense}
+                      onChange={doc => setDocuments(current => ({ ...current, businessLicense: doc }))}
+                    />
+                    <UploadField
+                      label="Giấy ủy quyền"
+                      doc={documents.authorization}
+                      onChange={doc => setDocuments(current => ({ ...current, authorization: doc }))}
+                    />
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    {documents.businessLicense && <DocCard doc={documents.businessLicense} label="Giấy phép kinh doanh" />}
+                    {documents.authorization && <DocCard doc={documents.authorization} label="Giấy ủy quyền" />}
+                  </div>
+                )}
               </motion.section>
             )}
           </div>

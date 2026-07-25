@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'wouter';
 import {
   ArrowLeft, Plus, ShieldCheck, AlertCircle, Eye, Pencil, Trash2, Package,
-  X, UploadCloud, CheckCircle2, ImagePlus, FileText, Check, LayoutGrid, Search
+  X, UploadCloud, CheckCircle2, ImagePlus, FileText, Check, LayoutGrid, Search,
+  ListFilter, ChevronDown
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -30,6 +31,17 @@ const certColor: Record<string, string> = {
 const PRODUCT_CATS = ['Nông sản & Rau củ', 'Trái cây', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Khác'];
 const UNITS = ['kg', 'tấn', 'hộp', 'thùng', 'chai', 'gói', 'cái', 'bó'];
 const CERTS_LIST = ['VietGAP', 'GlobalGAP', 'OCOP', 'HACCP', 'ISO 22000', 'Hữu cơ'];
+
+type ProductListItem = {
+  id: string;
+  name: string;
+  category: string;
+  cert?: string;
+  traceCode?: string;
+  img: string;
+  updatedAt?: string;
+  status: string;
+};
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: string }) {
@@ -127,6 +139,167 @@ function ProductCard({ p, tab, index, onEdit, onDelete }: { p: any, tab: 'with'|
         </div>
       </div>
     </motion.div>
+  );
+}
+
+function ProductList({
+  products,
+  tab,
+  onEdit,
+  onDelete,
+}: {
+  products: any[];
+  tab: 'with' | 'without';
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
+}) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+      {/* Desktop table */}
+      <div className="hidden md:block overflow-x-auto">
+        <table className="w-full min-w-[760px] text-left">
+          <thead className="bg-slate-50/90 border-b border-slate-200">
+            <tr className="text-[11px] uppercase tracking-wider text-slate-500">
+              <th className="px-6 py-4 font-extrabold">Sản phẩm</th>
+              <th className="px-4 py-4 font-extrabold">Danh mục</th>
+              <th className="px-4 py-4 font-extrabold">Mã truy xuất</th>
+              <th className="px-4 py-4 font-extrabold">Trạng thái</th>
+              <th className="px-4 py-4 font-extrabold">Cập nhật</th>
+              <th className="px-6 py-4 text-right font-extrabold">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {products.map((p, index) => (
+              <motion.tr
+                layout
+                key={p.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: index * 0.03 }}
+                className="group hover:bg-blue-50/35 transition-colors"
+              >
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3.5 min-w-[220px]">
+                    <img
+                      src={p.img}
+                      alt=""
+                      className="h-14 w-14 shrink-0 rounded-xl object-cover border border-slate-200 bg-slate-100"
+                    />
+                    <div className="min-w-0">
+                      <p className="font-extrabold text-slate-800 truncate max-w-[230px]">{p.name}</p>
+                      <p className="mt-1 text-xs font-mono text-slate-400">{p.id}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-4 py-4">
+                  <span className="inline-flex rounded-lg bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-600">
+                    {p.category}
+                  </span>
+                </td>
+                <td className="px-4 py-4">
+                  {p.traceCode ? (
+                    <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-emerald-100 bg-emerald-50 px-2.5 py-1.5 text-xs font-mono font-bold text-emerald-700">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                      {p.traceCode}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-lg border border-dashed border-amber-200 bg-amber-50 px-2.5 py-1.5 text-xs font-semibold text-amber-700">
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+                      Chưa cấp mã
+                    </span>
+                  )}
+                </td>
+                <td className="px-4 py-4"><StatusBadge status={p.status} /></td>
+                <td className="px-4 py-4 text-xs font-semibold text-slate-500">{p.updatedAt || 'Chưa cập nhật'}</td>
+                <td className="px-6 py-4">
+                  <div className="flex items-center justify-end gap-1.5">
+                    {tab === 'without' && (
+                      <>
+                        <button
+                          onClick={() => onEdit(p.id)}
+                          className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-blue-100 hover:text-[#2740BA]"
+                          title="Chỉnh sửa"
+                          aria-label={`Chỉnh sửa ${p.name}`}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => onDelete(p.id)}
+                          className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-100 hover:text-red-500"
+                          title="Xóa"
+                          aria-label={`Xóa ${p.name}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </>
+                    )}
+                    <Link
+                      href={`/san-pham/${p.id}`}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-2 text-xs font-extrabold text-slate-700 transition-colors hover:bg-[#2740BA] hover:text-white"
+                    >
+                      <Eye className="h-3.5 w-3.5" /> Chi tiết
+                    </Link>
+                  </div>
+                </td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile list */}
+      <div className="divide-y divide-slate-100 md:hidden">
+        {products.map((p, index) => (
+          <motion.div
+            layout
+            key={p.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: index * 0.03 }}
+            className="p-4"
+          >
+            <div className="flex items-start gap-3">
+              <img src={p.img} alt="" className="h-16 w-16 shrink-0 rounded-xl object-cover border border-slate-200 bg-slate-100" />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="font-extrabold text-slate-800 leading-tight">{p.name}</p>
+                    <p className="mt-1 text-xs font-mono text-slate-400">{p.id}</p>
+                  </div>
+                  <StatusBadge status={p.status} />
+                </div>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span className="rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-bold text-slate-600">{p.category}</span>
+                  {p.traceCode ? (
+                    <span className="rounded-lg bg-emerald-50 px-2 py-1 text-[11px] font-mono font-bold text-emerald-700">{p.traceCode}</span>
+                  ) : (
+                    <span className="rounded-lg bg-amber-50 px-2 py-1 text-[11px] font-semibold text-amber-700">Chưa cấp mã</span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
+              <span className="text-[11px] font-semibold text-slate-400">{p.updatedAt ? `Cập nhật ${p.updatedAt}` : 'Chưa cập nhật'}</span>
+              <div className="flex items-center gap-1.5">
+                {tab === 'without' && (
+                  <>
+                    <button onClick={() => onEdit(p.id)} className="rounded-lg bg-slate-100 p-2 text-slate-500 hover:bg-blue-100 hover:text-[#2740BA]" aria-label={`Chỉnh sửa ${p.name}`}>
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                    <button onClick={() => onDelete(p.id)} className="rounded-lg bg-slate-100 p-2 text-slate-500 hover:bg-red-100 hover:text-red-500" aria-label={`Xóa ${p.name}`}>
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </>
+                )}
+                <Link href={`/san-pham/${p.id}`} className="inline-flex items-center gap-1.5 rounded-lg bg-slate-100 px-3 py-2 text-xs font-extrabold text-slate-700 hover:bg-[#2740BA] hover:text-white">
+                  <Eye className="h-3.5 w-3.5" /> Chi tiết
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -381,6 +554,9 @@ export default function ProductsProfilePage() {
   const [showAdd, setShowAdd] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'approved' | 'pending'>('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
 
   const addProduct = (name: string, category: string) => {
     setWithoutList(l => [...l, {
@@ -394,6 +570,16 @@ export default function ProductsProfilePage() {
     setWithoutList(l => l.filter(p => p.id !== id));
     setDeleteId(null);
   };
+
+  const activeProducts: ProductListItem[] = activeTab === 'with' ? withList : withoutList;
+  const categories = Array.from(new Set(activeProducts.map(p => p.category)));
+  const filteredProducts = activeProducts.filter(p => {
+    const query = searchQuery.trim().toLowerCase();
+    const matchesQuery = !query || `${p.name} ${p.id} ${p.category} ${p.traceCode || ''}`.toLowerCase().includes(query);
+    const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
+    const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
+    return matchesQuery && matchesStatus && matchesCategory;
+  });
 
   return (
     <div className="min-h-screen bg-[#F4F6FB] font-sans pb-24">
@@ -486,41 +672,71 @@ export default function ProductsProfilePage() {
           </button>
         </div>
 
-        {/* Lists */}
-        {activeTab === 'with' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence mode="popLayout">
-              {withList.length === 0 ? (
-                <EmptyState msg="Chưa có sản phẩm nào được cấp mã truy xuất nguồn gốc." tab="with" />
-              ) : (
-                withList.map((p, index) => (
-                  <ProductCard 
-                    key={p.id} p={p} tab="with" index={index} 
-                    onEdit={() => {}} onDelete={() => {}} 
+        {/* List management */}
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 px-5 py-5 sm:px-6">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <h2 className="flex items-center gap-2 text-lg font-extrabold text-slate-800">
+                  <ListFilter className="h-5 w-5 text-[#2740BA]" /> Danh sách sản phẩm
+                </h2>
+                <p className="mt-1 text-xs font-medium text-slate-500">
+                  {filteredProducts.length} sản phẩm đang hiển thị trong {activeTab === 'with' ? 'nhóm đã có TXNG' : 'nhóm chưa có TXNG'}
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 sm:flex-row">
+                <div className="relative min-w-0 sm:w-64">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  <input
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    placeholder="Tìm theo tên, mã sản phẩm..."
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-9 pr-3 text-sm font-medium text-slate-700 outline-none transition focus:border-[#2740BA] focus:bg-white focus:ring-4 focus:ring-[#2740BA]/10"
                   />
-                ))
-              )}
-            </AnimatePresence>
+                </div>
+                <div className="relative">
+                  <select
+                    value={statusFilter}
+                    onChange={e => setStatusFilter(e.target.value as typeof statusFilter)}
+                    className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-3 pr-9 text-sm font-bold text-slate-600 outline-none transition focus:border-[#2740BA] focus:bg-white sm:w-36"
+                    aria-label="Lọc theo trạng thái"
+                  >
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="approved">Đã duyệt</option>
+                    <option value="pending">Chờ duyệt</option>
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                </div>
+                <div className="relative">
+                  <select
+                    value={categoryFilter}
+                    onChange={e => setCategoryFilter(e.target.value)}
+                    className="w-full appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-3 pr-9 text-sm font-bold text-slate-600 outline-none transition focus:border-[#2740BA] focus:bg-white sm:w-40"
+                    aria-label="Lọc theo danh mục"
+                  >
+                    <option value="all">Tất cả danh mục</option>
+                    {categories.map(category => <option key={category} value={category}>{category}</option>)}
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                </div>
+              </div>
+            </div>
           </div>
-        )}
 
-        {activeTab === 'without' && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence mode="popLayout">
-              {withoutList.length === 0 ? (
-                <EmptyState msg="Tất cả sản phẩm đã được cấp mã truy xuất nguồn gốc." tab="without" />
-              ) : (
-                withoutList.map((p, index) => (
-                  <ProductCard 
-                    key={p.id} p={p} tab="without" index={index} 
-                    onEdit={() => setEditingId(p.id)} 
-                    onDelete={() => setDeleteId(p.id)} 
-                  />
-                ))
-              )}
-            </AnimatePresence>
-          </div>
-        )}
+          {filteredProducts.length === 0 ? (
+            <EmptyState
+              msg={activeTab === 'with' ? 'Không tìm thấy sản phẩm đã có mã truy xuất nguồn gốc.' : 'Không tìm thấy sản phẩm trong danh sách.'}
+              tab={activeTab}
+            />
+          ) : (
+            <ProductList
+              products={filteredProducts}
+              tab={activeTab}
+              onEdit={id => setEditingId(id)}
+              onDelete={id => setDeleteId(id)}
+            />
+          )}
+        </section>
       </div>
 
       {/* Add Product Modal */}

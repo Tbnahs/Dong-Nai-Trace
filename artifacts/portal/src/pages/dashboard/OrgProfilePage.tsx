@@ -114,7 +114,8 @@ export default function OrgProfilePage() {
         {/* Tab Content */}
         <div className="p-6">
           {activeTab === 'info' && (
-            <form onSubmit={handleSave} className="space-y-6 max-w-4xl">
+            <>
+              <form onSubmit={handleSave} className="space-y-6 max-w-4xl">
               {saved && (
                 <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm font-semibold">
                   <CheckCircle2 className="w-4 h-4" /> Đã lưu thay đổi thành công!
@@ -203,7 +204,7 @@ export default function OrgProfilePage() {
                   <Save className="w-4 h-4" /> Lưu thay đổi
                 </button>
               </div>
-            </form>
+              </form>
 
             {/* ── Tài liệu đính kèm ── */}
             {(user?.documents?.businessLicense || user?.documents?.authorization) && (
@@ -221,6 +222,7 @@ export default function OrgProfilePage() {
                 </div>
               </div>
             )}
+            </>
           )}
 
           {activeTab === 'id' && (
