@@ -448,7 +448,7 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
             Hệ thống truy xuất nguồn gốc tỉnh Đồng Nai — minh bạch, tin cậy, chuẩn quốc tế.
           </p>
           <div className="flex gap-8">
-            {[['1.200+', 'Doanh nghiệp'], ['8.500+', 'Sản phẩm'], ['18/18', 'Huyện / TP']].map(([n, l]) => (
+            {[['1.200+', 'Doanh nghiệp'], ['8.500+', 'Sản phẩm'], ['95/95', 'Phường / Xã']].map(([n, l]) => (
               <div key={l}>
                 <div className="text-2xl font-extrabold text-white">{n}</div>
                 <div className="text-xs text-blue-200/60 mt-0.5">{l}</div>
