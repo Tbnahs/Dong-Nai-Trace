@@ -107,6 +107,7 @@ export default function MapSection() {
   const markerRef   = useRef<any>(null);
   const wardCodesRef = useRef<Set<string>>(new Set());
   const provinceBoundsRef = useRef<any>(null);
+  const placeMarkerRef = useRef<((latlng: any, wardName?: string) => void) | null>(null);
 
   // ── Initialise Leaflet once ──────────────────────────────────────────────────
   useEffect(() => {
@@ -156,6 +157,7 @@ export default function MapSection() {
         markerRef.current = marker;
         map.flyTo(latlng, Math.max(map.getZoom(), 13), { animate: true, duration: 0.8 });
       }
+      placeMarkerRef.current = placeMarker;
 
       // ── Map click: place marker only inside Đồng Nai wards ───────────────
       map.on("click", (e: any) => {
@@ -264,12 +266,8 @@ export default function MapSection() {
 
     const bounds = selectedLayer?.getBounds?.();
     if (bounds?.isValid?.()) {
-      map.flyToBounds(bounds, {
-        padding: [40, 40],
-        maxZoom: 12,
-        animate: true,
-        duration: 0.8,
-      });
+      const center = bounds.getCenter();
+      placeMarkerRef.current?.(center, selectedWard.name);
     }
   }, [selectedWard, mapDataReady]);
 
