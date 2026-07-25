@@ -202,7 +202,13 @@ export default function LandingPage() {
             </p>
 
             <form onSubmit={handleSearch} className="w-full">
-              <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
+              <div
+                className={
+                  searchType === "trace"
+                    ? "flex flex-row items-stretch gap-3 sm:gap-4"
+                    : "flex flex-col lg:flex-row gap-3 sm:gap-4"
+                }
+              >
                 {searchType === "trace" ? (
                   <>
                     <div className="flex-1 min-h-[56px] sm:h-[62px] bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-md flex items-center px-4 sm:px-6">
@@ -219,7 +225,7 @@ export default function LandingPage() {
 
                     <button
                       type="submit"
-                      className="min-h-[48px] sm:h-[62px] w-fit lg:w-auto px-5 sm:px-10 rounded-xl sm:rounded-2xl bg-[#e8650a] text-white text-base sm:text-lg font-semibold transition"
+                      className="h-[56px] sm:h-[62px] shrink-0 px-4 sm:px-10 rounded-xl sm:rounded-2xl bg-[#e8650a] text-base sm:text-lg font-semibold text-white transition"
                     >
                       Tra cứu
                     </button>
@@ -489,7 +495,7 @@ export default function LandingPage() {
             </a>
           </div>
 
-          <div className="lg:w-1/2 relative w-full flex justify-center overflow-hidden md:overflow-visible">
+          <div className="hidden md:flex lg:w-1/2 relative w-full justify-center overflow-hidden md:overflow-visible">
             <div className="absolute inset-0 bg-[#F8FAFC] rounded-[3rem] -rotate-3 transform z-0"></div>
 
             <div className="bg-white border border-slate-100 rounded-2xl shadow-xl w-full max-w-md p-6 relative z-10 mt-8 mb-8">
