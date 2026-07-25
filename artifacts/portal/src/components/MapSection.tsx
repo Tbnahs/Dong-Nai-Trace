@@ -462,20 +462,20 @@ function EmptyState({ label }: { label: string }) {
 
 // ─── GeoJSON style helpers ────────────────────────────────────────────────────
 
-// Diverse multi-color palette — one distinct color per region.
+// Diverse multi-color palette — deep, saturated tones, one per region.
 const WARD_PALETTE = [
-  "#2196F3", // blue
-  "#FF9800", // orange
-  "#9C27B0", // purple
-  "#4CAF50", // green
-  "#F44336", // red
-  "#00BCD4", // cyan
-  "#FF5722", // deep orange
-  "#3F51B5", // indigo
-  "#8BC34A", // light green
-  "#E91E63", // pink-red
-  "#009688", // teal
-  "#FFC107", // amber
+  "#1565C0", // deep blue
+  "#E65100", // deep orange
+  "#6A1B9A", // deep purple
+  "#2E7D32", // deep green
+  "#C62828", // deep red
+  "#00838F", // deep cyan
+  "#BF360C", // dark deep-orange
+  "#283593", // deep indigo
+  "#558B2F", // dark lime green
+  "#AD1457", // deep pink-red
+  "#00695C", // deep teal
+  "#F57F17", // dark amber
 ];
 
 function wardFillColor(code: string | number): string {
