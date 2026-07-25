@@ -6,5 +6,8 @@ export const modules: ModuleMap = {
   "./components/mockups/dong-nai-trace/PortalHome.tsx": () => import("../components/mockups/dong-nai-trace/PortalHome.tsx"),
   "./components/mockups/dong-nai-trace/PortalLanding.tsx": () => import("../components/mockups/dong-nai-trace/PortalLanding.tsx"),
   "./components/mockups/dong-nai-trace/PortalRegister.tsx": () => import("../components/mockups/dong-nai-trace/PortalRegister.tsx"),
-  "./components/mockups/dong-nai-trace/PortalSearch.tsx": () => import("../components/mockups/dong-nai-trace/PortalSearch.tsx")
+  "./components/mockups/dong-nai-trace/PortalSearch.tsx": () => import("../components/mockups/dong-nai-trace/PortalSearch.tsx"),
+  "./components/mockups/login-redesign/VariantA.tsx": () => import("../components/mockups/login-redesign/VariantA.tsx"),
+  "./components/mockups/login-redesign/VariantB.tsx": () => import("../components/mockups/login-redesign/VariantB.tsx"),
+  "./components/mockups/login-redesign/VariantC.tsx": () => import("../components/mockups/login-redesign/VariantC.tsx")
 };
