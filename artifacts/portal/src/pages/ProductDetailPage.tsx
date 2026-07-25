@@ -155,15 +155,6 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
-      {/* Topbar */}
-      <div className="bg-white border-b border-gray-200 px-6 lg:px-12 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/tra-cuu" className="inline-flex items-center gap-1.5 text-gray-500 hover:text-gray-800 text-sm transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Quay lại kết quả
-          </Link>
-          <span className="text-xs text-gray-400">Đồng Nai Trace — Hệ thống truy xuất nguồn gốc</span>
-        </div>
-      </div>
 
       <div className="max-w-6xl mx-auto px-6 lg:px-12 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
