@@ -110,7 +110,12 @@ export default function MapSection() {
   useEffect(() => {
     if (!mapRef.current || leafletMap.current) return;
 
+    let disposed = false;
+    const controller = new AbortController();
+
     import("leaflet").then((L) => {
+      if (disposed || !mapRef.current || leafletMap.current) return;
+
       // Fix default marker icon path broken by bundlers
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
@@ -168,9 +173,13 @@ export default function MapSection() {
       });
 
       // Load GeoJSON (BASE_PATH is now "/")
-      fetch(import.meta.env.BASE_URL + "geojson/dongnai_wards.geojson")
+      fetch(import.meta.env.BASE_URL + "geojson/dongnai_wards.geojson", {
+        signal: controller.signal,
+      })
         .then((r) => r.json())
         .then((data) => {
+          if (disposed || !mapRef.current || leafletMap.current !== map) return;
+
           const layer = L.geoJSON(data, {
             style: styleFeature(null),
             onEachFeature: (feature, layerItem) => {
@@ -204,10 +213,17 @@ export default function MapSection() {
           geoLayer.current = layer;
           // Fit map tightly to Đồng Nai after GeoJSON loads
           map.fitBounds(layer.getBounds(), { padding: [16, 16] });
+        })
+        .catch((error) => {
+          if (error?.name !== "AbortError") {
+            console.error("Unable to load Đồng Nai map data", error);
+          }
         });
     });
 
     return () => {
+      disposed = true;
+      controller.abort();
       leafletMap.current?.remove();
       leafletMap.current = null;
     };

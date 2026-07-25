@@ -18,8 +18,8 @@ Both services start automatically via managed workflows:
 
 | Service | Workflow name | URL |
 |---|---|---|
-| Portal (frontend) | `artifacts/portal: web` | Port 25265, path `/` |
-| API Server | `artifacts/api-server: API Server` | Port 8080, path `/api` |
+| Portal (frontend) | `artifacts/portal: web` | Port 25265, preview path `/portal/` |
+| API Server | `artifacts/api-server: API Server` | Port 8080, health check `/api/healthz` |
 
 Install dependencies (first time or after pulling): `pnpm install`
 
