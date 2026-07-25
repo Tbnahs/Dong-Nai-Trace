@@ -219,7 +219,7 @@ export default function LandingPage() {
 
                     <button
                       type="submit"
-                      className="min-h-[52px] sm:h-[62px] px-6 sm:px-10 rounded-xl sm:rounded-2xl bg-[#e8650a] text-white text-base sm:text-lg font-semibold transition w-full lg:w-auto"
+                      className="min-h-[48px] sm:h-[62px] w-fit lg:w-auto px-5 sm:px-10 rounded-xl sm:rounded-2xl bg-[#e8650a] text-white text-base sm:text-lg font-semibold transition"
                     >
                       Tra cứu
                     </button>
@@ -252,7 +252,7 @@ export default function LandingPage() {
 
                     <button
                       type="submit"
-                      className="min-h-[52px] sm:h-[62px] px-6 sm:px-10 rounded-xl sm:rounded-2xl hover:bg-[#1d3396] text-white text-base sm:text-lg font-semibold transition w-full lg:w-auto bg-[#e8650a]"
+                      className="min-h-[48px] sm:h-[62px] w-fit lg:w-auto px-5 sm:px-10 rounded-xl sm:rounded-2xl hover:bg-[#1d3396] text-white text-base sm:text-lg font-semibold transition bg-[#e8650a]"
                     >
                       Tra cứu
                     </button>
