@@ -1,0 +1,337 @@
+hải hiển thị đẹp trên tất cả các thiết bị:
+  - Mobile: 320px–767px
+  - Tablet: 768px–1023px
+  - Laptop: 1024px–1439px
+  - Desktop: 1440px+
+  - Màn hình 2K và 4K
+
+- Giao diện phải đồng nhất trên mọi độ phân giải.
+- Không được làm vỡ layout ở bất kỳ kích thước màn hình nào.
+- Không xuất hiện thanh cuộn ngang (Horizontal Scroll).
+- Không có khoảng trắng thừa hoặc vùng chết ở hai bên màn hình.
+- Mọi thành phần phải co giãn tự nhiên theo kích thước màn hình.
+
+---
+
+## 2. Layout
+
+- Thiết kế theo Mobile First.
+- Sử dụng Flexbox và CSS Grid.
+- Không sử dụng width cố định nếu không thật sự cần thiết.
+- Ưu tiên:
+  - width: 100%
+  - max-width
+  - minmax()
+  - auto-fit
+  - auto-fill
+
+Container:
+
+- max-width: 1280px
+- căn giữa
+- Padding:
+  - Mobile: 16px
+  - Tablet: 24px
+  - Desktop: 40px
+
+---
+
+## 3. Responsive
+
+Website phải tự động thích nghi với mọi kích thước màn hình.
+
+Được phép thay đổi:
+
+- kích thước
+- khoảng cách
+- font
+- số cột
+- chiều rộng
+- chiều cao
+- padding
+- margin
+
+KHÔNG được:
+
+- thay đổi vị trí các thành phần
+- đổi thứ tự hiển thị
+- đảo layout
+- tự động sắp xếp lại cấu trúc
+
+Ví dụ:
+
+Desktop
+
+TEXT | IMAGE
+
+thì Mobile phải là
+
+TEXT
+IMAGE
+
+KHÔNG được thành
+
+IMAGE
+TEXT
+
+Nếu Desktop là
+
+Card 1 | Card 2 | Card 3 | Card 4
+
+thì Mobile phải là
+
+Card 1
+
+Card 2
+
+Card 3
+
+Card 4
+
+không được đổi thành
+
+Card 3
+
+Card 1
+
+Card 4
+
+Card 2
+
+---
+
+## 4. Tuyệt đối không được
+
+Không sử dụng
+
+- order
+- flex-direction: column-reverse
+- flex-direction: row-reverse
+- direction: rtl
+- grid-auto-flow thay đổi thứ tự
+- bất kỳ kỹ thuật nào làm thay đổi thứ tự hiển thị.
+
+Không thay đổi DOM chỉ để responsive.
+
+---
+
+## 5. Navbar
+
+Desktop
+
+- Menu ngang
+- Logo bên trái
+- CTA bên phải
+
+Tablet
+
+- Thu gọn khoảng cách
+
+Mobile
+
+- Hamburger Menu
+- Drawer trượt mượt
+- Click ra ngoài tự đóng
+
+Logo luôn giữ bên trái.
+
+Không được đổi vị trí Logo.
+
+---
+
+## 6. Hero Section
+
+Desktop
+
+Text bên trái
+
+Hình bên phải
+
+Tablet
+
+Giữ nguyên nếu đủ không gian.
+
+Mobile
+
+Text
+
+↓
+
+Hình
+
+Giữ nguyên thứ tự.
+
+Không được đảo.
+
+---
+
+## 7. Section
+
+Các section phải:
+
+- giữ nguyên cấu trúc
+- chỉ thay đổi số cột
+
+Desktop
+
+4 cột
+
+Laptop
+
+3 cột
+
+Tablet
+
+2 cột
+
+Mobile
+
+1 cột
+
+Các card luôn giữ đúng thứ tự.
+
+---
+
+## 8. Card
+
+- Chiều cao bằng nhau.
+- Không méo.
+- Không lệch.
+- Không chồng lên nhau.
+- Không bị kéo giãn bất thường.
+
+---
+
+## 9. Typography
+
+Sử dụng
+
+clamp()
+
+để font tự co giãn.
+
+Không để:
+
+- chữ tràn
+- chữ chồng
+- xuống dòng bất thường
+
+Line-height hợp lý.
+
+---
+
+## 10. Hình ảnh
+
+- Responsive 100%
+- Không méo
+- Không vỡ
+- object-fit phù hợp
+- Lazy Load
+- Không crop mất nội dung quan trọng.
+
+---
+
+## 11. Button
+
+- Cao tối thiểu 44px
+- Mobile có thể full width
+- Desktop theo nội dung
+
+Không bị méo.
+
+---
+
+## 12. Form
+
+Input
+
+- Full Width
+- Label phía trên
+- Khoảng cách đồng đều
+
+---
+
+## 13. Table
+
+Nếu bảng quá rộng
+
+chỉ bảng được phép scroll ngang.
+
+Toàn bộ website tuyệt đối không được scroll ngang.
+
+---
+
+## 14. Animation
+
+- Nhẹ
+- Mượt
+- Không lag
+- Hỗ trợ prefers-reduced-motion
+
+---
+
+## 15. Hiệu năng
+
+- Lazy Load
+- Tối ưu LCP
+- Tối ưu CLS
+- Tối ưu FCP
+- Tối ưu SEO
+
+---
+
+## 16. Accessibility
+
+- Semantic HTML
+- WCAG AA
+- Keyboard Navigation
+- Focus State
+- ARIA đầy đủ
+
+---
+
+## 17. Khoảng cách
+
+Áp dụng hệ thống spacing 8px.
+
+Mọi section phải đồng đều.
+
+---
+
+## 18. Chất lượng giao diện
+
+Website phải có giao diện hiện đại, cao cấp theo phong cách Enterprise SaaS tương tự Stripe, Linear, Vercel, Notion hoặc Webflow.
+
+- Khoảng trắng hợp lý.
+- Căn lề chính xác.
+- Bóng đổ nhẹ.
+- Border radius đồng nhất.
+- Hiệu ứng hover mượt.
+- Không sử dụng màu sắc hoặc hiệu ứng gây rối mắt.
+
+---
+
+## 19. Quy tắc bất biến (Bắt buộc)
+
+Thiết kế Desktop là bản chuẩn.
+
+Tất cả các breakpoint chỉ được phép:
+
+- Co giãn kích thước.
+- Thay đổi khoảng cách.
+- Thay đổi số cột.
+- Xuống hàng khi thiếu không gian.
+- Điều chỉnh kích thước hình ảnh và font chữ.
+
+Tuyệt đối KHÔNG được:
+
+- Thay đổi vị trí của bất kỳ thành phần nào.
+- Đảo thứ tự hiển thị.
+- Đổi bố cục logic.
+- Di chuyển nút CTA.
+- Đổi vị trí Logo.
+- Đổi vị trí ảnh và nội dung.
+- Thay đổi cấu trúc DOM.
+- Làm mất cân bằng bố cục giữa các section.
+
+Mọi thành phần phải giữ nguyên đúng vị trí và thứ tự như thiết kế Desktop. Responsive chỉ được phép thay đổi kích thước và cách hiển thị để phù hợp với từng thiết bị, tuyệt đối không làm thay đổi trải nghiệm và luồng đọc của người dùng.
