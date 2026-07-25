@@ -423,15 +423,9 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
 
 // ─── Main Auth Page ────────────────────────────────────────────────────────────
 export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login' | 'register' }) {
-  const [tab, setTab] = useState<'login' | 'register'>(defaultTab);
   const [, setLocation] = useLocation();
   const logoUrl = import.meta.env.BASE_URL + 'images/logo-skhcn.png';
   const guideUrl = import.meta.env.BASE_URL + 'huong-dan.pdf';
-
-  const switchTab = (t: 'login' | 'register') => {
-    setTab(t);
-    setLocation(t === 'login' ? '/dang-nhap' : '/dang-ky');
-  };
 
   return (
     <div className="min-h-screen flex font-sans">
@@ -495,28 +489,12 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
             <p className="text-xs text-gray-500 uppercase tracking-widest font-semibold">Đồng Nai Trace</p>
           </div>
 
-          {/* Tab switcher */}
-          <div className="flex bg-white border border-slate-200 rounded-xl p-1 mb-6 shadow-sm">
-            <button
-              onClick={() => switchTab('login')}
-              className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${tab === 'login' ? 'bg-[#2740BA] text-white shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
-            >
-              Đăng nhập
-            </button>
-            <button
-              onClick={() => switchTab('register')}
-              className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all ${tab === 'register' ? 'bg-[#2740BA] text-white shadow-sm' : 'text-gray-500 hover:text-gray-800'}`}
-            >
-              Đăng ký doanh nghiệp
-            </button>
-          </div>
-
           {/* Form card */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 px-7 py-8">
-            {tab === 'login' ? (
-              <LoginForm onSwitchToRegister={() => switchTab('register')} guideUrl={guideUrl} />
+            {defaultTab === 'login' ? (
+              <LoginForm onSwitchToRegister={() => setLocation('/dang-ky')} guideUrl={guideUrl} />
             ) : (
-              <RegisterForm onSwitchToLogin={() => switchTab('login')} />
+              <RegisterForm onSwitchToLogin={() => setLocation('/dang-nhap')} />
             )}
           </div>
         </div>
