@@ -279,7 +279,7 @@ export default function MapSection() {
           <span className="text-xs font-bold text-[#2740BA] uppercase tracking-widest">
             Bản đồ
           </span>
-          <h2 className="text-[#2740BA] text-3xl lg:text-4xl font-extrabold text-slate-800 uppercase mt-1">
+          <h2 className="text-3xl lg:text-4xl font-extrabold uppercase mt-1 text-[#2740ba]">
             Doanh nghiệp &amp; Sản phẩm{" "}
             Đồng Nai
           </h2>
@@ -324,7 +324,6 @@ export default function MapSection() {
           )}
         </div>
       </div>
-
       {/* Map + Panel */}
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-4 h-[560px]">
 
