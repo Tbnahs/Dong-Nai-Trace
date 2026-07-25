@@ -30,8 +30,6 @@ interface ProductForm {
   category: string;
   unit: string;
   certs: string[];
-  certOther: boolean;
-  certOtherText: string;
   description: string;
 }
 
@@ -46,7 +44,7 @@ const INITIAL_PRODUCTS: Product[] = [
 
 const emptyForm: ProductForm = {
   name: '', category: PRODUCT_CATS[0], unit: '',
-  certs: [], certOther: false, certOtherText: '', description: '',
+  certs: [], description: '',
 };
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
@@ -190,15 +188,26 @@ function ProductModal({
   const [form, setForm] = useState<ProductForm>({ ...emptyForm, ...initial });
   const [errors, setErrors] = useState<Partial<Record<keyof ProductForm, string>>>({});
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [certSearch, setCertSearch] = useState('');
+  const [certOpen, setCertOpen] = useState(false);
 
   const set = <K extends keyof ProductForm>(key: K, val: ProductForm[K]) =>
     setForm(f => ({ ...f, [key]: val }));
 
-  const toggleCert = (c: string) =>
-    setForm(f => ({
-      ...f,
-      certs: f.certs.includes(c) ? f.certs.filter(x => x !== c) : [...f.certs, c],
-    }));
+  const certSuggestions = CERTS_LIST.filter(
+    c => c.toLowerCase().includes(certSearch.toLowerCase()) && !form.certs.includes(c)
+  );
+  const canAddCustom =
+    certSearch.trim().length > 0 &&
+    !CERTS_LIST.map(c => c.toLowerCase()).includes(certSearch.trim().toLowerCase()) &&
+    !form.certs.map(c => c.toLowerCase()).includes(certSearch.trim().toLowerCase());
+
+  const addCert = (c: string) => {
+    set('certs', [...form.certs, c]);
+    setCertSearch('');
+    setCertOpen(false);
+  };
+  const removeCert = (c: string) => set('certs', form.certs.filter(x => x !== c));
 
   const validate = () => {
     const e: Partial<Record<keyof ProductForm, string>> = {};
@@ -324,46 +333,79 @@ function ProductModal({
             <h3 className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
               <ShieldCheck className="w-3.5 h-3.5" /> Chứng nhận chất lượng
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {CERTS_LIST.map(c => (
-                <label
-                  key={c}
-                  onClick={() => toggleCert(c)}
-                  className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all select-none ${
-                    form.certs.includes(c)
-                      ? 'border-[#2740BA] bg-blue-50/50'
-                      : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50'
-                  }`}
-                >
-                  <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-colors shrink-0 ${
-                    form.certs.includes(c) ? 'bg-[#2740BA] border-[#2740BA]' : 'border-slate-300 bg-white'
-                  }`}>
-                    {form.certs.includes(c) && <Check className="w-3.5 h-3.5 text-white" />}
-                  </div>
-                  <span className={`text-sm font-semibold ${form.certs.includes(c) ? 'text-[#2740BA]' : 'text-slate-600'}`}>{c}</span>
-                </label>
-              ))}
-              <label
-                onClick={() => set('certOther', !form.certOther)}
-                className={`flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all select-none ${
-                  form.certOther ? 'border-[#2740BA] bg-blue-50/50' : 'border-slate-100 bg-white hover:border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                <div className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 ${
-                  form.certOther ? 'bg-[#2740BA] border-[#2740BA]' : 'border-slate-300 bg-white'
-                }`}>
-                  {form.certOther && <Check className="w-3.5 h-3.5 text-white" />}
+
+            {/* Selected chips */}
+            {form.certs.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {form.certs.map(c => (
+                  <span key={c} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 border border-[#2740BA]/30 text-xs font-bold text-[#2740BA]">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> {c}
+                    <button type="button" onClick={() => removeCert(c)} className="ml-0.5 hover:text-red-500 transition-colors">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Search + add */}
+            <div className="relative">
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                  <input
+                    className="w-full pl-9 pr-4 py-2.5 rounded-xl border-2 border-slate-200 bg-white text-sm font-medium text-slate-800 outline-none focus:border-[#2740BA] focus:ring-4 focus:ring-[#2740BA]/10 transition placeholder:text-slate-400"
+                    placeholder="Tìm hoặc nhập tên chứng nhận..."
+                    value={certSearch}
+                    onChange={e => { setCertSearch(e.target.value); setCertOpen(true); }}
+                    onFocus={() => setCertOpen(true)}
+                    onBlur={() => setTimeout(() => setCertOpen(false), 150)}
+                  />
                 </div>
-                <span className={`text-sm font-semibold ${form.certOther ? 'text-[#2740BA]' : 'text-slate-600'}`}>Khác</span>
-              </label>
+                <button
+                  type="button"
+                  disabled={!canAddCustom}
+                  onClick={() => canAddCustom && addCert(certSearch.trim())}
+                  className="flex items-center justify-center w-11 h-11 rounded-xl border-2 border-dashed border-slate-300 text-slate-400 hover:border-[#2740BA] hover:text-[#2740BA] hover:bg-blue-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all shrink-0"
+                  title="Thêm chứng nhận mới"
+                >
+                  <Plus className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Dropdown */}
+              <AnimatePresence>
+                {certOpen && (certSuggestions.length > 0 || canAddCustom) && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.12 }}
+                    className="absolute left-0 right-12 mt-1 bg-white rounded-xl border border-slate-200 shadow-lg z-10 overflow-hidden"
+                  >
+                    {certSuggestions.map(c => (
+                      <button
+                        key={c}
+                        type="button"
+                        onMouseDown={() => addCert(c)}
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-blue-50 hover:text-[#2740BA] transition-colors text-left"
+                      >
+                        <ShieldCheck className="w-4 h-4 shrink-0 text-slate-400" /> {c}
+                      </button>
+                    ))}
+                    {canAddCustom && (
+                      <button
+                        type="button"
+                        onMouseDown={() => addCert(certSearch.trim())}
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-[#2740BA] hover:bg-blue-50 transition-colors text-left border-t border-slate-100"
+                      >
+                        <Plus className="w-4 h-4 shrink-0" /> Thêm "{certSearch.trim()}"
+                      </button>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            <AnimatePresence>
-              {form.certOther && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-3 overflow-hidden">
-                  <input className={inputCls()} placeholder="Nhập tên chứng nhận khác..." value={form.certOtherText} onChange={e => set('certOtherText', e.target.value)} />
-                </motion.div>
-              )}
-            </AnimatePresence>
           </section>
 
           <hr className="border-slate-100" />
@@ -445,13 +487,12 @@ export default function ProductsProfilePage() {
   });
 
   const handleAdd = (form: ProductForm) => {
-    const allCerts = [...form.certs, ...(form.certOther && form.certOtherText ? [form.certOtherText] : [])];
     setProducts(prev => [{
       id: `p-${Date.now()}`,
       name: form.name,
       category: form.category,
       unit: form.unit,
-      certs: allCerts,
+      certs: form.certs,
       description: form.description,
       img: `https://picsum.photos/seed/${Date.now()}/400/300`,
       status: 'pending',
@@ -461,10 +502,9 @@ export default function ProductsProfilePage() {
 
   const handleEdit = (form: ProductForm) => {
     if (!editingId) return;
-    const allCerts = [...form.certs, ...(form.certOther && form.certOtherText ? [form.certOtherText] : [])];
     setProducts(prev => prev.map(p =>
       p.id === editingId
-        ? { ...p, name: form.name, category: form.category, unit: form.unit, certs: allCerts, description: form.description, updatedAt: new Date().toLocaleDateString('vi-VN') }
+        ? { ...p, name: form.name, category: form.category, unit: form.unit, certs: form.certs, description: form.description, updatedAt: new Date().toLocaleDateString('vi-VN') }
         : p
     ));
   };
@@ -744,9 +784,7 @@ export default function ProductsProfilePage() {
               name: editingProduct.name,
               category: editingProduct.category,
               unit: editingProduct.unit,
-              certs: editingProduct.certs.filter(c => CERTS_LIST.includes(c)),
-              certOther: editingProduct.certs.some(c => !CERTS_LIST.includes(c)),
-              certOtherText: editingProduct.certs.find(c => !CERTS_LIST.includes(c)) ?? '',
+              certs: editingProduct.certs,
               description: editingProduct.description,
             }}
             onClose={() => setEditingId(null)}
