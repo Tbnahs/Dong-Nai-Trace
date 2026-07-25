@@ -462,21 +462,20 @@ function EmptyState({ label }: { label: string }) {
 
 // ─── GeoJSON style helpers ────────────────────────────────────────────────────
 
-// Bright province palette — fresh, high-contrast colors that stay readable
-// against the white map background.
+// Warm-tone province palette — oranges, ambers, corals, reds, and golds.
 const WARD_PALETTE = [
-  "#42BDE8", // bright sky blue
-  "#39C98A", // fresh emerald
-  "#FFB84D", // warm mango
-  "#A875F5", // vivid violet
+  "#FF6B35", // vivid orange-red
+  "#F7A400", // amber
+  "#FFB84D", // mango
+  "#E85D04", // burnt orange
   "#FF7F66", // coral
-  "#25C7C1", // turquoise
+  "#DC2F02", // deep red
   "#F6D45A", // sunny yellow
-  "#6FA8FF", // periwinkle
-  "#83D34F", // lime green
-  "#D879F4", // orchid
-  "#FF98A8", // pink
-  "#45D6C3", // aqua
+  "#FFCA3A", // golden yellow
+  "#FB8500", // vivid orange
+  "#E63946", // crimson
+  "#F4A261", // terracotta
+  "#E9C46A", // warm sand
 ];
 
 function wardFillColor(code: string | number): string {
