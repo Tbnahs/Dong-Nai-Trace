@@ -80,9 +80,12 @@ export default function LandingPage() {
 
           {/* Cột trái */}
           <div className="lg:w-[48%] flex flex-col items-start space-y-7">
-            <h1 className="text-4xl lg:text-[2.75rem] font-extrabold uppercase leading-[1.1]">
-              <span className="text-[#2740BA]">
-                TRUY XUẤT NGUỒN GỐC SẢN PHẨM ĐỒNG NAI
+            <h1 className="w-full text-[clamp(1.35rem,6.8vw,2.75rem)] font-extrabold uppercase leading-[1.1]">
+              <span className="block whitespace-nowrap text-[#2740BA]">
+                TRUY XUẤT NGUỒN GỐC
+              </span>
+              <span className="block whitespace-nowrap text-[#2740BA]">
+                SẢN PHẨM ĐỒNG NAI
               </span>
             </h1>
 
