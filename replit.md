@@ -1,36 +1,54 @@
 # Đồng Nai Trace — Portal
 
-Cổng thông tin truy xuất nguồn gốc sản phẩm, hàng hóa Thành phố Đồng Nai, do Sở Khoa học và Công nghệ chủ trì.
+A Vietnamese traceability portal for Đồng Nai province's science & technology system. Users can search products, view business profiles, browse news, and authenticate.
 
 ## Stack
 
-- **Frontend** (`artifacts/portal`): React 19 + Vite + TailwindCSS + Wouter (routing) + TanStack Query + shadcn/ui components + React Leaflet (maps)
-- **Backend** (`artifacts/api-server`): Node.js + Express 5 + Pino (logging), built with esbuild
-- **Shared libs** (`lib/`):
-  - `api-spec` — OpenAPI spec (source of truth for all API contracts)
-  - `api-zod` — Zod schemas generated from OpenAPI spec
-  - `api-client-react` — React Query hooks generated from OpenAPI spec
-  - `db` — Drizzle ORM database layer
+- **Frontend** (`artifacts/portal`): React + Vite + Tailwind CSS + Wouter routing + React Query
+- **API Server** (`artifacts/api-server`): Express 5 + Drizzle ORM + Pino logging
+- **Database**: PostgreSQL (Replit managed, `DATABASE_URL` auto-provisioned)
+- **Package manager**: pnpm (monorepo workspace)
 
-## How to run
+## Running the project
 
 Both services start automatically via managed workflows:
 
-| Service | Workflow name | URL |
+| Service | Workflow | URL |
 |---|---|---|
-| Portal (frontend) | `artifacts/portal: web` | Port 25265, preview path `/portal/` |
-| API Server | `artifacts/api-server: API Server` | Port 8080, health check `/api/healthz` |
+| Portal (frontend) | `artifacts/portal: web` | `/portal/` |
+| API Server | `artifacts/api-server: API Server` | `/api/` |
 
-Install dependencies (first time or after pulling): `pnpm install`
+To restart manually:
+```
+pnpm --filter @workspace/portal run dev       # portal on PORT=25265
+pnpm --filter @workspace/api-server run dev   # api server on PORT=8080
+```
 
-## Project context
+## Installing dependencies
 
-- Brand: "Đồng Nai Trace" — professional government portal aesthetic, navy/orange palette
-- Primary colors: xanh navy `#1B2A6B` (primary), cam/orange (accent/CTA)
-- Font: Vietnamese-supporting sans-serif (Inter / Be Vietnam Pro / Noto Sans)
-- Three platforms in scope: Portal (public web), App (mobile), Client (admin dashboard)
-- This repo covers the **Portal** (public + enterprise) and its shared API/DB backend
+```
+pnpm install
+```
+
+## Project structure
+
+```
+artifacts/
+  portal/          — React frontend (src/pages, src/components, src/context)
+  api-server/      — Express API (src/routes, src/middlewares, src/lib)
+lib/
+  db/              — Drizzle ORM schema & config (lib/db/src/schema/)
+  api-spec/        — OpenAPI spec (source of truth for API contracts)
+  api-zod/         — Generated Zod schemas
+  api-client-react/ — Generated React Query hooks
+attached_assets/   — Brand images, logos, reference documents
+```
+
+## Environment variables
+
+- `DATABASE_URL` — auto-managed by Replit (do not set manually)
+- `SESSION_SECRET` — stored as a Replit Secret
 
 ## User preferences
 
-<!-- Add remembered user preferences here -->
+_None recorded yet._
