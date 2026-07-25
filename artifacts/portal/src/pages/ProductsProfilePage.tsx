@@ -791,29 +791,35 @@ export default function ProductsProfilePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Tabs */}
-        <div className="flex gap-3 mb-5">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-3 mb-5">
           <button
             onClick={() => { setActiveTab('with'); setSearch(''); setStatusFilter('all'); setCatFilter('all'); }}
-            className={`flex items-center gap-3 px-5 py-3 rounded-xl text-sm font-bold transition-all border-2 ${activeTab === 'with' ? 'bg-emerald-50 border-emerald-400 text-emerald-800 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
+            className={`min-w-0 min-h-[76px] sm:min-h-0 flex items-center justify-center gap-1.5 sm:gap-3 px-2.5 sm:px-5 py-3 rounded-xl text-sm font-bold transition-all border-2 ${activeTab === 'with' ? 'bg-emerald-50 border-emerald-400 text-emerald-800 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
           >
-            <ShieldCheck className={`w-4 h-4 ${activeTab === 'with' ? 'text-emerald-600' : 'text-slate-400'}`} />
-            Đã có truy xuất nguồn gốc
-            <span className={`px-2.5 py-0.5 rounded-lg text-xs font-bold ${activeTab === 'with' ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}`}>{withCount}</span>
+            <ShieldCheck className={`hidden sm:block w-4 h-4 shrink-0 ${activeTab === 'with' ? 'text-emerald-600' : 'text-slate-400'}`} />
+            <span className="min-w-0 text-center leading-tight">
+              <span className="sm:hidden">Đã có truy xuất</span>
+              <span className="hidden sm:inline">Đã có truy xuất nguồn gốc</span>
+            </span>
+            <span className={`shrink-0 px-2.5 py-0.5 rounded-lg text-xs font-bold ${activeTab === 'with' ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-500'}`}>{withCount}</span>
           </button>
           <button
             onClick={() => { setActiveTab('without'); setSearch(''); setStatusFilter('all'); setCatFilter('all'); }}
-            className={`flex items-center gap-3 px-5 py-3 rounded-xl text-sm font-bold transition-all border-2 ${activeTab === 'without' ? 'bg-amber-50 border-amber-400 text-amber-800 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
+            className={`min-w-0 min-h-[76px] sm:min-h-0 flex items-center justify-center gap-1.5 sm:gap-3 px-2.5 sm:px-5 py-3 rounded-xl text-sm font-bold transition-all border-2 ${activeTab === 'without' ? 'bg-amber-50 border-amber-400 text-amber-800 shadow-sm' : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700'}`}
           >
-            <AlertCircle className={`w-4 h-4 ${activeTab === 'without' ? 'text-amber-500' : 'text-slate-400'}`} />
-            Chưa có truy xuất nguồn gốc
-            <span className={`px-2.5 py-0.5 rounded-lg text-xs font-bold ${activeTab === 'without' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-500'}`}>{withoutCount}</span>
+            <AlertCircle className={`hidden sm:block w-4 h-4 shrink-0 ${activeTab === 'without' ? 'text-amber-500' : 'text-slate-400'}`} />
+            <span className="min-w-0 text-center leading-tight">
+              <span className="sm:hidden">Chưa có truy xuất</span>
+              <span className="hidden sm:inline">Chưa có truy xuất nguồn gốc</span>
+            </span>
+            <span className={`shrink-0 px-2.5 py-0.5 rounded-lg text-xs font-bold ${activeTab === 'without' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-500'}`}>{withoutCount}</span>
           </button>
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
 
           {/* Toolbar */}
-          <div className="px-5 py-4 border-b border-slate-100 flex flex-col sm:flex-row gap-3">
+          <div className="px-3 sm:px-5 py-4 border-b border-slate-100 flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
               <input
@@ -823,12 +829,21 @@ export default function ProductsProfilePage() {
                 className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium text-slate-700 outline-none focus:border-[#2740BA] focus:bg-white focus:ring-4 focus:ring-[#2740BA]/10 transition"
               />
             </div>
-            <div className="flex gap-2">
-              <div className="relative">
+            <div className="grid grid-cols-2 sm:flex gap-2">
+              <div className="relative min-w-0">
                 <select
                   value={statusFilter}
                   onChange={e => setStatusFilter(e.target.value as typeof statusFilter)}
-                  className="appearance-none pl-3 pr-8 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-600 outline-none focus:border-[#2740BA] focus:bg-white transition w-40"
+                  className="sm:hidden appearance-none w-full min-w-0 pl-3 pr-7 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-600 outline-none focus:border-[#2740BA] focus:bg-white transition"
+                >
+                  <option value="all">Trạng thái</option>
+                  <option value="approved">Đã duyệt</option>
+                  <option value="pending">Chờ duyệt</option>
+                </select>
+                <select
+                  value={statusFilter}
+                  onChange={e => setStatusFilter(e.target.value as typeof statusFilter)}
+                  className="hidden sm:block appearance-none w-full min-w-0 pl-3 pr-8 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-600 outline-none focus:border-[#2740BA] focus:bg-white transition w-40"
                 >
                   <option value="all">Tất cả trạng thái</option>
                   <option value="approved">Đã duyệt</option>
@@ -836,11 +851,19 @@ export default function ProductsProfilePage() {
                 </select>
                 <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
               </div>
-              <div className="relative">
+              <div className="relative min-w-0">
                 <select
                   value={catFilter}
                   onChange={e => setCatFilter(e.target.value)}
-                  className="appearance-none pl-3 pr-8 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-600 outline-none focus:border-[#2740BA] focus:bg-white transition w-44"
+                  className="sm:hidden appearance-none w-full min-w-0 pl-3 pr-7 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold text-slate-600 outline-none focus:border-[#2740BA] focus:bg-white transition"
+                >
+                  <option value="all">Danh mục</option>
+                  {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <select
+                  value={catFilter}
+                  onChange={e => setCatFilter(e.target.value)}
+                  className="hidden sm:block appearance-none w-full min-w-0 pl-3 pr-8 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-600 outline-none focus:border-[#2740BA] focus:bg-white transition w-44"
                 >
                   <option value="all">Tất cả danh mục</option>
                   {categories.map(c => <option key={c} value={c}>{c}</option>)}
