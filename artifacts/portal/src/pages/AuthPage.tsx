@@ -442,7 +442,7 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
         {/* Bottom — Headline + stats */}
         <div className="relative z-10 px-12 pb-14">
           <h2 className="text-4xl font-extrabold text-white leading-tight mb-4">
-            Truy xuất<br />nguồn gốc<br />hàng hóa
+            Truy xuất nguồn gốc hàng hóa
           </h2>
           <p className="text-blue-200/75 text-sm leading-relaxed mb-10 max-w-xs">
             Hệ thống truy xuất nguồn gốc tỉnh Đồng Nai — minh bạch, tin cậy, chuẩn quốc tế.
