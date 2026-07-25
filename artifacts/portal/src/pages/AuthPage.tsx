@@ -275,7 +275,7 @@ function LoginForm({ onSwitchToRegister, guideUrl }: { onSwitchToRegister: () =>
           <div className="w-6 h-6 rounded-full bg-[#2740BA] flex items-center justify-center shrink-0">
             <Phone className="w-3 h-3 text-white" />
           </div>
-          <span>Hotline: <strong className="text-[#2740BA]">0900.000.000</strong></span>
+          <span>Hotline: <strong className="text-[#2740BA]">0251.3822297</strong></span>
         </div>
       </div>
 
