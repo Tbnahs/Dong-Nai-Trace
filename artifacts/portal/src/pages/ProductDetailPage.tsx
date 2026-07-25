@@ -156,7 +156,7 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
 
-      <div className="max-w-6xl mx-auto px-6 lg:px-12 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-12 py-5 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
 
           {/* ── LEFT COLUMN ── */}
@@ -177,18 +177,18 @@ export default function ProductDetailPage() {
               </div>
               <p className="text-xs text-gray-500 mb-4 text-center">Mã QR truy xuất nguồn gốc</p>
               <div className="flex gap-2 w-full">
-                <button className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors font-medium">
-                  <Download className="w-4 h-4" /> Tải QR
+                <button className="flex-1 min-h-11 flex items-center justify-center gap-1.5 px-2 sm:px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm text-gray-700 hover:bg-gray-50 transition-colors font-medium">
+                  <Download className="w-4 h-4 shrink-0" /> Tải QR
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors font-medium">
-                  <Share2 className="w-4 h-4" /> Chia sẻ
+                <button className="flex-1 min-h-11 flex items-center justify-center gap-1.5 px-2 sm:px-3 py-2 border border-gray-300 rounded-lg text-xs sm:text-sm text-gray-700 hover:bg-gray-50 transition-colors font-medium">
+                  <Share2 className="w-4 h-4 shrink-0" /> Chia sẻ
                 </button>
               </div>
             </div>
           </div>
 
           {/* ── RIGHT COLUMN ── */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 lg:p-8">
             {/* Cert badge */}
             <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-3 ${product.certColor}`}>
               <span className="w-1.5 h-1.5 rounded-full bg-current opacity-70" />
@@ -227,18 +227,26 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Tabs */}
-            <div className="flex border-b border-slate-200 mb-6">
+            <div
+              role="tablist"
+              aria-label="Thông tin sản phẩm"
+              className="grid grid-cols-3 gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 mb-6"
+            >
               {TABS.map(t => (
                 <button
                   key={t.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === t.key}
                   onClick={() => setActiveTab(t.key as any)}
-                  className={`flex items-center gap-1.5 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors whitespace-nowrap -mb-px ${
+                  className={`min-h-12 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-1 sm:px-3 py-2 text-[11px] sm:text-sm leading-tight text-center font-semibold rounded-lg transition-colors ${
                     activeTab === t.key
-                      ? 'border-[#2740BA] text-[#2740BA]'
-                      : 'border-transparent text-gray-500 hover:text-gray-800'
+                      ? 'bg-white text-[#2740BA] shadow-sm ring-1 ring-slate-200'
+                      : 'text-gray-500 hover:bg-white/70 hover:text-gray-800'
                   }`}
                 >
-                  {t.icon} {t.label}
+                  <span className="shrink-0">{t.icon}</span>
+                  <span>{t.label}</span>
                 </button>
               ))}
             </div>
