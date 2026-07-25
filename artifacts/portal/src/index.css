@@ -4,7 +4,30 @@
 /* Remove black focus rectangle on Leaflet clickable regions */
 /* Map background — white, no tiles */
 .leaflet-container {
-  background: #ffffff;
+  background: #eefaff;
+}
+
+/* Keep the map controls crisp while letting the brighter ward colors lead. */
+.leaflet-control-zoom {
+  overflow: hidden;
+  border: 1px solid #d8e8f2 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 12px rgba(39, 64, 186, 0.12) !important;
+}
+
+.leaflet-control-zoom a {
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 28px !important;
+  border: 0 !important;
+  color: #2740ba !important;
+  background: #ffffff !important;
+  font-weight: 700;
+}
+
+.leaflet-control-zoom a:hover {
+  color: #e8650a !important;
+  background: #fff7ef !important;
 }
 
 .leaflet-interactive:focus {

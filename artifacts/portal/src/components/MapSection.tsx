@@ -94,6 +94,7 @@ export default function MapSection() {
   const [activeTab,     setActiveTab]     = useState<"business" | "product">("business");
   const [selectedWard,  setSelectedWard]  = useState<{ code: string; name: string } | null>(null);
   const [dropdownOpen,  setDropdownOpen]  = useState(false);
+  const [mapDataReady,  setMapDataReady]  = useState(false);
 
   // Filtered lists
   const filteredBiz  = selectedWard
@@ -105,6 +106,7 @@ export default function MapSection() {
 
   const markerRef   = useRef<any>(null);
   const wardCodesRef = useRef<Set<string>>(new Set());
+  const provinceBoundsRef = useRef<any>(null);
 
   // ── Initialise Leaflet once ──────────────────────────────────────────────────
   useEffect(() => {
@@ -211,8 +213,10 @@ export default function MapSection() {
             },
           }).addTo(map);
           geoLayer.current = layer;
+          provinceBoundsRef.current = layer.getBounds();
+          setMapDataReady(true);
           // Fit map tightly to Đồng Nai after GeoJSON loads
-          map.fitBounds(layer.getBounds(), { padding: [16, 16] });
+          map.fitBounds(provinceBoundsRef.current, { padding: [16, 16] });
         })
         .catch((error) => {
           if (error?.name !== "AbortError") {
@@ -229,13 +233,45 @@ export default function MapSection() {
     };
   }, []);
 
-  // ── Re-style GeoJSON when selection changes ──────────────────────────────────
+  // ── Re-style and move the map when a ward is selected ────────────────────────
   useEffect(() => {
-    if (!geoLayer.current) return;
-    geoLayer.current.setStyle((feature: any) =>
+    const map = leafletMap.current;
+    const layerGroup = geoLayer.current;
+    if (!map || !layerGroup || !mapDataReady) return;
+
+    layerGroup.setStyle((feature: any) =>
       styleFeature(selectedWard?.code ?? null)(feature)
     );
-  }, [selectedWard]);
+
+    if (!selectedWard) {
+      if (provinceBoundsRef.current?.isValid?.()) {
+        map.flyToBounds(provinceBoundsRef.current, {
+          padding: [16, 16],
+          animate: true,
+          duration: 0.8,
+        });
+      }
+      return;
+    }
+
+    let selectedLayer: any = null;
+    layerGroup.eachLayer((layer: any) => {
+      const code = layer.feature?.properties?.code;
+      if (String(code) === String(selectedWard.code)) {
+        selectedLayer = layer;
+      }
+    });
+
+    const bounds = selectedLayer?.getBounds?.();
+    if (bounds?.isValid?.()) {
+      map.flyToBounds(bounds, {
+        padding: [40, 40],
+        maxZoom: 12,
+        animate: true,
+        duration: 0.8,
+      });
+    }
+  }, [selectedWard, mapDataReady]);
 
   return (
     <section className="py-16 px-4 lg:px-10 bg-[#F5F7FA]">
@@ -426,20 +462,21 @@ function EmptyState({ label }: { label: string }) {
 
 // ─── GeoJSON style helpers ────────────────────────────────────────────────────
 
-// Harmonious choropleth palette — 12 distinct, balanced hues
+// Bright province palette — fresh, high-contrast colors that stay readable
+// against the white map background.
 const WARD_PALETTE = [
-  "#5B9BD5", // cornflower blue
-  "#52B788", // emerald green
-  "#F4A261", // sandy orange
-  "#9B72CF", // amethyst
-  "#E76F51", // terracotta
-  "#2EC4B6", // caribbean teal
-  "#E9C46A", // saffron
-  "#70A9D6", // sky blue
-  "#A7C957", // apple green
-  "#C77DFF", // orchid
-  "#F4978E", // salmon rose
-  "#4DBDBA", // medium aquamarine
+  "#42BDE8", // bright sky blue
+  "#39C98A", // fresh emerald
+  "#FFB84D", // warm mango
+  "#A875F5", // vivid violet
+  "#FF7F66", // coral
+  "#25C7C1", // turquoise
+  "#F6D45A", // sunny yellow
+  "#6FA8FF", // periwinkle
+  "#83D34F", // lime green
+  "#D879F4", // orchid
+  "#FF98A8", // pink
+  "#45D6C3", // aqua
 ];
 
 function wardFillColor(code: string | number): string {
@@ -455,10 +492,10 @@ function styleFeature(selectedCode: string | null) {
     const code = feature?.properties?.code ?? feature?.id ?? "";
     const isSelected = selectedCode && String(code) === String(selectedCode);
     return {
-      fillColor:   isSelected ? "#1B2A6B" : wardFillColor(code),
-      fillOpacity: isSelected ? 0.88 : 0.52,
+      fillColor:   isSelected ? "#2740BA" : wardFillColor(code),
+      fillOpacity: isSelected ? 0.9 : 0.66,
       color:       "#ffffff",
-      weight:      isSelected ? 2.5 : 1.0,
+      weight:      isSelected ? 2.5 : 1.2,
     };
   };
 }
