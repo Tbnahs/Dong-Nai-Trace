@@ -27,46 +27,63 @@ export default function ContactPage() {
               {
                 icon: MapPin,
                 label: "Địa chỉ",
-                value:
-                  "1592 Nguyễn Ái Quốc, KP6, P.Trung Dũng, Biên Hoà, Đồng Nai",
+                value: "1592 Nguyễn Ái Quốc, KP6, P.Trung Dũng, Biên Hoà, Đồng Nai",
                 color: "text-[#E8650A]",
+                href: "https://maps.google.com/?q=1592+Nguy%E1%BB%85n+%C3%81i+Qu%E1%BB%91c+Bi%C3%AAn+Ho%C3%A0+%C4%90%E1%BB%93ng+Nai",
               },
               {
                 icon: Phone,
                 label: "Điện thoại",
                 value: "0251.3822297",
                 color: "text-[#2740BA]",
+                href: "tel:02513822297",
               },
               {
                 icon: Mail,
                 label: "Email",
                 value: "skhcn@dongnai.gov.vn",
                 color: "text-[#2740BA]",
+                href: "mailto:skhcn@dongnai.gov.vn",
               },
               {
                 icon: Clock,
                 label: "Giờ làm việc",
                 value: "Thứ 2 – Thứ 6: 7:30 – 11:30 & 13:30 – 17:00",
                 color: "text-[#2740BA]",
+                href: null,
               },
-            ].map(({ icon: Icon, label, value, color }) => (
-              <div
-                key={label}
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex gap-4 items-start"
-              >
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
-                  <Icon className={`w-5 h-5 ${color}`} />
+            ].map(({ icon: Icon, label, value, color, href }) => {
+              const inner = (
+                <>
+                  <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+                    <Icon className={`w-5 h-5 ${color}`} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-0.5">
+                      {label}
+                    </p>
+                    <p className={`text-sm font-medium leading-relaxed ${href ? "text-[#2740BA] hover:underline" : "text-slate-800"}`}>
+                      {value}
+                    </p>
+                  </div>
+                </>
+              );
+              return href ? (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex gap-4 items-start hover:shadow-md transition-shadow"
+                >
+                  {inner}
+                </a>
+              ) : (
+                <div key={label} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex gap-4 items-start">
+                  {inner}
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-0.5">
-                    {label}
-                  </p>
-                  <p className="text-sm text-slate-800 font-medium leading-relaxed">
-                    {value}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
 
             <a
               href="https://dongnai.gov.vn"
