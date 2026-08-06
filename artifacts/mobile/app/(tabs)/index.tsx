@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Image,
   Platform,
   Pressable,
   ScrollView,
@@ -14,7 +15,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
@@ -26,6 +26,7 @@ import {
   lookupByTraceCode,
 } from '@/data/mock';
 
+const HERO_GUIDE = require('@/assets/images/hero-guide.png');
 const CERT_COLORS: Record<string, string> = {
   VietGAP: '#16A34A',
   GlobalGAP: '#0369A1',
@@ -35,9 +36,10 @@ const CERT_COLORS: Record<string, string> = {
 };
 
 function CertBadge({ label }: { label: string }) {
-  const color = CERT_COLORS[label.split(' ')[0]] ?? '#64748B';
+  const colors = useColors();
+  const color = CERT_COLORS[label.split(' ')[0]] ?? colors.mutedForeground;
   return (
-    <View style={[styles.certBadge, { backgroundColor: color + '20', borderColor: color + '60' }]}>
+    <View style={[styles.certBadge, { backgroundColor: `${color}18`, borderColor: `${color}55` }]}>
       <Text style={[styles.certBadgeText, { color }]}>{label}</Text>
     </View>
   );
@@ -46,13 +48,19 @@ function CertBadge({ label }: { label: string }) {
 function ProductCard({ product, onPress }: { product: typeof PRODUCTS[0]; onPress: () => void }) {
   const colors = useColors();
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.productCard, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.85 : 1 }]}>
-      <LinearGradient colors={['#2740BA20', '#E8650A15']} style={styles.productCardImage}>
-        <Ionicons name="leaf-outline" size={32} color="#2740BA" />
-      </LinearGradient>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.productCard,
+        { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.82 : 1 },
+      ]}
+    >
+      <View style={[styles.productCardImage, { backgroundColor: colors.blueSoft }]}>
+        <Ionicons name="leaf-outline" size={30} color={colors.primary} />
+      </View>
       <View style={styles.productCardBody}>
-        <Text style={[styles.productCardName, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]} numberOfLines={2}>{product.name}</Text>
-        <Text style={[styles.productCardBusiness, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]} numberOfLines={1}>{product.businessName}</Text>
+        <Text style={[styles.productCardName, { color: colors.foreground }]} numberOfLines={2}>{product.name}</Text>
+        <Text style={[styles.productCardBusiness, { color: colors.mutedForeground }]} numberOfLines={1}>{product.businessName}</Text>
         <View style={styles.productCardCerts}>
           {product.certifications.slice(0, 2).map(c => <CertBadge key={c} label={c} />)}
         </View>
@@ -64,27 +72,36 @@ function ProductCard({ product, onPress }: { product: typeof PRODUCTS[0]; onPres
 function NewsCard({ item, onPress }: { item: typeof NEWS[0]; onPress: () => void }) {
   const colors = useColors();
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => [styles.newsCard, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.85 : 1 }]}>
-      <LinearGradient colors={['#2740BA30', '#7B93FF20']} style={styles.newsCardImage}>
-        <Ionicons name="newspaper-outline" size={24} color="#2740BA" />
-      </LinearGradient>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.newsCard,
+        { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.82 : 1 },
+      ]}
+    >
+      <View style={[styles.newsCardImage, { backgroundColor: colors.blueSoft }]}>
+        <Ionicons name="newspaper-outline" size={23} color={colors.primary} />
+      </View>
       <View style={styles.newsCardBody}>
-        <View style={[styles.newsCategoryChip, { backgroundColor: colors.navyLight }]}>
-          <Text style={[styles.newsCategoryText, { color: colors.primary, fontFamily: 'BeVietnamPro_500Medium' }]}>{item.category}</Text>
+        <View style={[styles.newsCategoryChip, { backgroundColor: colors.orangeLight }]}>
+          <Text style={[styles.newsCategoryText, { color: colors.accent }]}>{item.category}</Text>
         </View>
-        <Text style={[styles.newsCardTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]} numberOfLines={2}>{item.title}</Text>
-        <Text style={[styles.newsCardDate, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{item.date}</Text>
+        <Text style={[styles.newsCardTitle, { color: colors.foreground }]} numberOfLines={2}>{item.title}</Text>
+        <Text style={[styles.newsCardDate, { color: colors.mutedForeground }]}>{item.date}</Text>
       </View>
     </Pressable>
   );
 }
 
-function StatCard({ value, label, icon }: { value: string; label: string; icon: string }) {
+function SectionHeading({ title, onMore }: { title: string; onMore: () => void }) {
   const colors = useColors();
   return (
-    <View style={[styles.statCard, { backgroundColor: colors.navyLight }]}>
-      <Text style={[styles.statValue, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>{value}</Text>
-      <Text style={[styles.statLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{label}</Text>
+    <View style={styles.sectionHeader}>
+      <View style={[styles.sectionAccent, { backgroundColor: colors.accent }]} />
+      <Text style={[styles.sectionTitle, { color: colors.primary }]}>{title}</Text>
+      <Pressable onPress={onMore} hitSlop={8}>
+        <Text style={[styles.sectionMore, { color: colors.accent }]}>Xem tất cả</Text>
+      </Pressable>
     </View>
   );
 }
@@ -98,7 +115,6 @@ export default function HomeScreen() {
   const [lot, setLot] = useState('');
   const [searching, setSearching] = useState(false);
   const [notFound, setNotFound] = useState(false);
-
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
 
   const handleSearch = async () => {
@@ -110,11 +126,11 @@ export default function HomeScreen() {
     }
     setSearching(true);
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    await new Promise(r => setTimeout(r, 400));
-
-    let found = useGtin ? lookupByGTIN(gtin.trim(), lot.trim()) : lookupByTraceCode(traceCode.trim());
+    await new Promise(resolve => setTimeout(resolve, 300));
+    const found = useGtin
+      ? lookupByGTIN(gtin.trim(), lot.trim())
+      : lookupByTraceCode(traceCode.trim());
     setSearching(false);
-
     if (found) {
       router.push(`/product/${found.id}`);
     } else {
@@ -129,168 +145,111 @@ export default function HomeScreen() {
       contentContainerStyle={{ paddingBottom: 100 }}
       showsVerticalScrollIndicator={false}
     >
-      {/* Hero */}
-      <LinearGradient colors={['#1A2E9E', '#2740BA', '#3B56D4']} style={[styles.hero, { paddingTop: topPad + 16 }]}>
-        {/* Header row */}
-        <View style={styles.heroHeader}>
+      <View style={[styles.topHeader, { paddingTop: topPad + 10, borderBottomColor: colors.border }]}>
+        <Pressable onPress={() => router.push('/')} style={styles.brand} hitSlop={6}>
+          <Image source={require('@/assets/images/logo-skhcn.png')} style={styles.logo} />
           <View>
-            <Text style={[styles.heroLogoText, { fontFamily: 'BeVietnamPro_700Bold' }]}>Đồng Nai Trace</Text>
-            <Text style={[styles.heroSubtitle, { fontFamily: 'BeVietnamPro_400Regular' }]}>Hệ thống truy xuất nguồn gốc</Text>
+            <Text style={[styles.brandName, { color: colors.primary }]}>ĐỒNG NAI TRACE</Text>
+            <Text style={[styles.brandTagline, { color: colors.mutedForeground }]}>HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM</Text>
           </View>
-          <Pressable onPress={() => router.push('/contact')} style={styles.heroIconBtn}>
-            <Ionicons name="help-circle-outline" size={26} color="rgba(255,255,255,0.85)" />
-          </Pressable>
-        </View>
+        </Pressable>
+        <Pressable onPress={() => router.push('/contact')} style={styles.headerIcon} hitSlop={8}>
+          <Feather name="globe" size={19} color={colors.primary} />
+        </Pressable>
+      </View>
 
-        {/* Hero text */}
-        <View style={styles.heroBadge}>
-          <Ionicons name="shield-checkmark" size={14} color="#E8650A" />
-          <Text style={[styles.heroBadgeText, { fontFamily: 'BeVietnamPro_500Medium' }]}>Công nghệ Blockchain</Text>
-        </View>
-        <Text style={[styles.heroTitle, { fontFamily: 'BeVietnamPro_700Bold' }]}>Tra cứu nguồn gốc{'\n'}sản phẩm nông nghiệp</Text>
-        <Text style={[styles.heroDesc, { fontFamily: 'BeVietnamPro_400Regular' }]}>Nhập mã QR hoặc mã GTIN để xem thông tin đầy đủ về nguồn gốc, quy trình sản xuất và chứng nhận của sản phẩm.</Text>
+      <View style={styles.hero}>
+        <Text style={[styles.heroTitle, { color: colors.primary }]}>
+          TRUY XUẤT NGUỒN GỐC{'\n'}SẢN PHẨM, HÀNG HÓA{'\n'}THÀNH PHỐ ĐỒNG NAI
+        </Text>
+        <Text style={[styles.heroDesc, { color: colors.mutedForeground }]}>
+          Nhờ ứng dụng công nghệ tiên tiến, hệ thống cho phép định danh, truy vết nguồn gốc sản phẩm hàng hóa tại Thành phố Đồng Nai.
+        </Text>
 
-        {/* Search card */}
-        <View style={[styles.searchCard, { backgroundColor: colors.background }]}>
-          {/* Toggle */}
-          <View style={[styles.toggleRow, { backgroundColor: colors.muted, borderRadius: 8 }]}>
-            <Pressable onPress={() => { setUseGtin(false); setNotFound(false); }} style={[styles.toggleBtn, !useGtin && { backgroundColor: colors.primary, borderRadius: 7 }]}>
-              <Text style={[styles.toggleBtnText, { color: !useGtin ? '#FFF' : colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>Mã truy xuất</Text>
-            </Pressable>
-            <Pressable onPress={() => { setUseGtin(true); setNotFound(false); }} style={[styles.toggleBtn, useGtin && { backgroundColor: colors.primary, borderRadius: 7 }]}>
-              <Text style={[styles.toggleBtnText, { color: useGtin ? '#FFF' : colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>GTIN / Lô hàng</Text>
-            </Pressable>
-          </View>
-
+        <View style={styles.searchArea}>
           {!useGtin ? (
-            <View style={[styles.inputRow, { borderColor: colors.border, backgroundColor: colors.muted }]}>
-              <Ionicons name="qr-code-outline" size={20} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
+            <View style={[styles.inputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
+              <Ionicons name="barcode-outline" size={21} color={colors.primary} />
               <TextInput
-                style={[styles.input, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
-                placeholder="VD: DNRM-2024-001"
+                style={[styles.input, { color: colors.foreground }]}
+                placeholder="Nhập mã truy xuất sản phẩm"
                 placeholderTextColor={colors.mutedForeground}
                 value={traceCode}
-                onChangeText={t => { setTraceCode(t); setNotFound(false); }}
+                onChangeText={value => { setTraceCode(value); setNotFound(false); }}
                 autoCapitalize="characters"
                 returnKeyType="search"
                 onSubmitEditing={handleSearch}
               />
-              {traceCode.length > 0 && (
-                <Pressable onPress={() => { setTraceCode(''); setNotFound(false); }} style={{ padding: 8 }}>
-                  <Ionicons name="close-circle" size={18} color={colors.mutedForeground} />
-                </Pressable>
-              )}
             </View>
           ) : (
-            <View style={{ gap: 8 }}>
-              <View style={[styles.inputRow, { borderColor: colors.border, backgroundColor: colors.muted }]}>
-                <Ionicons name="barcode-outline" size={20} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
-                <TextInput
-                  style={[styles.input, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
-                  placeholder="Mã GTIN (VD: 8934673000016)"
-                  placeholderTextColor={colors.mutedForeground}
-                  value={gtin}
-                  onChangeText={t => { setGtin(t); setNotFound(false); }}
-                  keyboardType="numeric"
-                />
+            <View style={styles.gtinFields}>
+              <View style={[styles.inputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                <Ionicons name="barcode-outline" size={20} color={colors.primary} />
+                <TextInput style={[styles.input, { color: colors.foreground }]} placeholder="Nhập mã GTIN" placeholderTextColor={colors.mutedForeground} value={gtin} onChangeText={setGtin} keyboardType="numeric" />
               </View>
-              <View style={[styles.inputRow, { borderColor: colors.border, backgroundColor: colors.muted }]}>
-                <Ionicons name="layers-outline" size={20} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
-                <TextInput
-                  style={[styles.input, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
-                  placeholder="Số lô hàng (VD: LOT-2024-001)"
-                  placeholderTextColor={colors.mutedForeground}
-                  value={lot}
-                  onChangeText={t => { setLot(t); setNotFound(false); }}
-                  autoCapitalize="characters"
-                />
+              <View style={[styles.inputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                <Ionicons name="cube-outline" size={20} color={colors.primary} />
+                <TextInput style={[styles.input, { color: colors.foreground }]} placeholder="Nhập số lô / mẻ" placeholderTextColor={colors.mutedForeground} value={lot} onChangeText={setLot} />
               </View>
             </View>
           )}
 
           {notFound && (
             <View style={[styles.notFoundBox, { backgroundColor: '#FEF2F2', borderColor: '#FCA5A5' }]}>
-              <Ionicons name="alert-circle-outline" size={16} color="#EF4444" />
-              <Text style={[styles.notFoundText, { color: '#DC2626', fontFamily: 'BeVietnamPro_400Regular' }]}>Không tìm thấy sản phẩm. Vui lòng kiểm tra lại mã tra cứu.</Text>
+              <Ionicons name="alert-circle-outline" size={16} color="#DC2626" />
+              <Text style={[styles.notFoundText, { color: '#DC2626' }]}>Không tìm thấy sản phẩm. Vui lòng kiểm tra lại mã.</Text>
             </View>
           )}
 
-          <Pressable onPress={handleSearch} style={({ pressed }) => [styles.searchBtn, { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 }]} disabled={searching}>
-            {searching
-              ? <ActivityIndicator color="#FFF" size="small" />
-              : <>
-                  <Ionicons name="search" size={18} color="#FFF" />
-                  <Text style={[styles.searchBtnText, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Tra cứu</Text>
-                </>
-            }
+          <Pressable onPress={handleSearch} disabled={searching} style={({ pressed }) => [styles.searchButton, { backgroundColor: colors.accent, opacity: pressed || searching ? 0.82 : 1 }]}>
+            {searching ? <ActivityIndicator color={colors.primaryForeground} size="small" /> : <><Text style={styles.searchButtonText}>Tra cứu</Text><Ionicons name="arrow-forward" size={18} color={colors.accentForeground} /></>}
           </Pressable>
-        </View>
-      </LinearGradient>
 
-      {/* Stats */}
-      <View style={styles.statsSection}>
-        <StatCard value={STATS.products.toLocaleString()} label="Sản phẩm" icon="cube" />
-        <StatCard value={STATS.businesses.toString()} label="Doanh nghiệp" icon="business" />
-        <StatCard value={STATS.districts.toString()} label="Huyện/TP" icon="location" />
+          <View style={styles.radioRow}>
+            <Pressable onPress={() => { setUseGtin(false); setNotFound(false); }} style={styles.radioOption}>
+              <View style={[styles.radio, { borderColor: colors.primary }]}>{!useGtin && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}</View>
+              <Text style={[styles.radioText, { color: colors.foreground }]}>Mã truy xuất sản phẩm</Text>
+            </Pressable>
+            <Pressable onPress={() => { setUseGtin(true); setNotFound(false); }} style={styles.radioOption}>
+              <View style={[styles.radio, { borderColor: colors.primary }]}>{useGtin && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}</View>
+              <Text style={[styles.radioText, { color: colors.foreground }]}>Mã GTIN &amp; Số lô</Text>
+            </Pressable>
+          </View>
+        </View>
+
+        <Image source={HERO_GUIDE} style={styles.heroImage} resizeMode="contain" />
       </View>
 
-      {/* Featured products */}
+      <View style={[styles.statsBox, { backgroundColor: colors.softBackground, borderColor: colors.border }]}>
+        <View style={styles.statItem}><Ionicons name="cube-outline" size={26} color={colors.accent} /><Text style={[styles.statValue, { color: colors.accent }]}>{STATS.products.toLocaleString('vi-VN')}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>SẢN PHẨM ĐÃ ĐĂNG KÝ</Text></View>
+        <View style={styles.statItem}><Ionicons name="business-outline" size={26} color={colors.accent} /><Text style={[styles.statValue, { color: colors.accent }]}>{STATS.businesses.toLocaleString('vi-VN')}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>DOANH NGHIỆP THAM GIA</Text></View>
+        <View style={styles.statItem}><Ionicons name="link-outline" size={26} color={colors.accent} /><Text style={[styles.statValue, { color: colors.accent }]}>{STATS.districts.toLocaleString('vi-VN')}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>CẤP MÃ ĐỊNH DANH</Text></View>
+      </View>
+
       <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <View style={[styles.sectionAccent, { backgroundColor: colors.accent }]} />
-          <Text style={[styles.sectionTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Sản phẩm nổi bật</Text>
-          <Pressable onPress={() => router.push('/(tabs)/search')}>
-            <Text style={[styles.sectionMore, { color: colors.primary, fontFamily: 'BeVietnamPro_500Medium' }]}>Xem tất cả</Text>
-          </Pressable>
-        </View>
+        <SectionHeading title="Sản phẩm nổi bật" onMore={() => router.push('/(tabs)/search')} />
         <FlatList
           data={PRODUCTS}
-          keyExtractor={p => p.id}
           horizontal
+          scrollEnabled={PRODUCTS.length > 0}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
-          renderItem={({ item }) => (
-            <ProductCard product={item} onPress={() => router.push(`/product/${item.id}`)} />
-          )}
+          keyExtractor={p => p.id}
+          contentContainerStyle={styles.horizontalList}
+          renderItem={({ item }) => <ProductCard product={item} onPress={() => router.push(`/product/${item.id}`)} />}
         />
       </View>
 
-      {/* Latest news */}
-      <View style={[styles.section, { paddingHorizontal: 16 }]}>
-        <View style={styles.sectionHeader}>
-          <View style={[styles.sectionAccent, { backgroundColor: colors.accent }]} />
-          <Text style={[styles.sectionTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Tin tức mới nhất</Text>
-          <Pressable onPress={() => router.push('/(tabs)/news')}>
-            <Text style={[styles.sectionMore, { color: colors.primary, fontFamily: 'BeVietnamPro_500Medium' }]}>Xem tất cả</Text>
-          </Pressable>
-        </View>
-        {NEWS.slice(0, 3).map(item => (
-          <NewsCard key={item.id} item={item} onPress={() => router.push(`/news/${item.id}`)} />
-        ))}
+      <View style={styles.sectionPadded}>
+        <SectionHeading title="Tin tức mới nhất" onMore={() => router.push('/(tabs)/news')} />
+        {NEWS.slice(0, 3).map(item => <NewsCard key={item.id} item={item} onPress={() => router.push(`/news/${item.id}`)} />)}
       </View>
 
-      {/* Businesses */}
-      <View style={[styles.section, { paddingHorizontal: 16 }]}>
-        <View style={styles.sectionHeader}>
-          <View style={[styles.sectionAccent, { backgroundColor: colors.accent }]} />
-          <Text style={[styles.sectionTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Doanh nghiệp tiêu biểu</Text>
-          <Pressable onPress={() => router.push('/(tabs)/search')}>
-            <Text style={[styles.sectionMore, { color: colors.primary, fontFamily: 'BeVietnamPro_500Medium' }]}>Xem tất cả</Text>
-          </Pressable>
-        </View>
+      <View style={styles.sectionPadded}>
+        <SectionHeading title="Doanh nghiệp tiêu biểu" onMore={() => router.push('/(tabs)/search')} />
         {BUSINESSES.slice(0, 3).map(b => (
-          <Pressable
-            key={b.id}
-            onPress={() => router.push(`/business/${b.id}`)}
-            style={({ pressed }) => [styles.bizRow, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.85 : 1 }]}
-          >
-            <View style={[styles.bizAvatar, { backgroundColor: colors.navyLight }]}>
-              <Text style={[styles.bizAvatarText, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>{b.shortName.slice(0, 2).toUpperCase()}</Text>
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.bizName, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]} numberOfLines={1}>{b.name}</Text>
-              <Text style={[styles.bizMeta, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{b.type} · {b.district} · {b.productCount} sản phẩm</Text>
-            </View>
+          <Pressable key={b.id} onPress={() => router.push(`/business/${b.id}`)} style={({ pressed }) => [styles.bizRow, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.82 : 1 }]}>
+            <View style={[styles.bizAvatar, { backgroundColor: colors.blueSoft }]}><Text style={[styles.bizAvatarText, { color: colors.primary }]}>{b.shortName.slice(0, 2).toUpperCase()}</Text></View>
+            <View style={styles.bizCopy}><Text style={[styles.bizName, { color: colors.foreground }]} numberOfLines={1}>{b.name}</Text><Text style={[styles.bizMeta, { color: colors.mutedForeground }]}>{b.type} · {b.district} · {b.productCount} sản phẩm</Text></View>
             <Ionicons name="chevron-forward" size={18} color={colors.mutedForeground} />
           </Pressable>
         ))}
@@ -301,52 +260,59 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  hero: { paddingHorizontal: 20, paddingBottom: 24 },
-  heroHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 },
-  heroLogoText: { fontSize: 20, color: '#FFF', letterSpacing: 0.3 },
-  heroSubtitle: { fontSize: 11, color: 'rgba(255,255,255,0.7)', marginTop: 1 },
-  heroIconBtn: { padding: 4 },
-  heroBadge: { flexDirection: 'row', alignItems: 'center', gap: 5, marginBottom: 8 },
-  heroBadgeText: { fontSize: 12, color: '#E8650A' },
-  heroTitle: { fontSize: 26, color: '#FFF', lineHeight: 34, marginBottom: 10 },
-  heroDesc: { fontSize: 13, color: 'rgba(255,255,255,0.75)', lineHeight: 20, marginBottom: 20 },
-  searchCard: { borderRadius: 16, padding: 16, gap: 10, shadowColor: '#000', shadowOpacity: 0.12, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 6 },
-  toggleRow: { flexDirection: 'row', padding: 3 },
-  toggleBtn: { flex: 1, paddingVertical: 7, alignItems: 'center' },
-  toggleBtnText: { fontSize: 13 },
-  inputRow: { flexDirection: 'row', alignItems: 'center', borderRadius: 10, borderWidth: 1 },
-  input: { flex: 1, height: 44, paddingHorizontal: 10, fontSize: 14 },
-  notFoundBox: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 10, borderRadius: 8, borderWidth: 1 },
-  notFoundText: { flex: 1, fontSize: 13, lineHeight: 18 },
-  searchBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 13, borderRadius: 10 },
-  searchBtnText: { fontSize: 15, color: '#FFF' },
-  statsSection: { flexDirection: 'row', paddingHorizontal: 16, paddingTop: 20, gap: 10 },
-  statCard: { flex: 1, alignItems: 'center', paddingVertical: 14, borderRadius: 12 },
-  statValue: { fontSize: 20 },
-  statLabel: { fontSize: 11, marginTop: 2 },
-  section: { marginTop: 24 },
-  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 14 },
-  sectionAccent: { width: 3, height: 18, borderRadius: 2 },
-  sectionTitle: { flex: 1, fontSize: 16 },
-  sectionMore: { fontSize: 13 },
-  productCard: { width: 160, borderRadius: 14, borderWidth: 1, overflow: 'hidden' },
-  productCardImage: { height: 100, alignItems: 'center', justifyContent: 'center' },
+  topHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingBottom: 12, borderBottomWidth: 1 },
+  brand: { flexDirection: 'row', alignItems: 'center', gap: 9, flex: 1 },
+  logo: { width: 39, height: 39 },
+  brandName: { fontSize: 15, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: 0.1 },
+  brandTagline: { fontSize: 7, fontFamily: 'BeVietnamPro_500Medium', marginTop: 2 },
+  headerIcon: { padding: 7 },
+  hero: { paddingTop: 24, paddingHorizontal: 20, alignItems: 'stretch' },
+  heroTitle: { fontSize: 27, lineHeight: 33, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: -0.3 },
+  heroDesc: { fontSize: 14, lineHeight: 22, fontFamily: 'BeVietnamPro_400Regular', marginTop: 16 },
+  searchArea: { marginTop: 20 },
+  inputRow: { flexDirection: 'row', alignItems: 'center', minHeight: 54, borderRadius: 13, borderWidth: 1, paddingHorizontal: 15, shadowColor: '#000', shadowOpacity: 0.07, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 2 },
+  input: { flex: 1, height: 52, paddingHorizontal: 11, fontSize: 14, fontFamily: 'BeVietnamPro_400Regular' },
+  gtinFields: { gap: 9 },
+  notFoundBox: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 10, marginTop: 10, borderRadius: 9, borderWidth: 1 },
+  notFoundText: { flex: 1, fontSize: 12, fontFamily: 'BeVietnamPro_400Regular' },
+  searchButton: { minHeight: 54, borderRadius: 13, marginTop: 11, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  searchButtonText: { color: '#FFFFFF', fontSize: 16, fontFamily: 'BeVietnamPro_700Bold' },
+  radioRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 16, marginTop: 16 },
+  radioOption: { flexDirection: 'row', alignItems: 'center', gap: 7 },
+  radio: { width: 19, height: 19, borderRadius: 10, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
+  radioDot: { width: 9, height: 9, borderRadius: 5 },
+  radioText: { fontSize: 12, fontFamily: 'BeVietnamPro_400Regular' },
+  heroImage: { width: '100%', height: 230, marginTop: 10 },
+  statsBox: { flexDirection: 'row', marginHorizontal: 16, marginTop: 4, paddingVertical: 20, paddingHorizontal: 7, borderRadius: 20, borderWidth: 1 },
+  statItem: { flex: 1, alignItems: 'center', gap: 4 },
+  statValue: { fontSize: 24, fontFamily: 'BeVietnamPro_700Bold' },
+  statLabel: { fontSize: 8, lineHeight: 12, textAlign: 'center', fontFamily: 'BeVietnamPro_600SemiBold' },
+  section: { marginTop: 26 },
+  sectionPadded: { marginTop: 27, paddingHorizontal: 16 },
+  sectionHeader: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 16, marginBottom: 13 },
+  sectionAccent: { width: 4, height: 20, borderRadius: 2 },
+  sectionTitle: { flex: 1, fontSize: 17, fontFamily: 'BeVietnamPro_700Bold' },
+  sectionMore: { fontSize: 12, fontFamily: 'BeVietnamPro_600SemiBold' },
+  horizontalList: { paddingHorizontal: 16, gap: 12 },
+  productCard: { width: 170, borderRadius: 13, borderWidth: 1, overflow: 'hidden' },
+  productCardImage: { height: 105, alignItems: 'center', justifyContent: 'center' },
   productCardBody: { padding: 10, gap: 4 },
-  productCardName: { fontSize: 13, lineHeight: 18 },
-  productCardBusiness: { fontSize: 11 },
+  productCardName: { fontSize: 13, lineHeight: 18, fontFamily: 'BeVietnamPro_600SemiBold' },
+  productCardBusiness: { fontSize: 11, fontFamily: 'BeVietnamPro_400Regular' },
   productCardCerts: { flexDirection: 'row', flexWrap: 'wrap', gap: 4, marginTop: 2 },
   certBadge: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, borderWidth: 1 },
-  certBadgeText: { fontSize: 10 },
+  certBadgeText: { fontSize: 9, fontFamily: 'BeVietnamPro_500Medium' },
   newsCard: { flexDirection: 'row', borderRadius: 12, borderWidth: 1, overflow: 'hidden', marginBottom: 10 },
-  newsCardImage: { width: 80, height: 80, alignItems: 'center', justifyContent: 'center' },
+  newsCardImage: { width: 84, height: 84, alignItems: 'center', justifyContent: 'center' },
   newsCardBody: { flex: 1, padding: 10, gap: 4, justifyContent: 'center' },
   newsCategoryChip: { alignSelf: 'flex-start', paddingHorizontal: 7, paddingVertical: 2, borderRadius: 4 },
-  newsCategoryText: { fontSize: 10 },
-  newsCardTitle: { fontSize: 13, lineHeight: 18 },
-  newsCardDate: { fontSize: 11 },
+  newsCategoryText: { fontSize: 10, fontFamily: 'BeVietnamPro_500Medium' },
+  newsCardTitle: { fontSize: 13, lineHeight: 18, fontFamily: 'BeVietnamPro_600SemiBold' },
+  newsCardDate: { fontSize: 11, fontFamily: 'BeVietnamPro_400Regular' },
   bizRow: { flexDirection: 'row', alignItems: 'center', borderRadius: 12, borderWidth: 1, padding: 12, marginBottom: 8, gap: 10 },
   bizAvatar: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
-  bizAvatarText: { fontSize: 14 },
-  bizName: { fontSize: 14 },
-  bizMeta: { fontSize: 12, marginTop: 2 },
+  bizAvatarText: { fontSize: 14, fontFamily: 'BeVietnamPro_700Bold' },
+  bizCopy: { flex: 1 },
+  bizName: { fontSize: 14, fontFamily: 'BeVietnamPro_600SemiBold' },
+  bizMeta: { fontSize: 11, marginTop: 2, fontFamily: 'BeVietnamPro_400Regular' },
 });
