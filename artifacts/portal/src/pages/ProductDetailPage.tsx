@@ -25,13 +25,33 @@ const PRODUCTS: Record<string, any> = {
     expiry: '15 ngày (nhiệt độ thường)',
     ingredients: 'Bưởi nguyên quả 100% tự nhiên',
     certs: [{ name: 'VietGAP', issuer: 'Sở NN&PTNT tỉnh Đồng Nai', date: '01/10/2023', expiry: '30/09/2025' }],
-    org: { name: 'HTX Nông nghiệp Xanh Tân Triều', address: 'Xã Tân Triều, Vĩnh Cửu, Đồng Nai', phone: '0251 890 123', email: 'htx@nongnghi.vn', type: 'Hợp tác xã', products: 5, cert: 'VietGAP' },
+    org: { name: 'HTX Nông nghiệp Xanh Tân Triều', address: 'Xã Tân Triều, Vĩnh Cửu, Đồng Nai', phone: '0251 890 123', email: 'htx@nongnghi.vn', type: 'Hợp tác xã', products: 5, cert: 'VietGAP',images: [
+           'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600',
+           'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600',
+           'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=600',
+           'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600',
+         ] },
     journey: [
       { icon: 'leaf', label: 'Gieo trồng', date: '1/7/2024', detail: 'Gieo hạt giống được kiểm định, đất được xử lý theo chuẩn VietGAP.', location: 'Vườn A – Tân Triều', org: 'HTX Nông nghiệp Xanh' },
-      { icon: 'flask', label: 'Chăm sóc', date: '8/7/2024', detail: 'Tưới nước, bón phân hữu cơ theo lịch, kiểm tra sâu bệnh định kỳ.', location: 'Vườn A – Tân Triều', org: 'HTX Nông nghiệp Xanh' },
-      { icon: 'calendar', label: 'Thu hoạch', date: '14/7/2024', detail: 'Thu hoạch đợt 1, đạt tiêu chuẩn kích thước và màu sắc, không có dấu hiệu bệnh.', location: 'Vườn A – Tân Triều', org: 'HTX Nông nghiệp Xanh' },
+      { icon: 'flask', label: 'Chăm sóc', date: '8/7/2024', detail: 'Tưới nước, bón phân hữu cơ theo lịch, kiểm tra sâu bệnh định kỳ.', location: 'Vườn A – Tân Triều', org: 'HTX Nông nghiệp Xanh',images: [
+        'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600',
+        'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600',
+        'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=600',
+        'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600',
+      ] },
+      { icon: 'calendar', label: 'Thu hoạch', date: '14/7/2024', detail: 'Thu hoạch đợt 1, đạt tiêu chuẩn kích thước và màu sắc, không có dấu hiệu bệnh.', location: 'Vườn A – Tân Triều', org: 'HTX Nông nghiệp Xanh',images: [
+        'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600',
+        'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600',
+        'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=600',
+        'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600',
+      ] },
       { icon: 'package', label: 'Đóng gói', date: '14/7/2024', detail: 'Đóng gói, dán nhãn mã QR truy xuất nguồn gốc, kiểm tra VSATTP.', location: 'Nhà đóng gói HTX', org: 'HTX Nông nghiệp Xanh' },
-      { icon: 'truck', label: 'Vận chuyển & Phân phối', date: '15/7/2024', detail: 'Vận chuyển bằng xe lạnh đến điểm phân phối Co.opmart Biên Hòa.', location: 'Co.opmart Biên Hòa', org: 'Logistics Nam Phát' },
+      { icon: 'truck', label: 'Vận chuyển & Phân phối', date: '15/7/2024', detail: 'Vận chuyển bằng xe lạnh đến điểm phân phối Co.opmart Biên Hòa.', location: 'Co.opmart Biên Hòa', org: 'Logistics Nam Phát',images: [
+        'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600',
+        'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600',
+        'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=600',
+        'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600',
+      ] },
     ],
   },
   sp002: {
@@ -54,8 +74,18 @@ const PRODUCTS: Record<string, any> = {
     org: { name: 'HTX Nông nghiệp Xuân Lộc', address: 'Xã Xuân Thọ, Xuân Lộc, Đồng Nai', phone: '0251 555 666', email: 'htx@xuanloc.vn', type: 'Hợp tác xã', products: 4, cert: 'VietGAP' },
     journey: [
       { icon: 'leaf', label: 'Gieo trồng', date: '1/7/2024', detail: 'Gieo hạt giống được kiểm định, đất được xử lý theo chuẩn VietGAP.', location: 'Vườn A – Xuân Lộc', org: 'HTX Nông nghiệp Xuân Lộc' },
-      { icon: 'flask', label: 'Chăm sóc', date: '8/7/2024', detail: 'Tưới nước, bón phân hữu cơ theo lịch, kiểm tra sâu bệnh định kỳ.', location: 'Vườn A – Xuân Lộc', org: 'HTX Nông nghiệp Xuân Lộc' },
-      { icon: 'calendar', label: 'Thu hoạch', date: '14/7/2024', detail: 'Thu hoạch đợt 1, đạt tiêu chuẩn kích thước và màu sắc, không có dấu hiệu bệnh.', location: 'Vườn A – Xuân Lộc', org: 'HTX Nông nghiệp Xuân Lộc' },
+      { icon: 'flask', label: 'Chăm sóc', date: '8/7/2024', detail: 'Tưới nước, bón phân hữu cơ theo lịch, kiểm tra sâu bệnh định kỳ.', location: 'Vườn A – Xuân Lộc', org: 'HTX Nông nghiệp Xuân Lộc', images: [
+        'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600',
+        'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600',
+        'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=600',
+        'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600',
+      ],},
+      { icon: 'calendar', label: 'Thu hoạch', date: '14/7/2024', detail: 'Thu hoạch đợt 1, đạt tiêu chuẩn kích thước và màu sắc, không có dấu hiệu bệnh.', location: 'Vườn A – Xuân Lộc', org: 'HTX Nông nghiệp Xuân Lộc',images: [
+        'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600',
+        'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600',
+        'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=600',
+        'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600',
+      ],},
     ],
   },
   sp003: {
@@ -258,28 +288,62 @@ export default function ProductDetailPage() {
                   <div key={i} className="flex gap-4">
                     {/* Timeline connector */}
                     <div className="flex flex-col items-center">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 ${JourneyBg[step.icon] || 'bg-gray-100 text-gray-500'}`}>
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 ${
+                          JourneyBg[step.icon] || 'bg-gray-100 text-gray-500'
+                        }`}
+                      >
                         {JourneyIcon[step.icon] || <Package className="w-4 h-4" />}
                       </div>
+
                       {i < arr.length - 1 && (
-                        <div className="w-0.5 flex-1 bg-slate-100 my-1" />
+                        <div className="w-0.5 flex-1 bg-slate-200 my-1" />
                       )}
                     </div>
 
                     {/* Content */}
-                    <div className={`flex-1 pb-5 ${i === arr.length - 1 ? '' : ''}`}>
-                      <div className="flex items-start justify-between gap-3 mb-1">
-                        <span className="font-semibold text-slate-800 text-sm">{step.label}</span>
-                        <span className="text-xs text-gray-400 whitespace-nowrap shrink-0">{step.date}</span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-2 leading-relaxed">{step.detail}</p>
-                      <div className="flex flex-wrap gap-3 text-xs text-gray-400">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3" /> {step.location}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Building2 className="w-3 h-3" /> {step.org}
-                        </span>
+                    <div className="flex-1 pb-8">
+                      <div className="bg-white border border-slate-200 rounded-xl p-4 hover:shadow-md transition-all">
+
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-semibold text-slate-800">
+                            {step.label}
+                          </h3>
+
+                          <span className="text-xs px-2 py-1 rounded-full bg-blue-50 text-blue-600">
+                            {step.date}
+                          </span>
+                        </div>
+
+                        <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                          {step.detail}
+                        </p>
+
+                        <div className="flex flex-wrap gap-4 text-xs text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <MapPin className="w-3.5 h-3.5" />
+                            {step.location}
+                          </div>
+
+                          <div className="flex items-center gap-1">
+                            <Building2 className="w-3.5 h-3.5" />
+                            {step.org}
+                          </div>
+                        </div>
+
+                        {/* Hình ảnh của từng bước */}
+                        {step.images && (
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+                            {step.images.map((img: string, index: number) => (
+                              <img
+                                key={index}
+                                src={img}
+                                alt={`${step.label}-${index}`}
+                                className="rounded-lg border border-slate-200 h-28 w-full object-cover hover:scale-105 transition-transform cursor-pointer"
+                              />
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
