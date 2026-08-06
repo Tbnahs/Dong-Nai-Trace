@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { 
   Edit2, CheckCircle2, Save, X, FileText, Download, UploadCloud,
-  ImageIcon, Building2, MapPin, Phone, Mail, 
-  ShieldCheck, Briefcase, FileSignature, Map, UserRound, CreditCard
+  ImageIcon, Building2, MapPin, Phone, Mail,
+  ShieldCheck, Briefcase, FileSignature, Map, UserRound, CreditCard 
 } from 'lucide-react';
 import { useAuth, type FileDoc, type OrgProfile } from '../context/AuthContext';
 
@@ -223,6 +223,7 @@ export default function OrgProfilePage() {
     representativePhone: '0901234567',
     representativeEmail: user?.email ?? 'admin@htx.vn',
     cccd: '',
+    gcp: '4466'
   };
   const [form, setForm] = useState<OrgProfile>(() => ({ ...fallbackProfile, ...user?.profile }));
   const [documents, setDocuments] = useState(user?.documents ?? {});

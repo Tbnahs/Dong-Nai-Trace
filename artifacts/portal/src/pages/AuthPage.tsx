@@ -15,12 +15,13 @@ interface RegForm {
   orgName: string; taxCode: string; orgType: string; industry: string;
   address: string; district: string; phone: string; email: string;
   repName: string; repPhone: string; repEmail: string; cccd: string;
-  password: string; confirmPassword: string;
+  password: string; confirmPassword: string; gcp: string;
+  
 }
 const initReg: RegForm = {
   orgName: '', taxCode: '', orgType: ORG_TYPES[0], industry: '',
   address: '', district: DISTRICTS[0], phone: '', email: '',
-  repName: '', repPhone: '', repEmail: '', cccd: '', password: '', confirmPassword: '',
+  repName: '', repPhone: '', repEmail: '', cccd: '', password: '', confirmPassword: '', gcp :''
 };
 type RegErrors = Partial<Record<keyof RegForm, string>>;
 
@@ -378,9 +379,9 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
             <input className={iCls(e.email)} placeholder="email@gmail.com" type="email"
               value={form.email} onChange={ev => set('email')(ev.target.value)} />
           </Field>
-          <Field label="GCP" error={e.email} half>
-            <input className={iCls(e.email)} placeholder="025253" type="GCP"
-              value={form.email} onChange={ev => set('email')(ev.target.value)} />
+          <Field label="GCP" error={e.gcp} half>
+            <input className={iCls(e.gcp)} placeholder="025253" type="GCP"
+              value={form.gcp} onChange={ev => set('gcp')(ev.target.value)} />
           </Field>
           <div className="sm:col-span-2">
             <UploadZone label="Giấy phép kinh doanh (bản scan)" hint="Kéo thả hoặc bấm để tải lên (PDF, JPG, PNG)" onChange={setLicenseDoc} />
