@@ -166,7 +166,22 @@ export default function HomeScreen() {
             <Text style={[styles.brandTagline, { color: colors.mutedForeground }]}>HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM</Text>
           </View>
         </Pressable>
-        <Pressable onPress={() => router.push('/contact')} style={styles.headerIcon} hitSlop={8}>
+        <Pressable
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            Alert.alert(
+              'Ngôn ngữ / Language',
+              '',
+              [
+                { text: '🇻🇳  Tiếng Việt', onPress: () => {} },
+                { text: '🇬🇧  English', onPress: () => {} },
+                { text: 'Đóng', style: 'cancel' },
+              ]
+            );
+          }}
+          style={styles.headerIcon}
+          hitSlop={8}
+        >
           <Feather name="globe" size={19} color={colors.primary} />
         </Pressable>
       </View>
