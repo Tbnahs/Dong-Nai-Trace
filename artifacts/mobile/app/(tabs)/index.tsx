@@ -86,18 +86,17 @@ const MAP_PRODUCTS = [
   { id: 'p15', name: 'Tôm thẻ chân trắng Biên Hòa', category: 'Thủy sản', wardCode: '26068', wardName: 'Biên Hòa',  cert: 'ASC' },
 ];
 
-// The public map catalogue uses short IDs while detail screens use the
-// richer fixture IDs. Keep the hand-off explicit so every map row resolves.
+// Map catalogue short IDs → detail screen IDs (now using b1-b12, sp001-sp012)
 const MAP_BUSINESS_DETAIL_IDS: Record<string, string> = {
-  b1: 'b001', b2: 'b002', b3: 'b003', b4: 'b004', b5: 'b005',
-  b6: 'b001', b7: 'b002', b8: 'b003', b9: 'b004', b10: 'b005',
-  b11: 'b001', b12: 'b002', b13: 'b003', b14: 'b004', b15: 'b005',
+  b1: 'b1',  b2: 'b2',  b3: 'b3',  b4: 'b4',  b5: 'b5',
+  b6: 'b6',  b7: 'b7',  b8: 'b8',  b9: 'b9',  b10: 'b10',
+  b11: 'b11', b12: 'b12', b13: 'b1', b14: 'b2', b15: 'b3',
 };
 
 const MAP_PRODUCT_DETAIL_IDS: Record<string, string> = {
-  p1: 'p001', p2: 'p002', p3: 'p003', p4: 'p004', p5: 'p005', p6: 'p006',
-  p7: 'p001', p8: 'p002', p9: 'p003', p10: 'p004', p11: 'p005', p12: 'p006',
-  p13: 'p001', p14: 'p002', p15: 'p003',
+  p1:  'sp001', p2:  'sp002', p3:  'sp003', p4:  'sp004', p5:  'sp005',
+  p6:  'sp006', p7:  'sp007', p8:  'sp008', p9:  'sp009', p10: 'sp010',
+  p11: 'sp011', p12: 'sp012', p13: 'sp001', p14: 'sp002', p15: 'sp003',
 };
 
 const MAP_WARDS = Array.from(
@@ -525,7 +524,7 @@ export default function HomeScreen() {
                     key={b.id}
                     onPress={() => {
                       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                      router.push(`/business/${MAP_BUSINESS_DETAIL_IDS[b.id] ?? 'b001'}`);
+                      router.push(`/business/${MAP_BUSINESS_DETAIL_IDS[b.id] ?? 'b1'}`);
                     }}
                     style={({ pressed }) => [
                       styles.mapListItem,
@@ -571,7 +570,7 @@ export default function HomeScreen() {
                       key={p.id}
                       onPress={() => {
                         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                        router.push(`/product/${MAP_PRODUCT_DETAIL_IDS[p.id] ?? 'p001'}`);
+                        router.push(`/product/${MAP_PRODUCT_DETAIL_IDS[p.id] ?? 'sp001'}`);
                       }}
                       style={({ pressed }) => [
                         styles.mapListItem,
