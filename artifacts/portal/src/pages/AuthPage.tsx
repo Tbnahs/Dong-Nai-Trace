@@ -378,6 +378,10 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
             <input className={iCls(e.email)} placeholder="email@gmail.com" type="email"
               value={form.email} onChange={ev => set('email')(ev.target.value)} />
           </Field>
+          <Field label="GCP" error={e.email} half>
+            <input className={iCls(e.email)} placeholder="025253" type="GCP"
+              value={form.email} onChange={ev => set('email')(ev.target.value)} />
+          </Field>
           <div className="sm:col-span-2">
             <UploadZone label="Giấy phép kinh doanh (bản scan)" hint="Kéo thả hoặc bấm để tải lên (PDF, JPG, PNG)" onChange={setLicenseDoc} />
           </div>
