@@ -1,54 +1,34 @@
-# Đồng Nai Trace — Portal
+# Đồng Nai Trace — Hệ thống Truy xuất Nguồn gốc Sản phẩm
 
-A Vietnamese traceability portal for Đồng Nai province's science & technology system. Users can search products, view business profiles, browse news, and authenticate.
+A product traceability platform for Đồng Nai province, Vietnam. Allows businesses to register products with QR-based trace codes, and lets consumers look up full supply-chain history (farm → harvest → transport → retail).
 
-## Stack
+## Artifacts
 
-- **Frontend** (`artifacts/portal`): React + Vite + Tailwind CSS + Wouter routing + React Query
-- **API Server** (`artifacts/api-server`): Express 5 + Drizzle ORM + Pino logging
-- **Database**: PostgreSQL (Replit managed, `DATABASE_URL` auto-provisioned)
-- **Package manager**: pnpm (monorepo workspace)
-
-## Running the project
-
-Both services start automatically via managed workflows:
-
-| Service | Workflow | URL |
+| Artifact | Path | Description |
 |---|---|---|
-| Portal (frontend) | `artifacts/portal: web` | `/portal/` |
-| API Server | `artifacts/api-server: API Server` | `/api/` |
+| **Portal** (web) | `artifacts/portal/` | Public-facing web portal — homepage, product lookup, business registration |
+| **API Server** | `artifacts/api-server/` | Backend REST API (Node.js/Hono, esbuild-bundled) |
+| **Mobile** | `artifacts/mobile/` | Expo React Native companion app |
+| **Slides** | `artifacts/dong-nai-trace-slides/` | Project introduction slide deck |
 
-To restart manually:
-```
-pnpm --filter @workspace/portal run dev       # portal on PORT=25265
-pnpm --filter @workspace/api-server run dev   # api server on PORT=8080
-```
+## How to run
 
-## Installing dependencies
+Dependencies are managed with **pnpm** (workspace monorepo).
 
-```
+```bash
+# Install all dependencies
 pnpm install
 ```
 
-## Project structure
+Workflows auto-start the portal (port `$PORT`, base path `/portal/`) and the API server (port `8080`). Use the workflow panel to start the mobile or slides artifacts when needed.
 
-```
-artifacts/
-  portal/          — React frontend (src/pages, src/components, src/context)
-  api-server/      — Express API (src/routes, src/middlewares, src/lib)
-lib/
-  db/              — Drizzle ORM schema & config (lib/db/src/schema/)
-  api-spec/        — OpenAPI spec (source of truth for API contracts)
-  api-zod/         — Generated Zod schemas
-  api-client-react/ — Generated React Query hooks
-attached_assets/   — Brand images, logos, reference documents
-```
+## Stack
 
-## Environment variables
-
-- `DATABASE_URL` — auto-managed by Replit (do not set manually)
-- `SESSION_SECRET` — stored as a Replit Secret
+- **Frontend:** React + Vite + Tailwind CSS v4
+- **Backend:** Node.js + Hono, bundled with esbuild
+- **Mobile:** Expo (React Native)
+- **Shared types/libs:** `lib/` packages in the pnpm workspace
 
 ## User preferences
 
-_None recorded yet._
+<!-- Add any preferences the user asks you to remember here -->
