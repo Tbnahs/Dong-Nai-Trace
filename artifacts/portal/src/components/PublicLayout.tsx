@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { MapPin, Phone, Mail, ChevronRight, User, Package, Bell, LogOut, ChevronDown, Menu, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-
+import { MapPin, Phone, Mail, ChevronRight, User, Package, Bell, LogOut, ChevronDown, Menu, X, Globe, Check,} from "lucide-react";
 const NAV_LINKS = [
   { label: "TRANG CHỦ",              href: "/" },
   { label: "DANH MỤC",               href: "/tra-cuu" },
@@ -16,14 +15,37 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
   const { isLoggedIn, user, logout } = useAuth();
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
+  const [language, setLanguage] = useState(
+    localStorage.getItem("language") || "vi"
+  );
+
+  const languageRef = useRef<HTMLDivElement>(null);
+
+  const LANGUAGES = [
+    { code: "vi", label: "Tiếng Việt" },
+    { code: "en", label: "English" },
+    { code: "zh", label: "中文" },
+    { code: "ko", label: "한국어" },
+  ];
   const dropdownRef = useRef<HTMLDivElement>(null);
   const logoUrl = import.meta.env.BASE_URL + "images/logo-skhcn.png";
 
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setAvatarOpen(false);
+      }
+
+      if (
+        languageRef.current &&
+        !languageRef.current.contains(e.target as Node)
+      ) {
+        setLanguageOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClick);
@@ -58,7 +80,48 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </button>
 
           <div className="hidden lg:flex items-center gap-6">
-            {isLoggedIn && user ? (
+            <div className="relative" ref={languageRef}>
+              <button
+                onClick={() => setLanguageOpen(!languageOpen)}
+                className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-100 transition"
+              >
+                <Globe className="w-5 h-5 text-[#2740BA]" />
+                <ChevronDown
+                  className={`w-4 h-4 transition ${
+                    languageOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {languageOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-[1002]">
+                  {LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        localStorage.setItem("language", lang.code);
+                        setLanguageOpen(false);
+
+                        // Nếu dùng react-i18next
+                        // i18n.changeLanguage(lang.code);
+                      }}
+                      className={`w-full flex items-center justify-between px-4 py-3 hover:bg-blue-50 ${
+                        language === lang.code
+                          ? "bg-blue-50 text-[#2740BA] font-semibold"
+                          : ""
+                      }`}
+                    >
+                      <span>{lang.label}</span>
+
+                      {language === lang.code && (
+                        <Check className="w-4 h-4 text-[#2740BA]" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>{isLoggedIn && user ? (
               /* ── Avatar dropdown (logged in) ── */
               <div className="relative" ref={dropdownRef}>
                 <button
