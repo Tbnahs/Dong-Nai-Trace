@@ -70,11 +70,10 @@ export default function ContactScreen() {
       <Text style={[styles.sectionTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Thông tin liên hệ</Text>
 
       {[
-        { icon: 'business-outline', label: 'Sở Khoa học & Công nghệ Đồng Nai', sub: 'Số 02, đường Nguyễn Văn Trị, TP. Biên Hòa', color: colors.primary },
-        { icon: 'call-outline', label: 'Điện thoại', sub: '0251 382 6789', color: '#16A34A' },
-        { icon: 'mail-outline', label: 'Email', sub: 'txng@dongnai.gov.vn', color: colors.accent },
-        { icon: 'globe-outline', label: 'Website', sub: 'txng.dongnai.gov.vn', color: colors.primary },
-        { icon: 'time-outline', label: 'Giờ làm việc', sub: 'Thứ 2 - Thứ 6: 7:30 - 16:30', color: '#7C3AED' },
+        { icon: 'location-outline', label: 'Địa chỉ', sub: '1592 Nguyễn Ái Quốc, KP6, P.Trung Dũng, Biên Hoà, Đồng Nai', color: colors.accent },
+        { icon: 'call-outline', label: 'Điện thoại', sub: '0251.3822297', color: colors.primary },
+        { icon: 'mail-outline', label: 'Email', sub: 'skhcn@dongnai.gov.vn', color: colors.primary },
+        { icon: 'time-outline', label: 'Giờ làm việc', sub: 'Thứ 2 – Thứ 6: 7:30 – 11:30 & 13:30 – 17:00', color: colors.primary },
       ].map((item, idx) => (
         <View key={idx} style={[styles.contactCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <View style={[styles.contactIcon, { backgroundColor: item.color + '18' }]}>

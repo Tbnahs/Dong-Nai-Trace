@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { NEWS } from '@/data/mock';
 
-const CATEGORIES = ['Tất cả', 'Công nghệ', 'Nông nghiệp', 'Sự kiện', 'Thành tích'];
+const CATEGORIES = ['Tất cả', 'Chính sách', 'Sự kiện', 'Hướng dẫn', 'Thị trường'];
 
 export default function NewsScreen() {
   const colors = useColors();

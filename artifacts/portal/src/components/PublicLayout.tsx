@@ -123,7 +123,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               )}
             </div>{isLoggedIn && user ? (
               /* ── Avatar dropdown (logged in) ── */
-              <div className="relative" ref={dropdownRef}>
+              (<div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setAvatarOpen((o) => !o)}
                   className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
@@ -137,7 +137,6 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                   </div>
                   <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${avatarOpen ? "rotate-180" : ""}`} />
                 </button>
-
                 {avatarOpen && (
                   <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 overflow-hidden" style={{ zIndex: 1002 }}>
                     <div className="px-4 py-2.5 border-b border-gray-100">
@@ -167,10 +166,10 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                     </div>
                   </div>
                 )}
-              </div>
+              </div>)
             ) : (
               /* ── Guest: register / login buttons ── */
-              <>
+              (<>
                 <div className="text-right">
                   <Link
                     href="/dang-ky"
@@ -196,7 +195,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                     Đăng nhập
                   </Link>
                 </div>
-              </>
+              </>)
             )}
           </div>
         </div>
@@ -300,7 +299,6 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           </div>
         )}
       </header>
-
       {/* Backdrop — closes mobile menu on outside click */}
       {mobileMenuOpen && (
         <div
@@ -310,10 +308,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           aria-hidden="true"
         />
       )}
-
       {/* PAGE CONTENT */}
       <main className="flex-1">{children}</main>
-
       {/* FOOTER */}
       <footer className="bg-[#2740BA] text-white pt-6 md:pt-16 pb-5 md:pb-8 px-4 md:px-6 lg:px-10">
         <div className="max-w-[1280px] mx-auto">
@@ -330,9 +326,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 nhằm minh bạch hóa thông tin chuỗi cung ứng.
               </p>
               {/* Short version on mobile */}
-              <p className="text-blue-100/80 text-[11px] leading-relaxed md:hidden">
-                Hệ thống truy xuất nguồn gốc nông sản Đồng Nai.
-              </p>
+              <p className="text-blue-100/80 text-[11px] leading-relaxed md:hidden">Hệ thống Truy xuất nguồn gốc sản phẩm hàng hóa Thành phố Đồng Nai.</p>
             </div>
 
             {/* Col 2 */}

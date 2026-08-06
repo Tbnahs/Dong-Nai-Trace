@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -18,6 +18,7 @@ import { useColors } from '@/hooks/useColors';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
+import WebView from 'react-native-webview';
 import {
   BUSINESSES,
   NEWS,
@@ -175,6 +176,64 @@ function SectionHeading({ title, onMore }: { title: string; onMore: () => void }
   );
 }
 
+const MAP_PAGE_SIZE = 5;
+
+const LEAFLET_HTML = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body,#map{width:100%;height:100%;overflow:hidden}
+#loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,.92);padding:10px 18px;border-radius:8px;font-family:sans-serif;font-size:13px;color:#2740BA;z-index:9999;white-space:nowrap}
+.leaflet-tooltip-custom{font-family:-apple-system,sans-serif;font-size:11px;font-weight:500}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="loading">Đang tải bản đồ...</div>
+<script>
+var sel=null,geoLayer=null,marker=null,provBounds=null;
+var PAL=["#2196F3","#FF9800","#9C27B0","#4CAF50","#F44336","#00BCD4","#FF5722","#3F51B5","#8BC34A","#E91E63","#009688","#FFC107"];
+function wColor(c){var n=parseInt(String(c),10);var i=isNaN(n)?String(c).split('').reduce(function(a,x){return a+x.charCodeAt(0)},0):n;return PAL[i%PAL.length]}
+function fStyle(selCode){return function(f){var c=(f.properties&&f.properties.code)||f.id||'';var s=selCode&&String(c)===String(selCode);return{fillColor:s?'#2740BA':wColor(c),fillOpacity:s?0.9:0.66,color:'#fff',weight:s?2.5:1.2}}}
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({iconRetinaUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',iconUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',shadowUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'});
+var map=L.map('map',{center:[11.05,107.17],zoom:9,minZoom:8,maxZoom:13,zoomControl:true,attributionControl:false});
+function putMarker(ll,nm){if(marker)marker.remove();marker=L.marker(ll,{title:nm||''}).addTo(map);if(nm)marker.bindPopup('<div style="font-size:13px;font-weight:600;color:#2740BA">'+nm+'</div>',{closeButton:false}).openPopup();map.flyTo(ll,Math.max(map.getZoom(),11),{animate:true,duration:0.8})}
+function send(d){var s=JSON.stringify(d);if(window.ReactNativeWebView)window.ReactNativeWebView.postMessage(s);else if(window.parent)window.parent.postMessage(s,'*')}
+var base=window.location.origin&&window.location.origin!=='null'?window.location.origin:'';
+fetch(base+'/api/geojson/wards').then(function(r){return r.json()}).then(function(data){
+  document.getElementById('loading').style.display='none';
+  geoLayer=L.geoJSON(data,{style:fStyle(null),onEachFeature:function(f,ly){
+    var p=f.properties||{};
+    ly.on({
+      mouseover:function(e){e.target.setStyle({fillOpacity:0.85,weight:2})},
+      mouseout:function(e){geoLayer.resetStyle(e.target)},
+      click:function(e){
+        L.DomEvent.stopPropagation(e);
+        var nw=(!sel||String(sel.code)!==String(p.code))?{code:p.code,name:p.name}:null;
+        sel=nw;
+        geoLayer.setStyle(fStyle(sel?sel.code:null));
+        if(sel){putMarker(e.latlng,p.fullName||p.name)}
+        else{if(marker){marker.remove();marker=null}if(provBounds)map.flyToBounds(provBounds,{padding:[16,16]})}
+        send({type:'wardSelected',ward:sel});
+      }
+    });
+    ly.bindTooltip(p.fullName||p.name,{sticky:true,className:'leaflet-tooltip-custom'});
+  }}).addTo(map);
+  provBounds=geoLayer.getBounds();map.fitBounds(provBounds,{padding:[16,16]});
+}).catch(function(e){document.getElementById('loading').textContent='Không thể tải bản đồ';console.error(e)});
+function onMsg(raw){try{var m=typeof raw==='string'?JSON.parse(raw):raw;if(m.type==='selectWard'){sel=m.ward;if(!geoLayer)return;geoLayer.setStyle(fStyle(sel?sel.code:null));if(!sel){if(marker){marker.remove();marker=null}if(provBounds)map.flyToBounds(provBounds,{padding:[16,16]})}else{geoLayer.eachLayer(function(l){if(l.feature&&String(l.feature.properties.code)===String(sel.code)){var b=l.getBounds&&l.getBounds();if(b&&b.isValid())putMarker(b.getCenter(),sel.name)}})}}}catch(e){}}
+document.addEventListener('message',function(e){onMsg(e.data)});
+window.addEventListener('message',function(e){onMsg(e.data)});
+</script>
+</body>
+</html>`;
+
 export default function HomeScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
@@ -188,10 +247,27 @@ export default function HomeScreen() {
   const [mapTab, setMapTab] = useState<'business' | 'product'>('business');
   const [selectedMapWard, setSelectedMapWard] = useState<{ code: string; name: string } | null>(null);
   const [wardModalVisible, setWardModalVisible] = useState(false);
+  const [bizPage, setBizPage] = useState(1);
+  const [prodPage, setProdPage] = useState(1);
+  const webViewRef = useRef<any>(null);
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
 
   const filteredMapBiz  = selectedMapWard ? MAP_BUSINESSES.filter(b => b.wardCode === selectedMapWard.code) : MAP_BUSINESSES;
   const filteredMapProd = selectedMapWard ? MAP_PRODUCTS.filter(p => p.wardCode === selectedMapWard.code) : MAP_PRODUCTS;
+  const pagedBiz  = filteredMapBiz.slice(0, bizPage * MAP_PAGE_SIZE);
+  const pagedProd = filteredMapProd.slice(0, prodPage * MAP_PAGE_SIZE);
+  const hasMoreBiz  = pagedBiz.length < filteredMapBiz.length;
+  const hasMoreProd = pagedProd.length < filteredMapProd.length;
+
+  // Notify WebView when ward selection changes
+  const syncWardToMap = (ward: { code: string; name: string } | null) => {
+    try {
+      webViewRef.current?.postMessage(JSON.stringify({ type: 'selectWard', ward }));
+      // For iframe-based WebView (Expo web), also try contentWindow
+      const iframe = document.querySelector?.('iframe');
+      iframe?.contentWindow?.postMessage(JSON.stringify({ type: 'selectWard', ward }), '*');
+    } catch (_) {}
+  };
 
   const handleSearch = async () => {
     setNotFound(false);
@@ -353,30 +429,33 @@ export default function HomeScreen() {
           </Pressable>
         </View>
 
-        {/* Map: 2×2 OSM tile composite centred on Đồng Nai (zoom 9, tiles 407-408 / 239-240) */}
+        {/* Leaflet interactive map via WebView */}
         <View style={styles.mapImageWrap}>
-          {/* row 1 */}
-          <View style={styles.mapTileRow}>
-            <Image source={{ uri: 'https://a.tile.openstreetmap.org/9/407/239.png' }} style={styles.mapTile} />
-            <Image source={{ uri: 'https://b.tile.openstreetmap.org/9/408/239.png' }} style={styles.mapTile} />
-          </View>
-          {/* row 2 */}
-          <View style={styles.mapTileRow}>
-            <Image source={{ uri: 'https://c.tile.openstreetmap.org/9/407/240.png' }} style={styles.mapTile} />
-            <Image source={{ uri: 'https://a.tile.openstreetmap.org/9/408/240.png' }} style={styles.mapTile} />
-          </View>
-          {/* translucent blue tint so it reads as "province map" */}
-          <View style={styles.mapTint} />
-          {/* centre pin */}
-          <View style={styles.mapPinWrap} pointerEvents="none">
-            <Ionicons name="location" size={30} color="#2740BA" />
-            <Text style={styles.mapPinLabel}>Đồng Nai</Text>
-          </View>
+          <WebView
+            ref={webViewRef}
+            source={{ html: LEAFLET_HTML }}
+            style={styles.mapWebView}
+            scrollEnabled={false}
+            onMessage={(e) => {
+              try {
+                const msg = JSON.parse(e.nativeEvent.data);
+                if (msg.type === 'wardSelected') {
+                  setSelectedMapWard(msg.ward);
+                  setBizPage(1);
+                  setProdPage(1);
+                }
+              } catch (_) {}
+            }}
+          />
           {selectedMapWard && (
             <View style={[styles.mapChip, { backgroundColor: colors.primary }]}>
               <Ionicons name="location" size={12} color="#FFF" />
               <Text style={styles.mapChipText}>{selectedMapWard.name}</Text>
-              <Pressable onPress={() => setSelectedMapWard(null)} hitSlop={8}>
+              <Pressable onPress={() => {
+                setSelectedMapWard(null);
+                setBizPage(1); setProdPage(1);
+                syncWardToMap(null);
+              }} hitSlop={8}>
                 <Ionicons name="close" size={12} color="#FFF" />
               </Pressable>
             </View>
@@ -418,7 +497,7 @@ export default function HomeScreen() {
               <Text style={[styles.mapFilterText, { color: colors.primary }]}>
                 Đang lọc: <Text style={{ fontFamily: 'BeVietnamPro_700Bold' }}>{selectedMapWard.name}</Text>
               </Text>
-              <Pressable onPress={() => setSelectedMapWard(null)} hitSlop={8} style={{ marginLeft: 'auto' }}>
+              <Pressable onPress={() => { setSelectedMapWard(null); setBizPage(1); setProdPage(1); syncWardToMap(null); }} hitSlop={8} style={{ marginLeft: 'auto' }}>
                 <Ionicons name="close" size={14} color={colors.primary} />
               </Pressable>
             </View>
@@ -431,53 +510,73 @@ export default function HomeScreen() {
                 <Ionicons name="location-outline" size={28} color="#CBD5E1" />
                 <Text style={{ color: colors.mutedForeground, fontSize: 13 }}>Không có doanh nghiệp nào trong vùng này</Text>
               </View>
-            ) : filteredMapBiz.map(b => (
-              <View key={b.id} style={[styles.mapListItem, { borderBottomColor: colors.border }]}>
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.mapListName, { color: colors.foreground }]}>{b.name}</Text>
-                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
-                    <View style={[styles.mapListBadge, { backgroundColor: '#DBEAFE' }]}>
-                      <Text style={{ fontSize: 10, color: '#1D4ED8', fontFamily: 'BeVietnamPro_700Bold' }}>{b.type}</Text>
+            ) : (
+              <>
+                {pagedBiz.map(b => (
+                  <View key={b.id} style={[styles.mapListItem, { borderBottomColor: colors.border }]}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={[styles.mapListName, { color: colors.foreground }]}>{b.name}</Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
+                        <View style={[styles.mapListBadge, { backgroundColor: '#DBEAFE' }]}>
+                          <Text style={{ fontSize: 10, color: '#1D4ED8', fontFamily: 'BeVietnamPro_700Bold' }}>{b.type}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
+                          <Ionicons name="location-outline" size={11} color={colors.mutedForeground} />
+                          <Text style={{ fontSize: 11, color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }}>{b.wardName}</Text>
+                        </View>
+                      </View>
+                      <Text style={{ fontSize: 11, color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular', marginTop: 2 }}>{b.phone}</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
-                      <Ionicons name="location-outline" size={11} color={colors.mutedForeground} />
-                      <Text style={{ fontSize: 11, color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }}>{b.wardName}</Text>
-                    </View>
+                    <Ionicons name="chevron-forward" size={14} color="#CBD5E1" />
                   </View>
-                  <Text style={{ fontSize: 11, color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular', marginTop: 2 }}>{b.phone}</Text>
-                </View>
-                <Ionicons name="chevron-forward" size={14} color="#CBD5E1" />
-              </View>
-            ))
+                ))}
+                {hasMoreBiz && (
+                  <Pressable onPress={() => setBizPage(p => p + 1)} style={styles.loadMoreBtn}>
+                    <Text style={[styles.loadMoreText, { color: colors.primary }]}>Xem thêm ({filteredMapBiz.length - pagedBiz.length})</Text>
+                    <Ionicons name="chevron-down" size={14} color={colors.primary} />
+                  </Pressable>
+                )}
+              </>
+            )
           ) : (
             filteredMapProd.length === 0 ? (
               <View style={styles.mapEmpty}>
                 <Ionicons name="location-outline" size={28} color="#CBD5E1" />
                 <Text style={{ color: colors.mutedForeground, fontSize: 13 }}>Không có sản phẩm nào trong vùng này</Text>
               </View>
-            ) : filteredMapProd.map(p => {
-              const cs = mapCertStyle(p.cert);
-              return (
-                <View key={p.id} style={[styles.mapListItem, { borderBottomColor: colors.border }]}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.mapListName, { color: colors.foreground }]}>{p.name}</Text>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
-                      <View style={[styles.mapListBadge, { backgroundColor: '#FFEDD5' }]}>
-                        <Text style={{ fontSize: 10, color: '#C2410C', fontFamily: 'BeVietnamPro_700Bold' }}>{p.category}</Text>
+            ) : (
+              <>
+                {pagedProd.map(p => {
+                  const cs = mapCertStyle(p.cert);
+                  return (
+                    <View key={p.id} style={[styles.mapListItem, { borderBottomColor: colors.border }]}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={[styles.mapListName, { color: colors.foreground }]}>{p.name}</Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
+                          <View style={[styles.mapListBadge, { backgroundColor: '#FFEDD5' }]}>
+                            <Text style={{ fontSize: 10, color: '#C2410C', fontFamily: 'BeVietnamPro_700Bold' }}>{p.category}</Text>
+                          </View>
+                          <View style={[styles.mapListBadge, { backgroundColor: cs.bg }]}>
+                            <Text style={{ fontSize: 10, color: cs.text, fontFamily: 'BeVietnamPro_700Bold' }}>{p.cert}</Text>
+                          </View>
+                          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3, marginLeft: 'auto' }}>
+                            <Ionicons name="location-outline" size={11} color={colors.mutedForeground} />
+                            <Text style={{ fontSize: 11, color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }}>{p.wardName}</Text>
+                          </View>
+                        </View>
                       </View>
-                      <View style={[styles.mapListBadge, { backgroundColor: cs.bg }]}>
-                        <Text style={{ fontSize: 10, color: cs.text, fontFamily: 'BeVietnamPro_700Bold' }}>{p.cert}</Text>
-                      </View>
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3, marginLeft: 'auto' }}>
-                        <Ionicons name="location-outline" size={11} color={colors.mutedForeground} />
-                        <Text style={{ fontSize: 11, color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }}>{p.wardName}</Text>
-                      </View>
+                      <Ionicons name="chevron-forward" size={14} color="#CBD5E1" />
                     </View>
-                  </View>
-                  <Ionicons name="chevron-forward" size={14} color="#CBD5E1" />
-                </View>
-              );
-            })
+                  );
+                })}
+                {hasMoreProd && (
+                  <Pressable onPress={() => setProdPage(p => p + 1)} style={styles.loadMoreBtn}>
+                    <Text style={[styles.loadMoreText, { color: colors.primary }]}>Xem thêm ({filteredMapProd.length - pagedProd.length})</Text>
+                    <Ionicons name="chevron-down" size={14} color={colors.primary} />
+                  </Pressable>
+                )}
+              </>
+            )
           )}
         </View>
       </View>
@@ -496,7 +595,7 @@ export default function HomeScreen() {
             <ScrollView style={{ maxHeight: 380 }} showsVerticalScrollIndicator={false}>
               {/* "All" option */}
               <Pressable
-                onPress={() => { setSelectedMapWard(null); setWardModalVisible(false); }}
+                onPress={() => { setSelectedMapWard(null); setBizPage(1); setProdPage(1); syncWardToMap(null); setWardModalVisible(false); }}
                 style={[styles.wardOption, { borderBottomColor: colors.border, backgroundColor: !selectedMapWard ? '#EFF6FF' : 'transparent' }]}
               >
                 <Text style={[styles.wardOptionText, { color: !selectedMapWard ? colors.primary : colors.foreground, fontFamily: !selectedMapWard ? 'BeVietnamPro_700Bold' : 'BeVietnamPro_400Regular' }]}>
@@ -507,7 +606,7 @@ export default function HomeScreen() {
               {MAP_WARDS.map(w => (
                 <Pressable
                   key={w.code}
-                  onPress={() => { setSelectedMapWard(w); setWardModalVisible(false); }}
+                  onPress={() => { setSelectedMapWard(w); setBizPage(1); setProdPage(1); syncWardToMap(w); setWardModalVisible(false); }}
                   style={[styles.wardOption, { borderBottomColor: colors.border, backgroundColor: selectedMapWard?.code === w.code ? '#EFF6FF' : 'transparent' }]}
                 >
                   <Text style={[styles.wardOptionText, { color: selectedMapWard?.code === w.code ? colors.primary : colors.foreground, fontFamily: selectedMapWard?.code === w.code ? 'BeVietnamPro_700Bold' : 'BeVietnamPro_400Regular' }]}>
@@ -710,12 +809,8 @@ const styles = StyleSheet.create({
   mapTitle: { fontSize: 17, fontFamily: 'BeVietnamPro_700Bold', lineHeight: 24, textTransform: 'uppercase' },
   wardPickerBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 10, borderWidth: 1, maxWidth: 160, flexShrink: 1 },
   wardPickerText: { flex: 1, fontSize: 12, fontFamily: 'BeVietnamPro_500Medium' },
-  mapImageWrap: { borderRadius: 14, overflow: 'hidden', height: 200, position: 'relative' },
-  mapTileRow: { flexDirection: 'row', flex: 1 },
-  mapTile: { flex: 1, height: 100 },
-  mapTint: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(39,64,186,0.08)' },
-  mapPinWrap: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' },
-  mapPinLabel: { fontSize: 11, fontFamily: 'BeVietnamPro_700Bold', color: '#2740BA', backgroundColor: 'rgba(255,255,255,0.85)', paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, marginTop: 2 },
+  mapImageWrap: { borderRadius: 14, overflow: 'hidden', height: 240, position: 'relative' },
+  mapWebView: { flex: 1, borderRadius: 14 },
   mapChip: { position: 'absolute', top: 10, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 },
   mapChipText: { color: '#FFF', fontSize: 12, fontFamily: 'BeVietnamPro_700Bold' },
   mapPanel: { borderRadius: 16, borderWidth: 1, overflow: 'hidden' },
@@ -730,6 +825,8 @@ const styles = StyleSheet.create({
   mapListName: { fontSize: 13, fontFamily: 'BeVietnamPro_600SemiBold', lineHeight: 18 },
   mapListBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10 },
   mapEmpty: { alignItems: 'center', justifyContent: 'center', paddingVertical: 40, gap: 8 },
+  loadMoreBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, paddingVertical: 12, borderTopWidth: 1, borderTopColor: '#E2E8F0' },
+  loadMoreText: { fontSize: 13, fontFamily: 'BeVietnamPro_600SemiBold' },
   // Ward modal
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' },
   modalSheet: { borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingHorizontal: 20, paddingBottom: 32, paddingTop: 12 },
