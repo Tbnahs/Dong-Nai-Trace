@@ -15,6 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { useAuth, OrgProfile } from '@/context/AuthContext';
+import { ModalPicker } from '@/components/ModalPicker';
+import { ORG_TYPE_OPTIONS, SECTOR_OPTIONS, DISTRICT_OPTIONS } from '@/data/mock';
 
 const STEPS = ['Tổ chức', 'Đại diện', 'Xác nhận'];
 
@@ -24,7 +26,7 @@ export default function RegisterScreen() {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<OrgProfile & { password: string; confirmPassword: string }>({
-    name: '', taxCode: '', type: 'Hợp tác xã', industry: 'Nông nghiệp',
+    name: '', taxCode: '', type: 'Doanh nghiệp', industry: 'Nông sản & Rau củ',
     address: '', district: '', phone: '', email: '',
     representative: '', representativePhone: '', representativeEmail: '', cccd: '',
     gcp: '', password: '', confirmPassword: '',
@@ -32,13 +34,15 @@ export default function RegisterScreen() {
 
   const set = (key: keyof typeof form) => (val: string) => setForm(f => ({ ...f, [key]: val }));
 
-  function Field({ label, fieldKey, keyboard = 'default', secure = false, placeholder }: {
+  function Field({ label, fieldKey, keyboard = 'default', secure = false, placeholder, required = false }: {
     label: string; fieldKey: keyof typeof form;
-    keyboard?: 'default' | 'email-address' | 'phone-pad'; secure?: boolean; placeholder?: string;
+    keyboard?: 'default' | 'email-address' | 'phone-pad'; secure?: boolean; placeholder?: string; required?: boolean;
   }) {
     return (
       <View style={{ marginBottom: 12 }}>
-        <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{label}</Text>
+        <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>
+          {label}{required && <Text style={{ color: '#EF4444' }}> *</Text>}
+        </Text>
         <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.muted }]}>
           <TextInput
             style={[styles.input, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
@@ -51,21 +55,6 @@ export default function RegisterScreen() {
             placeholderTextColor={colors.mutedForeground}
           />
         </View>
-      </View>
-    );
-  }
-
-  function SelectRow({ label, fieldKey, options }: { label: string; fieldKey: keyof typeof form; options: string[] }) {
-    return (
-      <View style={{ marginBottom: 12 }}>
-        <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{label}</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
-          {options.map(opt => (
-            <Pressable key={opt} onPress={() => set(fieldKey)(opt)} style={[styles.chip, { backgroundColor: form[fieldKey] === opt ? colors.primary : colors.muted, borderColor: form[fieldKey] === opt ? colors.primary : colors.border }]}>
-              <Text style={[styles.chipText, { color: form[fieldKey] === opt ? '#FFF' : colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{opt}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
       </View>
     );
   }
@@ -122,19 +111,43 @@ export default function RegisterScreen() {
       <View style={{ padding: 16 }}>
         {step === 0 && (
           <>
-            <Field label="Tên tổ chức / doanh nghiệp" fieldKey="name" />
+            <Field label="Tên tổ chức / doanh nghiệp" fieldKey="name" required />
             <Field label="Mã số thuế" fieldKey="taxCode" placeholder="VD: 3600123456" keyboard="phone-pad" />
-            <SelectRow label="Loại hình" fieldKey="type" options={['Hợp tác xã', 'Doanh nghiệp', 'Hộ kinh doanh', 'Trang trại']} />
-            <SelectRow label="Ngành nghề" fieldKey="industry" options={['Nông nghiệp', 'Thủy sản', 'Chăn nuôi', 'Chế biến']} />
+
+            {/* Loại hình — dropdown matching portal <select> */}
+            <ModalPicker
+              label="Loại hình tổ chức"
+              value={form.type}
+              options={ORG_TYPE_OPTIONS}
+              onChange={set('type')}
+            />
+
+            {/* Ngành nghề — dropdown matching portal sector <select> */}
+            <ModalPicker
+              label="Ngành nghề"
+              value={form.industry}
+              options={SECTOR_OPTIONS}
+              onChange={set('industry')}
+            />
+
             <Field label="Địa chỉ" fieldKey="address" />
-            <Field label="Huyện / Thành phố" fieldKey="district" placeholder="VD: Long Khánh" />
+
+            {/* Huyện/Thành phố — dropdown matching portal district <select> */}
+            <ModalPicker
+              label="Huyện / Thành phố"
+              value={form.district}
+              options={DISTRICT_OPTIONS}
+              placeholder="Chọn huyện / thành phố..."
+              onChange={set('district')}
+            />
+
             <Field label="Số điện thoại" fieldKey="phone" keyboard="phone-pad" />
-            <Field label="Email đăng nhập" fieldKey="email" keyboard="email-address" placeholder="email@doanhnghiep.vn" />
+            <Field label="Email đăng nhập" fieldKey="email" keyboard="email-address" placeholder="email@doanhnghiep.vn" required />
           </>
         )}
         {step === 1 && (
           <>
-            <Field label="Họ và tên đại diện" fieldKey="representative" />
+            <Field label="Họ và tên đại diện" fieldKey="representative" required />
             <Field label="Điện thoại đại diện" fieldKey="representativePhone" keyboard="phone-pad" />
             <Field label="Email đại diện" fieldKey="representativeEmail" keyboard="email-address" />
             <Field label="CMND / CCCD" fieldKey="cccd" keyboard="phone-pad" />
@@ -148,6 +161,8 @@ export default function RegisterScreen() {
               {[
                 { label: 'Tổ chức', value: form.name },
                 { label: 'Loại hình', value: form.type },
+                { label: 'Ngành nghề', value: form.industry },
+                { label: 'Huyện / TP', value: form.district },
                 { label: 'Email', value: form.email },
                 { label: 'Đại diện', value: form.representative },
               ].map(row => (
@@ -158,8 +173,8 @@ export default function RegisterScreen() {
               ))}
             </View>
             <View style={{ gap: 12, marginTop: 8 }}>
-              <Field label="Mật khẩu" fieldKey="password" secure placeholder="Ít nhất 6 ký tự" />
-              <Field label="Xác nhận mật khẩu" fieldKey="confirmPassword" secure placeholder="Nhập lại mật khẩu" />
+              <Field label="Mật khẩu" fieldKey="password" secure placeholder="Ít nhất 6 ký tự" required />
+              <Field label="Xác nhận mật khẩu" fieldKey="confirmPassword" secure placeholder="Nhập lại mật khẩu" required />
             </View>
           </>
         )}
@@ -204,8 +219,6 @@ const styles = StyleSheet.create({
   fieldLabel: { fontSize: 13, marginBottom: 6 },
   inputWrap: { borderRadius: 10, borderWidth: 1 },
   input: { height: 44, paddingHorizontal: 12, fontSize: 14 },
-  chip: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, borderWidth: 1 },
-  chipText: { fontSize: 13 },
   reviewCard: { borderRadius: 14, borderWidth: 1, overflow: 'hidden', marginBottom: 16 },
   reviewTitle: { fontSize: 15, padding: 14, paddingBottom: 10 },
   reviewRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10, borderBottomWidth: 1 },

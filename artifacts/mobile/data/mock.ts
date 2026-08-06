@@ -493,9 +493,12 @@ export function getBusinessProducts(businessId: string): Product[] {
   return PRODUCTS.filter(p => p.businessId === businessId);
 }
 
-export const DISTRICTS = ['Tất cả', 'Long Khánh', 'Vĩnh Cửu', 'Tân Phú', 'Cẩm Mỹ', 'Biên Hòa', 'Nhơn Trạch'];
-export const CATEGORIES = ['Tất cả', 'Rau củ quả', 'Trái cây', 'Thực phẩm', 'Chăn nuôi', 'Thủy sản'];
-export const BUSINESS_TYPES = ['Tất cả', 'Hợp tác xã', 'Doanh nghiệp', 'Hộ kinh doanh'];
+export const DISTRICTS = ['Tất cả', 'Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
+export const DISTRICT_OPTIONS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
+export const ORG_TYPE_OPTIONS = ['Doanh nghiệp', 'Hợp tác xã (HTX)', 'Trang trại', 'Cơ sở sản xuất', 'Hộ kinh doanh'];
+export const SECTOR_OPTIONS = ['Nông sản & Rau củ', 'Thủy sản', 'Thực phẩm chế biến', 'Thủ công mỹ nghệ', 'Dược liệu', 'Công nghiệp chế biến'];
+export const CATEGORIES = ['Tất cả', 'Nông sản & Rau củ', 'Phân bón & Vật tư nông nghiệp', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Công nghiệp chế biến'];
+export const BUSINESS_TYPES = ['Tất cả', 'Hợp tác xã', 'Doanh nghiệp', 'Trang trại', 'Cơ sở sản xuất', 'Làng nghề'];
 export const CERTIFICATIONS = ['Tất cả', 'VietGAP', 'GlobalGAP', 'OCOP', 'Hữu cơ', 'HACCP'];
 
 export const STATS = {

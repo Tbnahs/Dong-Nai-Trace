@@ -13,6 +13,15 @@ import {
 import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import { ModalPicker } from '@/components/ModalPicker';
+
+const TOPICS = [
+  'Hỗ trợ đăng ký doanh nghiệp',
+  'Hỗ trợ khai báo sản phẩm',
+  'Tra cứu mã truy xuất',
+  'Báo lỗi hệ thống',
+  'Khác',
+];
 
 const FAQS = [
   {
@@ -41,7 +50,9 @@ export default function ContactScreen() {
   const colors = useColors();
   const [expanded, setExpanded] = useState<number | null>(null);
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [topic, setTopic] = useState('');
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -57,7 +68,7 @@ export default function ContactScreen() {
     setSending(false);
     setSent(true);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    setName(''); setEmail(''); setMessage('');
+    setName(''); setPhone(''); setEmail(''); setTopic(''); setMessage('');
   };
 
   return (
@@ -119,38 +130,82 @@ export default function ContactScreen() {
         </View>
       ) : (
         <View style={[styles.formCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          {[
-            { label: 'Họ và tên', placeholder: 'Nguyễn Văn A', value: name, setter: setName, keyboard: 'default' as const },
-            { label: 'Email', placeholder: 'email@example.com', value: email, setter: setEmail, keyboard: 'email-address' as const },
-          ].map(field => (
-            <View key={field.label} style={{ marginBottom: 12 }}>
-              <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{field.label}</Text>
-              <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
-                <TextInput
-                  style={[styles.inputField, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
-                  placeholder={field.placeholder}
-                  placeholderTextColor={colors.mutedForeground}
-                  value={field.value}
-                  onChangeText={field.setter}
-                  keyboardType={field.keyboard}
-                  autoCapitalize="none"
-                />
-              </View>
+          {/* Họ và tên */}
+          <View style={styles.fieldWrap}>
+            <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>
+              Họ và tên <Text style={{ color: '#EF4444' }}>*</Text>
+            </Text>
+            <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
+              <TextInput
+                style={[styles.inputField, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
+                placeholder="Nguyễn Văn A"
+                placeholderTextColor={colors.mutedForeground}
+                value={name}
+                onChangeText={setName}
+                autoCapitalize="words"
+              />
             </View>
-          ))}
-          <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>Nội dung</Text>
-          <View style={[styles.textAreaWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
-            <TextInput
-              style={[styles.textArea, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
-              placeholder="Mô tả vấn đề hoặc câu hỏi của bạn..."
-              placeholderTextColor={colors.mutedForeground}
-              value={message}
-              onChangeText={setMessage}
-              multiline
-              numberOfLines={4}
-              textAlignVertical="top"
-            />
           </View>
+
+          {/* Số điện thoại */}
+          <View style={styles.fieldWrap}>
+            <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>Số điện thoại</Text>
+            <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
+              <TextInput
+                style={[styles.inputField, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
+                placeholder="0912 345 678"
+                placeholderTextColor={colors.mutedForeground}
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+              />
+            </View>
+          </View>
+
+          {/* Email */}
+          <View style={styles.fieldWrap}>
+            <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>Email</Text>
+            <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
+              <TextInput
+                style={[styles.inputField, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
+                placeholder="email@example.com"
+                placeholderTextColor={colors.mutedForeground}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+            </View>
+          </View>
+
+          {/* Chủ đề — dropdown matching portal <select> */}
+          <ModalPicker
+            label="Chủ đề"
+            value={topic}
+            options={TOPICS}
+            placeholder="Chọn chủ đề..."
+            onChange={setTopic}
+          />
+
+          {/* Nội dung */}
+          <View>
+            <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>
+              Nội dung <Text style={{ color: '#EF4444' }}>*</Text>
+            </Text>
+            <View style={[styles.textAreaWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
+              <TextInput
+                style={[styles.textArea, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
+                placeholder="Mô tả chi tiết nội dung cần hỗ trợ..."
+                placeholderTextColor={colors.mutedForeground}
+                value={message}
+                onChangeText={setMessage}
+                multiline
+                numberOfLines={5}
+                textAlignVertical="top"
+              />
+            </View>
+          </View>
+
           <Pressable
             onPress={handleSend}
             disabled={sending}
@@ -179,13 +234,14 @@ const styles = StyleSheet.create({
   faqItem: { borderRadius: 12, borderWidth: 1, overflow: 'hidden' },
   faqHeader: { flexDirection: 'row', alignItems: 'center', padding: 14, gap: 10 },
   faqQ: { fontSize: 13, lineHeight: 19 },
-  faqA: { fontSize: 13, lineHeight: 20, padding: 14, paddingTop: 0, borderTopWidth: 1, marginTop: 0 },
+  faqA: { fontSize: 13, lineHeight: 20, padding: 14, paddingTop: 10, borderTopWidth: 1 },
   formCard: { borderRadius: 14, borderWidth: 1, padding: 16 },
+  fieldWrap: { marginBottom: 12 },
   fieldLabel: { fontSize: 13, marginBottom: 6 },
   inputWrap: { borderRadius: 10, borderWidth: 1 },
   inputField: { height: 44, paddingHorizontal: 12, fontSize: 14 },
   textAreaWrap: { borderRadius: 10, borderWidth: 1 },
-  textArea: { padding: 12, fontSize: 14, minHeight: 100 },
+  textArea: { padding: 12, fontSize: 14, minHeight: 110 },
   sendBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 13, borderRadius: 10 },
   sendBtnText: { fontSize: 15, color: '#FFF' },
   successBox: { alignItems: 'center', padding: 24, borderRadius: 14, borderWidth: 1, gap: 8 },

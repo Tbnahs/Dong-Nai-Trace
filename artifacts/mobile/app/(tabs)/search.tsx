@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { ModalPicker } from '@/components/ModalPicker';
 import {
   BUSINESSES,
   BUSINESS_TYPES,

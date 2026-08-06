@@ -14,9 +14,8 @@ import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useAuth, OrgProfile } from '@/context/AuthContext';
-
-const ORG_TYPES = ['Hợp tác xã', 'Doanh nghiệp', 'Hộ kinh doanh', 'Trang trại'];
-const INDUSTRIES = ['Nông nghiệp', 'Thủy sản', 'Chăn nuôi', 'Chế biến thực phẩm', 'Khác'];
+import { ModalPicker } from '@/components/ModalPicker';
+import { ORG_TYPE_OPTIONS, SECTOR_OPTIONS, DISTRICT_OPTIONS } from '@/data/mock';
 
 function Field({ label, value, onChange, placeholder, keyboard = 'default', multiline = false }: {
   label: string; value: string; onChange: (v: string) => void; placeholder?: string;
@@ -42,31 +41,11 @@ function Field({ label, value, onChange, placeholder, keyboard = 'default', mult
   );
 }
 
-function SelectField({ label, value, options, onChange }: { label: string; value: string; options: string[]; onChange: (v: string) => void }) {
-  const colors = useColors();
-  return (
-    <View style={{ marginBottom: 14 }}>
-      <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{label}</Text>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
-        {options.map(opt => (
-          <Pressable
-            key={opt}
-            onPress={() => onChange(opt)}
-            style={[styles.selectChip, { backgroundColor: value === opt ? colors.primary : colors.muted, borderColor: value === opt ? colors.primary : colors.border }]}
-          >
-            <Text style={[styles.selectChipText, { color: value === opt ? '#FFF' : colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{opt}</Text>
-          </Pressable>
-        ))}
-      </View>
-    </View>
-  );
-}
-
 export default function OrgProfileScreen() {
   const colors = useColors();
   const { user, updateProfile, isLoggedIn } = useAuth();
   const [form, setForm] = useState<OrgProfile>({
-    name: '', taxCode: '', type: 'Hợp tác xã', industry: 'Nông nghiệp',
+    name: '', taxCode: '', type: 'Doanh nghiệp', industry: 'Nông sản & Rau củ',
     address: '', district: '', phone: '', email: '',
     representative: '', representativePhone: '', representativeEmail: '', cccd: '',
   });
@@ -118,15 +97,45 @@ export default function OrgProfileScreen() {
 
       <Field label="Tên tổ chức / doanh nghiệp" value={form.name} onChange={set('name')} />
       <Field label="Mã số thuế" value={form.taxCode} onChange={set('taxCode')} placeholder="VD: 3600123456" />
-      <SelectField label="Loại hình" value={form.type} options={ORG_TYPES} onChange={set('type')} />
-      <SelectField label="Ngành nghề" value={form.industry} options={INDUSTRIES} onChange={set('industry')} />
+
+      {/* Loại hình — dropdown matching portal orgType <select> */}
+      <View style={{ marginBottom: 14 }}>
+        <ModalPicker
+          label="Loại hình tổ chức"
+          value={form.type}
+          options={ORG_TYPE_OPTIONS}
+          onChange={set('type')}
+        />
+      </View>
+
+      {/* Ngành nghề — dropdown matching portal sector <select> */}
+      <View style={{ marginBottom: 14 }}>
+        <ModalPicker
+          label="Ngành nghề"
+          value={form.industry}
+          options={SECTOR_OPTIONS}
+          onChange={set('industry')}
+        />
+      </View>
+
       <Field label="Địa chỉ" value={form.address} onChange={set('address')} multiline />
-      <Field label="Huyện / Thành phố" value={form.district} onChange={set('district')} placeholder="VD: Long Khánh" />
+
+      {/* Huyện/Thành phố — dropdown matching portal district <select> */}
+      <View style={{ marginBottom: 14 }}>
+        <ModalPicker
+          label="Huyện / Thành phố"
+          value={form.district}
+          options={DISTRICT_OPTIONS}
+          placeholder="Chọn huyện / thành phố..."
+          onChange={set('district')}
+        />
+      </View>
+
       <Field label="Số điện thoại" value={form.phone} onChange={set('phone')} keyboard="phone-pad" />
       <Field label="Email" value={form.email} onChange={set('email')} keyboard="email-address" />
-      {form.type === 'Hợp tác xã' || form.type === 'Doanh nghiệp' ? (
+      {(form.type === 'Doanh nghiệp' || form.type === 'Hợp tác xã (HTX)') && (
         <Field label="Mã GCP (tùy chọn)" value={form.gcp ?? ''} onChange={set('gcp')} placeholder="VD: 8934673" />
-      ) : null}
+      )}
 
       <Text style={[styles.sectionTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold', marginTop: 8 }]}>Đại diện pháp lý</Text>
 
@@ -162,8 +171,6 @@ const styles = StyleSheet.create({
   fieldLabel: { fontSize: 13, marginBottom: 6 },
   inputWrap: { flexDirection: 'row', alignItems: 'center', borderRadius: 10, borderWidth: 1 },
   inputField: { flex: 1, height: 44, paddingHorizontal: 12, fontSize: 14 },
-  selectChip: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, borderWidth: 1 },
-  selectChipText: { fontSize: 13 },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 14, borderRadius: 12, marginTop: 8 },
   saveBtnText: { fontSize: 16, color: '#FFF' },
 });
