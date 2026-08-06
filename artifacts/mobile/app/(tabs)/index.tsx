@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -191,7 +191,14 @@ function SectionHeading({ title, onMore }: { title: string; onMore: () => void }
 
 const MAP_PAGE_SIZE = 5;
 
-const LEAFLET_HTML = `<!DOCTYPE html>
+// On Expo web the iframe fetches directly from the Portal's static GeoJSON
+// (same domain, path-based routing). On native WebView the API server serves it.
+const GEOJSON_URL = Platform.OS === 'web'
+  ? '/portal/geojson/dongnai_wards.geojson'
+  : '/api/geojson/wards';
+
+function buildLeafletHTML(geojsonUrl: string) {
+  return `<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
@@ -209,6 +216,7 @@ html,body,#map{width:100%;height:100%;overflow:hidden}
 <div id="map"></div>
 <div id="loading">Đang tải bản đồ...</div>
 <script>
+var GEOJSON_URL="${geojsonUrl}";
 var sel=null,geoLayer=null,marker=null,provBounds=null;
 var PAL=["#2196F3","#FF9800","#9C27B0","#4CAF50","#F44336","#00BCD4","#FF5722","#3F51B5","#8BC34A","#E91E63","#009688","#FFC107"];
 function wColor(c){var n=parseInt(String(c),10);var i=isNaN(n)?String(c).split('').reduce(function(a,x){return a+x.charCodeAt(0)},0):n;return PAL[i%PAL.length]}
@@ -218,8 +226,7 @@ L.Icon.Default.mergeOptions({iconRetinaUrl:'https://unpkg.com/leaflet@1.9.4/dist
 var map=L.map('map',{center:[11.05,107.17],zoom:9,minZoom:8,maxZoom:13,zoomControl:true,attributionControl:false});
 function putMarker(ll,nm){if(marker)marker.remove();marker=L.marker(ll,{title:nm||''}).addTo(map);if(nm)marker.bindPopup('<div style="font-size:13px;font-weight:600;color:#2740BA">'+nm+'</div>',{closeButton:false}).openPopup();map.flyTo(ll,Math.max(map.getZoom(),11),{animate:true,duration:0.8})}
 function send(d){var s=JSON.stringify(d);if(window.ReactNativeWebView)window.ReactNativeWebView.postMessage(s);else if(window.parent)window.parent.postMessage(s,'*')}
-var base=window.location.origin&&window.location.origin!=='null'?window.location.origin:'';
-fetch(base+'/api/geojson/wards').then(function(r){return r.json()}).then(function(data){
+fetch(GEOJSON_URL).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(data){
   document.getElementById('loading').style.display='none';
   geoLayer=L.geoJSON(data,{style:fStyle(null),onEachFeature:function(f,ly){
     var p=f.properties||{};
@@ -239,13 +246,16 @@ fetch(base+'/api/geojson/wards').then(function(r){return r.json()}).then(functio
     ly.bindTooltip(p.fullName||p.name,{sticky:true,className:'leaflet-tooltip-custom'});
   }}).addTo(map);
   provBounds=geoLayer.getBounds();map.fitBounds(provBounds,{padding:[16,16]});
-}).catch(function(e){document.getElementById('loading').textContent='Không thể tải bản đồ';console.error(e)});
+}).catch(function(e){document.getElementById('loading').textContent='Không thể tải bản đồ. Thử lại sau.';console.error(e)});
 function onMsg(raw){try{var m=typeof raw==='string'?JSON.parse(raw):raw;if(m.type==='selectWard'){sel=m.ward;if(!geoLayer)return;geoLayer.setStyle(fStyle(sel?sel.code:null));if(!sel){if(marker){marker.remove();marker=null}if(provBounds)map.flyToBounds(provBounds,{padding:[16,16]})}else{geoLayer.eachLayer(function(l){if(l.feature&&String(l.feature.properties.code)===String(sel.code)){var b=l.getBounds&&l.getBounds();if(b&&b.isValid())putMarker(b.getCenter(),sel.name)}})}}}catch(e){}}
 document.addEventListener('message',function(e){onMsg(e.data)});
 window.addEventListener('message',function(e){onMsg(e.data)});
 </script>
 </body>
 </html>`;
+}
+
+const LEAFLET_HTML = buildLeafletHTML(GEOJSON_URL);
 
 export default function HomeScreen() {
   const colors = useColors();
@@ -265,7 +275,25 @@ export default function HomeScreen() {
   const [bizPage, setBizPage] = useState(1);
   const [prodPage, setProdPage] = useState(1);
   const webViewRef = useRef<any>(null);
+  const iframeRef = useRef<any>(null);
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
+
+  // On web: listen for postMessage from the Leaflet iframe
+  useEffect(() => {
+    if (Platform.OS !== 'web') return;
+    const handler = (e: MessageEvent) => {
+      try {
+        const msg = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+        if (msg?.type === 'wardSelected') {
+          setSelectedMapWard(msg.ward);
+          setBizPage(1);
+          setProdPage(1);
+        }
+      } catch (_) {}
+    };
+    (window as any).addEventListener('message', handler);
+    return () => (window as any).removeEventListener('message', handler);
+  }, []);
 
   const filteredMapBiz  = selectedMapWard ? MAP_BUSINESSES.filter(b => b.wardCode === selectedMapWard.code) : MAP_BUSINESSES;
   const filteredMapProd = selectedMapWard ? MAP_PRODUCTS.filter(p => p.wardCode === selectedMapWard.code) : MAP_PRODUCTS;
@@ -274,13 +302,15 @@ export default function HomeScreen() {
   const hasMoreBiz  = pagedBiz.length < filteredMapBiz.length;
   const hasMoreProd = pagedProd.length < filteredMapProd.length;
 
-  // Notify WebView when ward selection changes
+  // Notify the map when ward selection changes (WebView on native, iframe on web)
   const syncWardToMap = (ward: { code: string; name: string } | null) => {
     try {
-      webViewRef.current?.postMessage(JSON.stringify({ type: 'selectWard', ward }));
-      // For iframe-based WebView (Expo web), also try contentWindow
-      const iframe = document.querySelector?.('iframe');
-      iframe?.contentWindow?.postMessage(JSON.stringify({ type: 'selectWard', ward }), '*');
+      const msg = JSON.stringify({ type: 'selectWard', ward });
+      if (Platform.OS === 'web') {
+        iframeRef.current?.contentWindow?.postMessage(msg, '*');
+      } else {
+        webViewRef.current?.postMessage(msg);
+      }
     } catch (_) {}
   };
 
@@ -436,24 +466,33 @@ export default function HomeScreen() {
           </Pressable>
         </View>
 
-        {/* Leaflet interactive map via WebView */}
+        {/* Leaflet interactive map — WebView on native, iframe on Expo web */}
         <View style={styles.mapImageWrap}>
-          <WebView
-            ref={webViewRef}
-            source={{ html: LEAFLET_HTML }}
-            style={styles.mapWebView}
-            scrollEnabled={false}
-            onMessage={(e) => {
-              try {
-                const msg = JSON.parse(e.nativeEvent.data);
-                if (msg.type === 'wardSelected') {
-                  setSelectedMapWard(msg.ward);
-                  setBizPage(1);
-                  setProdPage(1);
-                }
-              } catch (_) {}
-            }}
-          />
+          {Platform.OS === 'web'
+            ? React.createElement('iframe', {
+                ref: iframeRef,
+                srcDoc: LEAFLET_HTML,
+                style: { width: '100%', height: '100%', border: 'none' },
+              })
+            : (
+              <WebView
+                ref={webViewRef}
+                source={{ html: LEAFLET_HTML }}
+                style={styles.mapWebView}
+                scrollEnabled={false}
+                onMessage={(e) => {
+                  try {
+                    const msg = JSON.parse(e.nativeEvent.data);
+                    if (msg.type === 'wardSelected') {
+                      setSelectedMapWard(msg.ward);
+                      setBizPage(1);
+                      setProdPage(1);
+                    }
+                  } catch (_) {}
+                }}
+              />
+            )
+          }
           {selectedMapWard && (
             <View style={[styles.mapChip, { backgroundColor: colors.primary }]}>
               <Ionicons name="location" size={12} color="#FFF" />
