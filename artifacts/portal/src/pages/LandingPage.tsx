@@ -192,7 +192,10 @@ export default function LandingPage() {
                 TRUY XUẤT NGUỒN GỐC
               </span>
               <span className="mt-1 block whitespace-nowrap text-[#2740BA]">
-                SẢN PHẨM ĐỒNG NAI
+                SẢN PHẨM, HÀNG HÓA
+              </span>
+              <span className="mt-1 block whitespace-nowrap text-[#2740BA]">
+                THÀNH PHỐ ĐỒNG NAI
               </span>
             </h1>
 
