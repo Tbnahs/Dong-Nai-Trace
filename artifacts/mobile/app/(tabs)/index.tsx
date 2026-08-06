@@ -27,6 +27,7 @@ import {
 } from '@/data/mock';
 
 const HERO_GUIDE = require('@/assets/images/hero-guide.png');
+
 const CERT_COLORS: Record<string, string> = {
   VietGAP: '#16A34A',
   GlobalGAP: '#0369A1',
@@ -34,6 +35,17 @@ const CERT_COLORS: Record<string, string> = {
   'Hữu cơ': '#7C3AED',
   HACCP: '#DC2626',
 };
+
+const CATEGORY_LIST = [
+  { name: 'Nông sản & Rau củ', img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=240&fit=crop' },
+  { name: 'Phân bón & Vật tư', img: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=240&fit=crop' },
+  { name: 'Thủy sản', img: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400&h=240&fit=crop' },
+  { name: 'Thịt & Chăn nuôi', img: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400&h=240&fit=crop' },
+  { name: 'Thực phẩm chế biến', img: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&h=240&fit=crop' },
+  { name: 'Dược liệu', img: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=240&fit=crop' },
+  { name: 'Thủ công mỹ nghệ', img: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=400&h=240&fit=crop' },
+  { name: 'Công nghiệp chế biến', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=240&fit=crop' },
+];
 
 function CertBadge({ label }: { label: string }) {
   const colors = useColors();
@@ -55,9 +67,11 @@ function ProductCard({ product, onPress }: { product: typeof PRODUCTS[0]; onPres
         { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.82 : 1 },
       ]}
     >
-      <View style={[styles.productCardImage, { backgroundColor: colors.blueSoft }]}>
-        <Ionicons name="leaf-outline" size={30} color={colors.primary} />
-      </View>
+      <Image
+        source={{ uri: product.image }}
+        style={styles.productCardImage}
+        resizeMode="cover"
+      />
       <View style={styles.productCardBody}>
         <Text style={[styles.productCardName, { color: colors.foreground }]} numberOfLines={2}>{product.name}</Text>
         <Text style={[styles.productCardBusiness, { color: colors.mutedForeground }]} numberOfLines={1}>{product.businessName}</Text>
@@ -79,9 +93,7 @@ function NewsCard({ item, onPress }: { item: typeof NEWS[0]; onPress: () => void
         { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.82 : 1 },
       ]}
     >
-      <View style={[styles.newsCardImage, { backgroundColor: colors.blueSoft }]}>
-        <Ionicons name="newspaper-outline" size={23} color={colors.primary} />
-      </View>
+      <Image source={{ uri: item.image }} style={styles.newsCardImage} resizeMode="cover" />
       <View style={styles.newsCardBody}>
         <View style={[styles.newsCategoryChip, { backgroundColor: colors.orangeLight }]}>
           <Text style={[styles.newsCategoryText, { color: colors.accent }]}>{item.category}</Text>
@@ -145,6 +157,7 @@ export default function HomeScreen() {
       contentContainerStyle={{ paddingBottom: 100 }}
       showsVerticalScrollIndicator={false}
     >
+      {/* TOP HEADER */}
       <View style={[styles.topHeader, { paddingTop: topPad + 10, borderBottomColor: colors.border }]}>
         <Pressable onPress={() => router.push('/')} style={styles.brand} hitSlop={6}>
           <Image source={require('@/assets/images/logo-skhcn.png')} style={styles.logo} />
@@ -158,6 +171,7 @@ export default function HomeScreen() {
         </Pressable>
       </View>
 
+      {/* HERO */}
       <View style={styles.hero}>
         <Text style={[styles.heroTitle, { color: colors.primary }]}>
           TRUY XUẤT NGUỒN GỐC{'\n'}SẢN PHẨM, HÀNG HÓA{'\n'}THÀNH PHỐ ĐỒNG NAI
@@ -220,12 +234,26 @@ export default function HomeScreen() {
         <Image source={HERO_GUIDE} style={styles.heroImage} resizeMode="contain" />
       </View>
 
+      {/* STATS */}
       <View style={[styles.statsBox, { backgroundColor: colors.softBackground, borderColor: colors.border }]}>
-        <View style={styles.statItem}><Ionicons name="cube-outline" size={26} color={colors.accent} /><Text style={[styles.statValue, { color: colors.accent }]}>{STATS.products.toLocaleString('vi-VN')}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>SẢN PHẨM ĐÃ ĐĂNG KÝ</Text></View>
-        <View style={styles.statItem}><Ionicons name="business-outline" size={26} color={colors.accent} /><Text style={[styles.statValue, { color: colors.accent }]}>{STATS.businesses.toLocaleString('vi-VN')}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>DOANH NGHIỆP THAM GIA</Text></View>
-        <View style={styles.statItem}><Ionicons name="link-outline" size={26} color={colors.accent} /><Text style={[styles.statValue, { color: colors.accent }]}>{STATS.districts.toLocaleString('vi-VN')}</Text><Text style={[styles.statLabel, { color: colors.mutedForeground }]}>CẤP MÃ ĐỊNH DANH</Text></View>
+        <View style={styles.statItem}>
+          <Ionicons name="cube-outline" size={26} color={colors.accent} />
+          <Text style={[styles.statValue, { color: colors.accent }]}>{STATS.products.toLocaleString('vi-VN')}</Text>
+          <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>SẢN PHẨM ĐÃ ĐĂNG KÝ</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Ionicons name="business-outline" size={26} color={colors.accent} />
+          <Text style={[styles.statValue, { color: colors.accent }]}>{STATS.businesses.toLocaleString('vi-VN')}</Text>
+          <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>DOANH NGHIỆP THAM GIA</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Ionicons name="link-outline" size={26} color={colors.accent} />
+          <Text style={[styles.statValue, { color: colors.accent }]}>{STATS.districts.toLocaleString('vi-VN')}</Text>
+          <Text style={[styles.statLabel, { color: colors.mutedForeground }]}>CẤP MÃ ĐỊNH DANH</Text>
+        </View>
       </View>
 
+      {/* SẢN PHẨM NỔI BẬT */}
       <View style={styles.section}>
         <SectionHeading title="Sản phẩm nổi bật" onMore={() => router.push('/(tabs)/search')} />
         <FlatList
@@ -239,20 +267,94 @@ export default function HomeScreen() {
         />
       </View>
 
+      {/* DANH MỤC NGÀNH HÀNG */}
+      <View style={[styles.sectionPadded, { marginTop: 28 }]}>
+        <View style={[styles.sectionHeader, { paddingHorizontal: 0 }]}>
+          <View>
+            <Text style={[styles.catSubLabel, { color: colors.mutedForeground }]}>DANH MỤC</Text>
+            <Text style={[styles.sectionTitle, { color: colors.primary, flex: undefined }]}>Danh mục đáng chú ý</Text>
+          </View>
+          <Pressable onPress={() => router.push('/(tabs)/search')} hitSlop={8}>
+            <Text style={[styles.sectionMore, { color: colors.accent }]}>Xem thêm</Text>
+          </Pressable>
+        </View>
+        <View style={styles.categoryGrid}>
+          {CATEGORY_LIST.map((cat, idx) => (
+            <Pressable
+              key={idx}
+              onPress={() => router.push(`/(tabs)/search`)}
+              style={({ pressed }) => [styles.categoryCard, { borderColor: colors.border, opacity: pressed ? 0.85 : 1 }]}
+            >
+              <Image source={{ uri: cat.img }} style={styles.categoryImage} resizeMode="cover" />
+              <View style={[styles.categoryLabel, { backgroundColor: colors.card }]}>
+                <Text style={[styles.categoryName, { color: colors.foreground }]} numberOfLines={2}>{cat.name}</Text>
+                <Text style={[styles.categoryArrow, { color: colors.accent }]}>→</Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+      </View>
+
+      {/* TIN TỨC MỚI NHẤT */}
       <View style={styles.sectionPadded}>
         <SectionHeading title="Tin tức mới nhất" onMore={() => router.push('/(tabs)/news')} />
         {NEWS.slice(0, 3).map(item => <NewsCard key={item.id} item={item} onPress={() => router.push(`/news/${item.id}`)} />)}
       </View>
 
+      {/* DOANH NGHIỆP TIÊU BIỂU */}
       <View style={styles.sectionPadded}>
         <SectionHeading title="Doanh nghiệp tiêu biểu" onMore={() => router.push('/(tabs)/search')} />
         {BUSINESSES.slice(0, 3).map(b => (
           <Pressable key={b.id} onPress={() => router.push(`/business/${b.id}`)} style={({ pressed }) => [styles.bizRow, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.82 : 1 }]}>
-            <View style={[styles.bizAvatar, { backgroundColor: colors.blueSoft }]}><Text style={[styles.bizAvatarText, { color: colors.primary }]}>{b.shortName.slice(0, 2).toUpperCase()}</Text></View>
-            <View style={styles.bizCopy}><Text style={[styles.bizName, { color: colors.foreground }]} numberOfLines={1}>{b.name}</Text><Text style={[styles.bizMeta, { color: colors.mutedForeground }]}>{b.type} · {b.district} · {b.productCount} sản phẩm</Text></View>
+            <Image source={{ uri: b.image }} style={styles.bizAvatar} resizeMode="cover" />
+            <View style={styles.bizCopy}>
+              <Text style={[styles.bizName, { color: colors.foreground }]} numberOfLines={1}>{b.name}</Text>
+              <Text style={[styles.bizMeta, { color: colors.mutedForeground }]}>{b.type} · {b.district} · {b.productCount} sản phẩm</Text>
+            </View>
             <Ionicons name="chevron-forward" size={18} color={colors.mutedForeground} />
           </Pressable>
         ))}
+      </View>
+
+      {/* HƯỚNG DẪN DOANH NGHIỆP */}
+      <View style={[styles.sectionPadded, styles.guideSectionWrap]}>
+        <View style={[styles.guideCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <Text style={[styles.guideSectionTitle, { color: colors.primary }]}>Hướng dẫn doanh nghiệp</Text>
+          <Text style={[styles.guideSectionSub, { color: colors.mutedForeground }]}>3 bước tham gia chương trình truy xuất nguồn gốc</Text>
+
+          {[
+            {
+              title: 'Đăng ký hồ sơ pháp lý và thông tin tổ chức',
+              desc: 'Cập nhật đầy đủ giấy phép kinh doanh và chứng nhận vệ sinh an toàn thực phẩm.',
+            },
+            {
+              title: 'Khai báo thông tin sản phẩm và tải lên chứng nhận',
+              desc: 'Gắn kết thông tin chứng nhận OCOP, VietGAP, GlobalGAP cho từng lô hàng.',
+            },
+            {
+              title: 'Kết nối đơn vị cung cấp giải pháp TXNG để đồng bộ dữ liệu',
+              desc: 'Tích hợp API hoặc import dữ liệu tự động từ các giải pháp bên thứ ba vào cổng chung.',
+            },
+          ].map((step, idx) => (
+            <View key={idx} style={styles.guideStep}>
+              <View style={[styles.guideStepIcon, { backgroundColor: '#FFF4EC' }]}>
+                <Ionicons name="checkmark-circle" size={20} color="#E8650A" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.guideStepTitle, { color: colors.foreground }]}>{step.title}</Text>
+                <Text style={[styles.guideStepDesc, { color: colors.mutedForeground }]}>{step.desc}</Text>
+              </View>
+            </View>
+          ))}
+
+          <Pressable
+            onPress={() => router.push('/register')}
+            style={({ pressed }) => [styles.guideBtn, { backgroundColor: colors.primary, opacity: pressed ? 0.85 : 1 }]}
+          >
+            <Text style={styles.guideBtnText}>Đăng ký tham gia TXNG</Text>
+            <Ionicons name="arrow-forward" size={16} color="#FFF" />
+          </Pressable>
+        </View>
       </View>
     </ScrollView>
   );
@@ -285,7 +387,7 @@ const styles = StyleSheet.create({
   heroImage: { width: '100%', height: 230, marginTop: 10 },
   statsBox: { flexDirection: 'row', marginHorizontal: 16, marginTop: 4, paddingVertical: 20, paddingHorizontal: 7, borderRadius: 20, borderWidth: 1 },
   statItem: { flex: 1, alignItems: 'center', gap: 4 },
-  statValue: { fontSize: 24, fontFamily: 'BeVietnamPro_700Bold' },
+  statValue: { fontSize: 22, fontFamily: 'BeVietnamPro_700Bold' },
   statLabel: { fontSize: 8, lineHeight: 12, textAlign: 'center', fontFamily: 'BeVietnamPro_600SemiBold' },
   section: { marginTop: 26 },
   sectionPadded: { marginTop: 27, paddingHorizontal: 16 },
@@ -295,7 +397,7 @@ const styles = StyleSheet.create({
   sectionMore: { fontSize: 12, fontFamily: 'BeVietnamPro_600SemiBold' },
   horizontalList: { paddingHorizontal: 16, gap: 12 },
   productCard: { width: 170, borderRadius: 13, borderWidth: 1, overflow: 'hidden' },
-  productCardImage: { height: 105, alignItems: 'center', justifyContent: 'center' },
+  productCardImage: { height: 105, width: '100%' },
   productCardBody: { padding: 10, gap: 4 },
   productCardName: { fontSize: 13, lineHeight: 18, fontFamily: 'BeVietnamPro_600SemiBold' },
   productCardBusiness: { fontSize: 11, fontFamily: 'BeVietnamPro_400Regular' },
@@ -303,16 +405,34 @@ const styles = StyleSheet.create({
   certBadge: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, borderWidth: 1 },
   certBadgeText: { fontSize: 9, fontFamily: 'BeVietnamPro_500Medium' },
   newsCard: { flexDirection: 'row', borderRadius: 12, borderWidth: 1, overflow: 'hidden', marginBottom: 10 },
-  newsCardImage: { width: 84, height: 84, alignItems: 'center', justifyContent: 'center' },
+  newsCardImage: { width: 90, height: 90 },
   newsCardBody: { flex: 1, padding: 10, gap: 4, justifyContent: 'center' },
   newsCategoryChip: { alignSelf: 'flex-start', paddingHorizontal: 7, paddingVertical: 2, borderRadius: 4 },
   newsCategoryText: { fontSize: 10, fontFamily: 'BeVietnamPro_500Medium' },
   newsCardTitle: { fontSize: 13, lineHeight: 18, fontFamily: 'BeVietnamPro_600SemiBold' },
   newsCardDate: { fontSize: 11, fontFamily: 'BeVietnamPro_400Regular' },
-  bizRow: { flexDirection: 'row', alignItems: 'center', borderRadius: 12, borderWidth: 1, padding: 12, marginBottom: 8, gap: 10 },
-  bizAvatar: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
-  bizAvatarText: { fontSize: 14, fontFamily: 'BeVietnamPro_700Bold' },
+  bizRow: { flexDirection: 'row', alignItems: 'center', borderRadius: 12, borderWidth: 1, padding: 10, marginBottom: 8, gap: 10, overflow: 'hidden' },
+  bizAvatar: { width: 50, height: 50, borderRadius: 10 },
   bizCopy: { flex: 1 },
   bizName: { fontSize: 14, fontFamily: 'BeVietnamPro_600SemiBold' },
   bizMeta: { fontSize: 11, marginTop: 2, fontFamily: 'BeVietnamPro_400Regular' },
+  // Categories
+  catSubLabel: { fontSize: 10, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 },
+  categoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 4 },
+  categoryCard: { width: '47.5%', borderRadius: 10, borderWidth: 1, overflow: 'hidden' },
+  categoryImage: { width: '100%', height: 90 },
+  categoryLabel: { paddingHorizontal: 8, paddingVertical: 7, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 4 },
+  categoryName: { flex: 1, fontSize: 11, fontFamily: 'BeVietnamPro_600SemiBold', lineHeight: 15 },
+  categoryArrow: { fontSize: 15, fontFamily: 'BeVietnamPro_700Bold' },
+  // Enterprise guide
+  guideSectionWrap: { marginBottom: 8 },
+  guideCard: { borderRadius: 16, borderWidth: 1, padding: 20, gap: 16 },
+  guideSectionTitle: { fontSize: 20, fontFamily: 'BeVietnamPro_700Bold', textTransform: 'uppercase' },
+  guideSectionSub: { fontSize: 13, fontFamily: 'BeVietnamPro_400Regular', marginTop: -8 },
+  guideStep: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' },
+  guideStepIcon: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', marginTop: 2 },
+  guideStepTitle: { fontSize: 14, fontFamily: 'BeVietnamPro_700Bold', lineHeight: 20 },
+  guideStepDesc: { fontSize: 12, fontFamily: 'BeVietnamPro_400Regular', lineHeight: 18, marginTop: 3 },
+  guideBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 14, borderRadius: 10, marginTop: 4 },
+  guideBtnText: { fontSize: 15, color: '#FFF', fontFamily: 'BeVietnamPro_700Bold' },
 });

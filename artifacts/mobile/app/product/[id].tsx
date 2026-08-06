@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -9,7 +10,6 @@ import {
 import { useLocalSearchParams, router } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { getProduct } from '@/data/mock';
 
@@ -37,22 +37,25 @@ export default function ProductDetailScreen() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
       {/* Hero image */}
-      <LinearGradient colors={['#1A2E9E', '#2740BA', '#4A63E0']} style={styles.heroImage}>
-        <View style={[styles.categoryBadge, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
-          <Text style={[styles.categoryText, { fontFamily: 'BeVietnamPro_500Medium' }]}>{product.category}</Text>
-        </View>
-        <Text style={[styles.heroProductName, { fontFamily: 'BeVietnamPro_700Bold' }]}>{product.name}</Text>
-        <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
-          <View style={styles.codeChip}>
-            <Ionicons name="qr-code-outline" size={13} color="rgba(255,255,255,0.9)" />
-            <Text style={[styles.codeChipText, { fontFamily: 'BeVietnamPro_400Regular' }]}>{product.traceCode}</Text>
+      <View style={styles.heroWrapper}>
+        <Image source={{ uri: product.image }} style={styles.heroImage} resizeMode="cover" />
+        <View style={styles.heroOverlay}>
+          <View style={[styles.categoryBadge, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
+            <Text style={[styles.categoryText, { fontFamily: 'BeVietnamPro_500Medium' }]}>{product.category}</Text>
           </View>
-          <View style={styles.codeChip}>
-            <Ionicons name="barcode-outline" size={13} color="rgba(255,255,255,0.9)" />
-            <Text style={[styles.codeChipText, { fontFamily: 'BeVietnamPro_400Regular' }]}>{product.gtin}</Text>
+          <Text style={[styles.heroProductName, { fontFamily: 'BeVietnamPro_700Bold' }]}>{product.name}</Text>
+          <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
+            <View style={styles.codeChip}>
+              <Ionicons name="qr-code-outline" size={13} color="rgba(255,255,255,0.9)" />
+              <Text style={[styles.codeChipText, { fontFamily: 'BeVietnamPro_400Regular' }]}>{product.traceCode}</Text>
+            </View>
+            <View style={styles.codeChip}>
+              <Ionicons name="barcode-outline" size={13} color="rgba(255,255,255,0.9)" />
+              <Text style={[styles.codeChipText, { fontFamily: 'BeVietnamPro_400Regular' }]}>{product.gtin}</Text>
+            </View>
           </View>
         </View>
-      </LinearGradient>
+      </View>
 
       {/* Verify badge */}
       <View style={[styles.verifyBanner, { backgroundColor: '#F0FDF4', borderColor: '#86EFAC' }]}>
@@ -105,11 +108,11 @@ export default function ProductDetailScreen() {
         {/* Producer */}
         <Pressable
           onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); router.push(`/business/${product.businessId}`); }}
-          style={({ pressed }) => [styles.card, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.85 : 1 }]}
+          style={({ pressed }) => [styles.card, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.85 : 1, overflow: 'hidden' }]}
         >
           <Text style={[styles.cardTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold', borderBottomColor: colors.border }]}>Nhà sản xuất</Text>
           <View style={styles.producerRow}>
-            <View style={[styles.producerAvatar, { backgroundColor: colors.navyLight }]}>
+            <View style={[styles.producerAvatar, { backgroundColor: colors.navyLight, overflow: 'hidden' }]}>
               <Ionicons name="business" size={22} color={colors.primary} />
             </View>
             <View style={{ flex: 1 }}>
@@ -122,7 +125,7 @@ export default function ProductDetailScreen() {
 
         {/* Process timeline */}
         <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <Text style={[styles.cardTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold', borderBottomColor: colors.border }]}>Quy trình sản xuất</Text>
+          <Text style={[styles.cardTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold', borderBottomColor: colors.border }]}>Hành trình sản phẩm</Text>
           {product.process.map((step, idx) => (
             <View key={idx} style={styles.timelineItem}>
               <View style={styles.timelineLeft}>
@@ -153,7 +156,9 @@ const styles = StyleSheet.create({
   notFoundText: { fontSize: 18, marginTop: 12, marginBottom: 20 },
   backBtn: { paddingHorizontal: 24, paddingVertical: 10, borderRadius: 10 },
   backBtnText: { fontSize: 15, color: '#FFF' },
-  heroImage: { height: 220, justifyContent: 'flex-end', padding: 20, gap: 10 },
+  heroWrapper: { height: 240, position: 'relative' },
+  heroImage: { width: '100%', height: '100%' },
+  heroOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 20, gap: 10, backgroundColor: 'rgba(0,0,0,0.42)' },
   categoryBadge: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6 },
   categoryText: { fontSize: 12, color: '#FFF' },
   heroProductName: { fontSize: 24, color: '#FFF', lineHeight: 30 },
@@ -172,7 +177,7 @@ const styles = StyleSheet.create({
   certBadge: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1 },
   certText: { fontSize: 12 },
   producerRow: { flexDirection: 'row', alignItems: 'center', padding: 14, gap: 12 },
-  producerAvatar: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
+  producerAvatar: { width: 48, height: 48, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   producerName: { fontSize: 15 },
   producerOrigin: { fontSize: 12, marginTop: 2 },
   timelineItem: { flexDirection: 'row', paddingHorizontal: 14, paddingTop: 12 },

@@ -22,6 +22,7 @@ export interface Product {
   productionDate: string;
   expiryDate: string;
   weight: string;
+  image: string;
   process: ProcessStep[];
 }
 
@@ -40,6 +41,7 @@ export interface Business {
   productIds: string[];
   description: string;
   productCount: number;
+  image: string;
 }
 
 export interface NewsItem {
@@ -52,6 +54,7 @@ export interface NewsItem {
   author: string;
   views: number;
   featured: boolean;
+  image: string;
 }
 
 export interface NotificationItem {
@@ -81,6 +84,7 @@ export const PRODUCTS: Product[] = [
     productionDate: '15/01/2024',
     expiryDate: '20/01/2024',
     weight: '500g',
+    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&h=400&fit=crop',
     process: [
       { step: 'Gieo trồng', description: 'Hạt giống được gieo trên nền đất hữu cơ đã xử lý', date: '01/12/2023', location: 'Xã Xuân Lập, Long Khánh' },
       { step: 'Chăm sóc', description: 'Tưới nước bằng hệ thống phun tự động, bón phân hữu cơ vi sinh', date: '01/12/2023 - 14/01/2024', location: 'Vườn trồng B3' },
@@ -106,6 +110,7 @@ export const PRODUCTS: Product[] = [
     productionDate: '10/07/2024',
     expiryDate: '25/07/2024',
     weight: '1kg',
+    image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=600&h=400&fit=crop',
     process: [
       { step: 'Trồng trọt', description: 'Cây nhãn tiêu 8 năm tuổi, chăm sóc theo quy trình GlobalGAP', date: 'Tháng 3/2024', location: 'Vườn nhãn số 7, Bình An' },
       { step: 'Ra hoa', description: 'Hỗ trợ ra hoa đồng loạt bằng kỹ thuật cắt cành', date: 'Tháng 4/2024', location: 'Vườn nhãn số 7' },
@@ -131,6 +136,7 @@ export const PRODUCTS: Product[] = [
     productionDate: '20/09/2024',
     expiryDate: '20/10/2024',
     weight: '1.2 - 1.8kg/quả',
+    image: 'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=600&h=400&fit=crop',
     process: [
       { step: 'Canh tác', description: 'Vườn bưởi 12 năm tuổi, quản lý sâu bệnh IPM', date: 'Năm 2024', location: 'Vườn bưởi A12, Phú Trung' },
       { step: 'Thu hoạch', description: 'Thu hoạch khi vỏ chuyển màu xanh nhạt đặc trưng', date: '18/09/2024', location: 'Vườn bưởi A12' },
@@ -155,6 +161,7 @@ export const PRODUCTS: Product[] = [
     productionDate: '05/03/2024',
     expiryDate: '05/03/2026',
     weight: '500ml',
+    image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&h=400&fit=crop',
     process: [
       { step: 'Thu gom', description: 'Khai thác mật từ tổ ong tự nhiên bởi thợ khai thác có kinh nghiệm', date: '01/03/2024', location: 'Rừng Mã Đà, Vĩnh Cửu' },
       { step: 'Lọc thô', description: 'Lọc qua vải để loại bỏ sáp và tạp chất lớn', date: '02/03/2024', location: 'Điểm thu mua HTX' },
@@ -179,6 +186,7 @@ export const PRODUCTS: Product[] = [
     productionDate: '12/11/2024',
     expiryDate: '26/11/2024',
     weight: '10 quả/hộp',
+    image: 'https://images.unsplash.com/photo-1518569656558-1f25e69d2049?w=600&h=400&fit=crop',
     process: [
       { step: 'Chăn nuôi', description: 'Đàn gà 5.000 con, nuôi thả vườn theo VietGAP, không dùng kháng sinh', date: 'Tháng 8 - 11/2024', location: 'Trang trại Bảo Bình' },
       { step: 'Thu trứng', description: 'Thu trứng mỗi ngày, kiểm tra ngoại quan, loại bỏ trứng dập vỡ', date: '12/11/2024', location: 'Nhà trứng trang trại' },
@@ -203,6 +211,7 @@ export const PRODUCTS: Product[] = [
     productionDate: '25/06/2024',
     expiryDate: '05/07/2024',
     weight: '350-500g/quả',
+    image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?w=600&h=400&fit=crop',
     process: [
       { step: 'Canh tác', description: 'Vườn xoài 15 năm tuổi, quản lý theo GlobalGAP', date: 'Năm 2024', location: 'Vườn xoài Bàu Trâm' },
       { step: 'Thu hoạch', description: 'Hái khi đạt độ chín 75%, tránh va đập', date: '23/06/2024', location: 'Vườn xoài B2' },
@@ -228,6 +237,7 @@ export const BUSINESSES: Business[] = [
     productIds: ['p001', 'p006'],
     description: 'HTX Nông nghiệp Xanh Long Khánh chuyên sản xuất rau củ quả và trái cây theo tiêu chuẩn VietGAP và GlobalGAP, cung cấp cho các siêu thị và xuất khẩu.',
     productCount: 12,
+    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&h=400&fit=crop',
   },
   {
     id: 'b002',
@@ -244,6 +254,7 @@ export const BUSINESSES: Business[] = [
     productIds: ['p002'],
     description: 'HTX Nhãn tiêu Bình An là vùng trồng nhãn đặc sản nổi tiếng của Đồng Nai, được chứng nhận GlobalGAP và xuất khẩu sang châu Âu.',
     productCount: 3,
+    image: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600&h=400&fit=crop',
   },
   {
     id: 'b003',
@@ -260,6 +271,7 @@ export const BUSINESSES: Business[] = [
     productIds: ['p003'],
     description: 'Công ty chuyên sản xuất và kinh doanh bưởi da xanh Tân Phú, được bảo hộ chỉ dẫn địa lý, xuất khẩu sang 15 quốc gia.',
     productCount: 8,
+    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&h=400&fit=crop',
   },
   {
     id: 'b004',
@@ -276,6 +288,7 @@ export const BUSINESSES: Business[] = [
     productIds: ['p004'],
     description: 'HTX khai thác và chế biến mật ong rừng tự nhiên tại khu bảo tồn Mã Đà, bảo đảm 100% nguyên chất, không pha trộn.',
     productCount: 5,
+    image: 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&h=400&fit=crop',
   },
   {
     id: 'b005',
@@ -292,6 +305,7 @@ export const BUSINESSES: Business[] = [
     productIds: ['p005'],
     description: 'Trang trại gà ta thả vườn quy mô 5.000 con, nuôi theo quy trình VietGAP, không dùng kháng sinh, cung cấp trứng và thịt gà sạch.',
     productCount: 2,
+    image: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=600&h=400&fit=crop',
   },
 ];
 
@@ -306,6 +320,7 @@ export const NEWS: NewsItem[] = [
     author: 'Ban biên tập',
     views: 12450,
     featured: true,
+    image: 'https://picsum.photos/seed/news1/800/450',
   },
   {
     id: 'n002',
@@ -317,6 +332,7 @@ export const NEWS: NewsItem[] = [
     author: 'Phòng Thông tin',
     views: 8320,
     featured: false,
+    image: 'https://picsum.photos/seed/news2/800/450',
   },
   {
     id: 'n003',
@@ -328,6 +344,7 @@ export const NEWS: NewsItem[] = [
     author: 'Nguyễn Thanh Hà',
     views: 9870,
     featured: false,
+    image: 'https://picsum.photos/seed/news3/800/450',
   },
   {
     id: 'n004',
@@ -339,6 +356,7 @@ export const NEWS: NewsItem[] = [
     author: 'Ban biên tập',
     views: 6540,
     featured: false,
+    image: 'https://picsum.photos/seed/news4/800/450',
   },
   {
     id: 'n005',
@@ -350,6 +368,7 @@ export const NEWS: NewsItem[] = [
     author: 'Trần Minh Quang',
     views: 11230,
     featured: false,
+    image: 'https://picsum.photos/seed/news5/800/450',
   },
   {
     id: 'n006',
@@ -361,6 +380,7 @@ export const NEWS: NewsItem[] = [
     author: 'Ban biên tập',
     views: 15680,
     featured: false,
+    image: 'https://picsum.photos/seed/news6/800/450',
   },
 ];
 
@@ -452,7 +472,6 @@ export function lookupByGTIN(gtin: string, lot?: string): Product | null {
   if (!id) return null;
   const product = PRODUCTS.find(p => p.id === id) ?? null;
   if (product && lot && lot.trim()) {
-    // Verify lot matches
     if (product.lotNumber.toLowerCase() !== lot.trim().toLowerCase()) return null;
   }
   return product;
@@ -480,8 +499,8 @@ export const BUSINESS_TYPES = ['Tất cả', 'Hợp tác xã', 'Doanh nghiệp',
 export const CERTIFICATIONS = ['Tất cả', 'VietGAP', 'GlobalGAP', 'OCOP', 'Hữu cơ', 'HACCP'];
 
 export const STATS = {
-  products: 2456,
-  businesses: 512,
-  districts: 11,
+  products: 4892,
+  businesses: 1247,
+  districts: 23104,
   scans: 1200000,
 };

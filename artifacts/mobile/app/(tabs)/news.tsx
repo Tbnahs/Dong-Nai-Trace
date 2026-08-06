@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import {
   FlatList,
+  Image,
   Platform,
   Pressable,
   ScrollView,
@@ -11,7 +12,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { NEWS } from '@/data/mock';
 
@@ -58,13 +58,14 @@ export default function NewsScreen() {
               onPress={() => router.push(`/news/${featured.id}`)}
               style={({ pressed }) => [styles.featuredCard, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.9 : 1 }]}
             >
-              <LinearGradient colors={['#1A2E9E', '#2740BA', '#E8650A']} style={styles.featuredImage}>
+              <View style={styles.featuredImageWrap}>
+                <Image source={{ uri: featured.image }} style={styles.featuredImage} resizeMode="cover" />
                 <View style={styles.featuredOverlay}>
                   <View style={[styles.featuredBadge, { backgroundColor: '#E8650A' }]}>
                     <Text style={[styles.featuredBadgeText, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Nổi bật</Text>
                   </View>
                 </View>
-              </LinearGradient>
+              </View>
               <View style={styles.featuredBody}>
                 <View style={[styles.catChip, { backgroundColor: colors.navyLight }]}>
                   <Text style={[styles.catChipText, { color: colors.primary, fontFamily: 'BeVietnamPro_500Medium' }]}>{featured.category}</Text>
@@ -94,9 +95,7 @@ export default function NewsScreen() {
             onPress={() => router.push(`/news/${item.id}`)}
             style={({ pressed }) => [styles.newsItem, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.85 : 1 }]}
           >
-            <LinearGradient colors={['#2740BA25', '#7B93FF15']} style={styles.newsItemImg}>
-              <Ionicons name="newspaper-outline" size={22} color="#2740BA" />
-            </LinearGradient>
+            <Image source={{ uri: item.image }} style={styles.newsItemImg} resizeMode="cover" />
             <View style={{ flex: 1 }}>
               <View style={[styles.catChip, { backgroundColor: colors.navyLight, alignSelf: 'flex-start' }]}>
                 <Text style={[styles.catChipText, { color: colors.primary, fontFamily: 'BeVietnamPro_500Medium' }]}>{item.category}</Text>
@@ -125,8 +124,9 @@ const styles = StyleSheet.create({
   chip: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1 },
   chipText: { fontSize: 12 },
   featuredCard: { borderRadius: 16, borderWidth: 1, overflow: 'hidden', marginTop: 16, marginBottom: 12 },
-  featuredImage: { height: 160, justifyContent: 'flex-end' },
-  featuredOverlay: { padding: 12 },
+  featuredImageWrap: { height: 180, position: 'relative' },
+  featuredImage: { width: '100%', height: '100%' },
+  featuredOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 12, backgroundColor: 'rgba(0,0,0,0.3)' },
   featuredBadge: { alignSelf: 'flex-start', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 6 },
   featuredBadgeText: { fontSize: 11, color: '#FFF' },
   featuredBody: { padding: 14, gap: 6 },
@@ -137,12 +137,13 @@ const styles = StyleSheet.create({
   featuredMeta: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   featuredMetaText: { fontSize: 12 },
   viewsRow: { flexDirection: 'row', alignItems: 'center', gap: 3 },
-  newsItem: { flexDirection: 'row', alignItems: 'flex-start', borderRadius: 12, borderWidth: 1, padding: 10, marginBottom: 10, gap: 10 },
-  newsItemImg: { width: 72, height: 72, borderRadius: 10, alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  newsItemTitle: { fontSize: 13, lineHeight: 19, marginTop: 4 },
-  newsItemMeta: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 },
+  newsItem: { flexDirection: 'row', alignItems: 'flex-start', borderRadius: 12, borderWidth: 1, overflow: 'hidden', marginBottom: 10 },
+  newsItemImg: { width: 80, height: 80 },
+  newsItemTitle: { fontSize: 13, lineHeight: 19, marginTop: 4, paddingRight: 4 },
+  newsItemMeta: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 6, paddingRight: 4 },
   newsItemDate: { fontSize: 11 },
   emptyState: { alignItems: 'center', paddingVertical: 60, gap: 8 },
   emptyTitle: { fontSize: 16 },
   emptyDesc: { fontSize: 13 },
+  newsItemBody: { flex: 1, padding: 10, gap: 4 },
 });

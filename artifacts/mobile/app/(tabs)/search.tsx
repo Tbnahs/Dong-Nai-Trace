@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import {
   FlatList,
+  Image,
   Platform,
   Pressable,
   ScrollView,
@@ -11,8 +12,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
-import { Feather, Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import {
   BUSINESSES,
@@ -131,9 +131,7 @@ export default function SearchScreen() {
               onPress={() => router.push(`/product/${item.id}`)}
               style={({ pressed }) => [styles.productItem, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.85 : 1 }]}
             >
-              <LinearGradient colors={['#2740BA20', '#E8650A15']} style={styles.productItemImg}>
-                <Ionicons name="leaf-outline" size={24} color="#2740BA" />
-              </LinearGradient>
+              <Image source={{ uri: item.image }} style={styles.productItemImg} resizeMode="cover" />
               <View style={{ flex: 1 }}>
                 <Text style={[styles.productItemName, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]} numberOfLines={1}>{item.name}</Text>
                 <Text style={[styles.productItemBiz, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]} numberOfLines={1}>{item.businessName}</Text>
@@ -174,9 +172,7 @@ export default function SearchScreen() {
               onPress={() => router.push(`/business/${item.id}`)}
               style={({ pressed }) => [styles.bizItem, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.85 : 1 }]}
             >
-              <View style={[styles.bizAvatar, { backgroundColor: colors.navyLight }]}>
-                <Text style={[styles.bizAvatarText, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>{item.shortName.slice(0, 2).toUpperCase()}</Text>
-              </View>
+              <Image source={{ uri: item.image }} style={styles.bizAvatar} resizeMode="cover" />
               <View style={{ flex: 1 }}>
                 <Text style={[styles.bizName, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]} numberOfLines={1}>{item.name}</Text>
                 <Text style={[styles.bizMeta, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{item.type} · {item.district}</Text>
@@ -216,18 +212,18 @@ const styles = StyleSheet.create({
   emptyState: { alignItems: 'center', paddingVertical: 60, gap: 8 },
   emptyTitle: { fontSize: 16 },
   emptyDesc: { fontSize: 13, textAlign: 'center' },
-  productItem: { flexDirection: 'row', alignItems: 'center', borderRadius: 12, borderWidth: 1, padding: 12, gap: 12 },
-  productItemImg: { width: 60, height: 60, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  productItemName: { fontSize: 14 },
-  productItemBiz: { fontSize: 12, marginTop: 2 },
-  productItemMeta: { flexDirection: 'row', gap: 6, marginTop: 4 },
+  productItem: { flexDirection: 'row', alignItems: 'center', borderRadius: 12, borderWidth: 1, overflow: 'hidden', gap: 0 },
+  productItemImg: { width: 70, height: 70 },
+  productItemName: { fontSize: 14, marginLeft: 12, marginTop: 6 },
+  productItemBiz: { fontSize: 12, marginTop: 2, marginLeft: 12 },
+  productItemMeta: { flexDirection: 'row', gap: 6, marginTop: 4, marginLeft: 12 },
   districtBadge: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 4 },
   districtBadgeText: { fontSize: 11 },
   certChip: { paddingHorizontal: 7, paddingVertical: 2, borderRadius: 4 },
   certChipText: { fontSize: 11 },
-  bizItem: { flexDirection: 'row', alignItems: 'center', borderRadius: 12, borderWidth: 1, padding: 12, gap: 12 },
-  bizAvatar: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
-  bizAvatarText: { fontSize: 15 },
-  bizName: { fontSize: 14 },
-  bizMeta: { fontSize: 12, marginTop: 2 },
+  bizItem: { flexDirection: 'row', alignItems: 'center', borderRadius: 12, borderWidth: 1, overflow: 'hidden', gap: 0 },
+  bizAvatar: { width: 60, height: 60 },
+  bizName: { fontSize: 14, marginLeft: 12, marginTop: 6 },
+  bizMeta: { fontSize: 12, marginTop: 2, marginLeft: 12 },
+  bizCerts: { flexDirection: 'row', gap: 4, marginTop: 4, marginLeft: 12 },
 });

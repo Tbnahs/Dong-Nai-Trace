@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -9,7 +10,6 @@ import {
 import { useLocalSearchParams, router } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { getBusiness, getBusinessProducts } from '@/data/mock';
 
@@ -37,20 +37,23 @@ export default function BusinessDetailScreen() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ paddingBottom: 60 }} showsVerticalScrollIndicator={false}>
-      {/* Hero */}
-      <LinearGradient colors={['#1A2E9E', '#2740BA']} style={styles.hero}>
-        <View style={[styles.bizAvatar, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
-          <Text style={[styles.bizAvatarText, { fontFamily: 'BeVietnamPro_700Bold' }]}>{business.shortName.slice(0, 2).toUpperCase()}</Text>
+      {/* Hero with real image */}
+      <View style={styles.heroWrapper}>
+        <Image source={{ uri: business.image }} style={styles.heroImage} resizeMode="cover" />
+        <View style={styles.heroOverlay}>
+          <View style={[styles.bizAvatar, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
+            <Text style={[styles.bizAvatarText, { fontFamily: 'BeVietnamPro_700Bold' }]}>{business.shortName.slice(0, 2).toUpperCase()}</Text>
+          </View>
+          <Text style={[styles.bizName, { fontFamily: 'BeVietnamPro_700Bold' }]}>{business.name}</Text>
+          <View style={[styles.typeBadge, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
+            <Text style={[styles.typeText, { fontFamily: 'BeVietnamPro_500Medium' }]}>{business.type}</Text>
+          </View>
+          <View style={styles.districtRow}>
+            <Ionicons name="location-outline" size={14} color="rgba(255,255,255,0.8)" />
+            <Text style={[styles.districtText, { fontFamily: 'BeVietnamPro_400Regular' }]}>{business.district}, Đồng Nai</Text>
+          </View>
         </View>
-        <Text style={[styles.bizName, { fontFamily: 'BeVietnamPro_700Bold' }]}>{business.name}</Text>
-        <View style={[styles.typeBadge, { backgroundColor: 'rgba(255,255,255,0.2)' }]}>
-          <Text style={[styles.typeText, { fontFamily: 'BeVietnamPro_500Medium' }]}>{business.type}</Text>
-        </View>
-        <View style={styles.districtRow}>
-          <Ionicons name="location-outline" size={14} color="rgba(255,255,255,0.8)" />
-          <Text style={[styles.districtText, { fontFamily: 'BeVietnamPro_400Regular' }]}>{business.district}, Đồng Nai</Text>
-        </View>
-      </LinearGradient>
+      </View>
 
       <View style={{ padding: 16, gap: 16 }}>
         {/* Stats */}
@@ -130,9 +133,7 @@ export default function BusinessDetailScreen() {
                   { borderBottomColor: colors.border, borderBottomWidth: idx < products.length - 1 ? 1 : 0, opacity: pressed ? 0.75 : 1 },
                 ]}
               >
-                <LinearGradient colors={['#2740BA20', '#E8650A15']} style={styles.productImg}>
-                  <Ionicons name="leaf-outline" size={20} color="#2740BA" />
-                </LinearGradient>
+                <Image source={{ uri: p.image }} style={styles.productImg} resizeMode="cover" />
                 <View style={{ flex: 1 }}>
                   <Text style={[styles.productName, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>{p.name}</Text>
                   <Text style={[styles.productCode, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{p.traceCode} · {p.category}</Text>
@@ -151,9 +152,11 @@ const styles = StyleSheet.create({
   notFoundText: { fontSize: 18, marginTop: 12, marginBottom: 20 },
   backBtn: { paddingHorizontal: 24, paddingVertical: 10, borderRadius: 10 },
   backBtnText: { fontSize: 15, color: '#FFF' },
-  hero: { alignItems: 'center', paddingTop: 36, paddingBottom: 28, paddingHorizontal: 20, gap: 8 },
-  bizAvatar: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center' },
-  bizAvatarText: { fontSize: 24, color: '#FFF' },
+  heroWrapper: { height: 260, position: 'relative' },
+  heroImage: { width: '100%', height: '100%' },
+  heroOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, padding: 20, paddingBottom: 22, gap: 8, backgroundColor: 'rgba(0,0,0,0.45)', alignItems: 'center' },
+  bizAvatar: { width: 68, height: 68, borderRadius: 34, alignItems: 'center', justifyContent: 'center' },
+  bizAvatarText: { fontSize: 22, color: '#FFF' },
   bizName: { fontSize: 20, color: '#FFF', textAlign: 'center', lineHeight: 26 },
   typeBadge: { paddingHorizontal: 14, paddingVertical: 5, borderRadius: 20 },
   typeText: { fontSize: 12, color: '#FFF' },
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
   certBadge: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1 },
   certText: { fontSize: 12 },
   productRow: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 14, paddingVertical: 10, gap: 10 },
-  productImg: { width: 44, height: 44, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  productImg: { width: 48, height: 48, borderRadius: 10 },
   productName: { fontSize: 13 },
   productCode: { fontSize: 11, marginTop: 2 },
 });
