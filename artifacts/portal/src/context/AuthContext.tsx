@@ -19,6 +19,7 @@ export interface OrgProfile {
   representativePhone: string;
   representativeEmail: string;
   cccd: string;
+  gcp?: string;
 }
 
 export interface AuthUser {
