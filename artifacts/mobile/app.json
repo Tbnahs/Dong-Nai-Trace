@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Đồng Nai Trace",
-    "slug": "mobile",
+    "name": "Đồng Nai Trace-mobile",
+    "slug": "ngnaitracemobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "ngnaitracemobile",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -14,11 +14,14 @@
       "backgroundColor": "#2740BA"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.ngnaitracemobile.app"
     },
-    "android": {},
+    "android": {
+      "package": "com.ngnaitracemobile.app"
+    },
     "web": {
-      "favicon": "./assets/images/icon.png"
+      "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
       [
