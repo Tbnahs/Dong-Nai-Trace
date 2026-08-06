@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Platform,
   Pressable,
   ScrollView,
@@ -62,27 +63,28 @@ function LoginView() {
       contentContainerStyle={{ paddingBottom: 100 }}
       keyboardShouldPersistTaps="handled"
     >
-      {/* Hero */}
-      <LinearGradient colors={['#1A2E9E', '#2740BA']} style={styles.loginHero}>
-        <View style={[styles.logoCircle, { backgroundColor: 'rgba(255,255,255,0.15)' }]}>
-          <Ionicons name="shield-checkmark" size={40} color="#FFF" />
+      {/* Portal-aligned brand header */}
+      <View style={[styles.loginBrand, { borderBottomColor: colors.border }]}>
+        <Image source={require('@/assets/images/logo-skhcn.png')} style={styles.loginLogo} />
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.loginBrandName, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>ĐỒNG NAI TRACE</Text>
+          <Text style={[styles.loginBrandTagline, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM</Text>
         </View>
-        <Text style={[styles.loginTitle, { fontFamily: 'BeVietnamPro_700Bold' }]}>Đồng Nai Trace</Text>
-        <Text style={[styles.loginSubtitle, { fontFamily: 'BeVietnamPro_400Regular' }]}>Hệ thống truy xuất nguồn gốc tỉnh Đồng Nai</Text>
-      </LinearGradient>
+        <Ionicons name="globe-outline" size={20} color={colors.primary} />
+      </View>
 
       <View style={[styles.loginCard, { backgroundColor: colors.background }]}>
         <Text style={[styles.loginCardTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Đăng nhập</Text>
-        <Text style={[styles.loginCardDesc, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Dành cho doanh nghiệp và tổ chức tham gia chương trình TXNG</Text>
+        <Text style={[styles.loginCardDesc, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Nhập thông tin tài khoản của bạn</Text>
 
         <View style={{ gap: 12, marginTop: 20 }}>
           <View>
-            <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>Email</Text>
-            <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.muted }]}>
-              <Ionicons name="mail-outline" size={18} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
+            <Text style={[styles.fieldLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>TÊN ĐĂNG NHẬP</Text>
+            <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
+              <Ionicons name="person-outline" size={18} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
               <TextInput
                 style={[styles.inputField, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
-                placeholder="email@doanhnghiep.vn"
+                placeholder="Mã số doanh nghiệp / CCCD / tài khoản"
                 placeholderTextColor={colors.mutedForeground}
                 value={email}
                 onChangeText={setEmail}
@@ -93,8 +95,13 @@ function LoginView() {
             </View>
           </View>
           <View>
-            <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>Mật khẩu</Text>
-            <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.muted }]}>
+            <View style={styles.passwordLabelRow}>
+              <Text style={[styles.fieldLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>MẬT KHẨU</Text>
+              <Pressable onPress={() => Alert.alert('Quên mật khẩu?', 'Vui lòng liên hệ Sở KH&CN Đồng Nai: skhcn@dongnai.gov.vn')}>
+                <Text style={[styles.forgotPassword, { color: colors.primary, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Quên mật khẩu?</Text>
+              </Pressable>
+            </View>
+            <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
               <Ionicons name="lock-closed-outline" size={18} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
               <TextInput
                 style={[styles.inputField, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
@@ -117,12 +124,10 @@ function LoginView() {
           ) : null}
         </View>
 
-        <View style={[styles.demoHint, { backgroundColor: colors.navyLight, borderColor: colors.primary + '40' }]}>
-          <Ionicons name="information-circle-outline" size={15} color={colors.primary} />
-          <Text style={[styles.demoHintText, { color: colors.primary, fontFamily: 'BeVietnamPro_400Regular' }]}>
-            Demo: <Text style={{ fontFamily: 'BeVietnamPro_600SemiBold' }}>admin@htx.vn</Text> / <Text style={{ fontFamily: 'BeVietnamPro_600SemiBold' }}>demo123</Text>
-          </Text>
-        </View>
+        <Pressable style={styles.rememberRow}>
+          <View style={[styles.rememberBox, { borderColor: colors.border }]} />
+          <Text style={[styles.rememberText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Ghi nhớ mật khẩu</Text>
+        </Pressable>
 
         <Pressable
           onPress={handleLogin}
@@ -131,22 +136,34 @@ function LoginView() {
         >
           {loading
             ? <ActivityIndicator color="#FFF" />
-            : <Text style={[styles.loginBtnText, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Đăng nhập</Text>
+            : <>
+                <Text style={[styles.loginBtnText, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Đăng nhập</Text>
+                <Ionicons name="chevron-forward" size={17} color="#FFF" />
+              </>
           }
         </Pressable>
 
-        <View style={styles.dividerRow}>
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          <Text style={[styles.dividerText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>hoặc</Text>
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        <View style={[styles.registerCallout, { backgroundColor: colors.muted, borderColor: colors.border }]}>
+          <Text style={[styles.registerCalloutText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Chưa có tài khoản?</Text>
+          <Pressable
+          onPress={() => router.push('/register')}
+            style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}
+          >
+            <Text style={[styles.registerBtnText, { color: colors.primary, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Đăng ký cho doanh nghiệp</Text>
+          </Pressable>
         </View>
 
-        <Pressable
-          onPress={() => router.push('/register')}
-          style={({ pressed }) => [styles.registerBtn, { borderColor: colors.primary, opacity: pressed ? 0.75 : 1 }]}
-        >
-          <Text style={[styles.registerBtnText, { color: colors.primary, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Đăng ký tham gia TXNG</Text>
-        </Pressable>
+        <View style={[styles.loginHelp, { borderTopColor: colors.border }]}>
+          <Text style={[styles.loginHelpText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Hướng dẫn đăng ký, cập nhật thông tin tài khoản.</Text>
+          <Text style={[styles.loginHelpLink, { color: colors.primary, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Tại đây</Text>
+          <View style={styles.hotlineRow}>
+            <View style={[styles.hotlineIcon, { backgroundColor: colors.primary }]}>
+              <Ionicons name="call" size={12} color="#FFF" />
+            </View>
+            <Text style={[styles.loginHelpText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Hotline: </Text>
+            <Text style={[styles.hotlineText, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>0251.3822297</Text>
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
@@ -249,27 +266,34 @@ export default function AccountScreen() {
 }
 
 const styles = StyleSheet.create({
-  loginHero: { alignItems: 'center', paddingTop: 60, paddingBottom: 36, paddingHorizontal: 24 },
-  logoCircle: { width: 80, height: 80, borderRadius: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 16 },
-  loginTitle: { fontSize: 24, color: '#FFF', marginBottom: 6 },
-  loginSubtitle: { fontSize: 13, color: 'rgba(255,255,255,0.75)', textAlign: 'center', lineHeight: 20 },
-  loginCard: { margin: 16, padding: 20, borderRadius: 16 },
-  loginCardTitle: { fontSize: 22 },
+  loginBrand: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingBottom: 14, borderBottomWidth: 1 },
+  loginLogo: { width: 42, height: 42 },
+  loginBrandName: { fontSize: 16 },
+  loginBrandTagline: { fontSize: 7, marginTop: 2 },
+  loginCard: { paddingHorizontal: 20, paddingTop: 28 },
+  loginCardTitle: { fontSize: 27 },
   loginCardDesc: { fontSize: 13, lineHeight: 19, marginTop: 4 },
-  fieldLabel: { fontSize: 13, marginBottom: 6 },
+  fieldLabel: { fontSize: 11, letterSpacing: 0.7, marginBottom: 6 },
   inputWrap: { flexDirection: 'row', alignItems: 'center', borderRadius: 10, borderWidth: 1 },
   inputField: { flex: 1, height: 46, paddingHorizontal: 10, fontSize: 14 },
+  passwordLabelRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  forgotPassword: { fontSize: 11, marginBottom: 6 },
   errorBox: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 10, borderRadius: 8, borderWidth: 1 },
   errorText: { flex: 1, fontSize: 13 },
-  demoHint: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 10, borderRadius: 8, borderWidth: 1, marginTop: 4 },
-  demoHintText: { fontSize: 12, flex: 1 },
-  loginBtn: { paddingVertical: 14, borderRadius: 10, alignItems: 'center' },
+  rememberRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 12 },
+  rememberBox: { width: 17, height: 17, borderRadius: 3, borderWidth: 1 },
+  rememberText: { fontSize: 13 },
+  loginBtn: { flexDirection: 'row', justifyContent: 'center', gap: 8, paddingVertical: 14, borderRadius: 10, alignItems: 'center', marginTop: 16 },
   loginBtnText: { fontSize: 16, color: '#FFF' },
-  dividerRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginVertical: 16 },
-  divider: { flex: 1, height: 1 },
-  dividerText: { fontSize: 13 },
-  registerBtn: { paddingVertical: 13, borderRadius: 10, alignItems: 'center', borderWidth: 1.5 },
-  registerBtnText: { fontSize: 15 },
+  registerCallout: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: 14, borderRadius: 12, borderWidth: 1, marginTop: 14 },
+  registerCalloutText: { fontSize: 12 },
+  registerBtnText: { fontSize: 12 },
+  loginHelp: { alignItems: 'center', borderTopWidth: 1, paddingTop: 18, marginTop: 20 },
+  loginHelpText: { fontSize: 11, textAlign: 'center' },
+  loginHelpLink: { fontSize: 11, marginTop: 2 },
+  hotlineRow: { flexDirection: 'row', alignItems: 'center', marginTop: 10 },
+  hotlineIcon: { width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginRight: 6 },
+  hotlineText: { fontSize: 13 },
   profileHero: { alignItems: 'center', paddingBottom: 28, paddingHorizontal: 24 },
   avatarCircle: { width: 80, height: 80, borderRadius: 40, backgroundColor: 'rgba(255,255,255,0.25)', alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
   avatarText: { fontSize: 28, color: '#FFF' },

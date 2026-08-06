@@ -86,6 +86,20 @@ const MAP_PRODUCTS = [
   { id: 'p15', name: 'Tôm thẻ chân trắng Biên Hòa', category: 'Thủy sản', wardCode: '26068', wardName: 'Biên Hòa',  cert: 'ASC' },
 ];
 
+// The public map catalogue uses short IDs while detail screens use the
+// richer fixture IDs. Keep the hand-off explicit so every map row resolves.
+const MAP_BUSINESS_DETAIL_IDS: Record<string, string> = {
+  b1: 'b001', b2: 'b002', b3: 'b003', b4: 'b004', b5: 'b005',
+  b6: 'b001', b7: 'b002', b8: 'b003', b9: 'b004', b10: 'b005',
+  b11: 'b001', b12: 'b002', b13: 'b003', b14: 'b004', b15: 'b005',
+};
+
+const MAP_PRODUCT_DETAIL_IDS: Record<string, string> = {
+  p1: 'p001', p2: 'p002', p3: 'p003', p4: 'p004', p5: 'p005', p6: 'p006',
+  p7: 'p001', p8: 'p002', p9: 'p003', p10: 'p004', p11: 'p005', p12: 'p006',
+  p13: 'p001', p14: 'p002', p15: 'p003',
+};
+
 const MAP_WARDS = Array.from(
   new Map(
     [...MAP_BUSINESSES, ...MAP_PRODUCTS].map(item => [item.wardCode, { code: item.wardCode, name: item.wardName }])
@@ -247,6 +261,8 @@ export default function HomeScreen() {
   const [mapTab, setMapTab] = useState<'business' | 'product'>('business');
   const [selectedMapWard, setSelectedMapWard] = useState<{ code: string; name: string } | null>(null);
   const [wardModalVisible, setWardModalVisible] = useState(false);
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [language, setLanguage] = useState('vi');
   const [bizPage, setBizPage] = useState(1);
   const [prodPage, setProdPage] = useState(1);
   const webViewRef = useRef<any>(null);
@@ -309,15 +325,7 @@ export default function HomeScreen() {
         <Pressable
           onPress={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            Alert.alert(
-              'Ngôn ngữ / Language',
-              '',
-              [
-                { text: '🇻🇳  Tiếng Việt', onPress: () => {} },
-                { text: '🇬🇧  English', onPress: () => {} },
-                { text: 'Đóng', style: 'cancel' },
-              ]
-            );
+            setLanguageModalVisible(true);
           }}
           style={styles.headerIcon}
           hitSlop={8}
@@ -513,7 +521,17 @@ export default function HomeScreen() {
             ) : (
               <>
                 {pagedBiz.map(b => (
-                  <View key={b.id} style={[styles.mapListItem, { borderBottomColor: colors.border }]}>
+                  <Pressable
+                    key={b.id}
+                    onPress={() => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      router.push(`/business/${MAP_BUSINESS_DETAIL_IDS[b.id] ?? 'b001'}`);
+                    }}
+                    style={({ pressed }) => [
+                      styles.mapListItem,
+                      { borderBottomColor: colors.border, opacity: pressed ? 0.72 : 1 },
+                    ]}
+                  >
                     <View style={{ flex: 1 }}>
                       <Text style={[styles.mapListName, { color: colors.foreground }]}>{b.name}</Text>
                       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
@@ -528,7 +546,7 @@ export default function HomeScreen() {
                       <Text style={{ fontSize: 11, color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular', marginTop: 2 }}>{b.phone}</Text>
                     </View>
                     <Ionicons name="chevron-forward" size={14} color="#CBD5E1" />
-                  </View>
+                  </Pressable>
                 ))}
                 {hasMoreBiz && (
                   <Pressable onPress={() => setBizPage(p => p + 1)} style={styles.loadMoreBtn}>
@@ -549,7 +567,17 @@ export default function HomeScreen() {
                 {pagedProd.map(p => {
                   const cs = mapCertStyle(p.cert);
                   return (
-                    <View key={p.id} style={[styles.mapListItem, { borderBottomColor: colors.border }]}>
+                    <Pressable
+                      key={p.id}
+                      onPress={() => {
+                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                        router.push(`/product/${MAP_PRODUCT_DETAIL_IDS[p.id] ?? 'p001'}`);
+                      }}
+                      style={({ pressed }) => [
+                        styles.mapListItem,
+                        { borderBottomColor: colors.border, opacity: pressed ? 0.72 : 1 },
+                      ]}
+                    >
                       <View style={{ flex: 1 }}>
                         <Text style={[styles.mapListName, { color: colors.foreground }]}>{p.name}</Text>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
@@ -566,7 +594,7 @@ export default function HomeScreen() {
                         </View>
                       </View>
                       <Ionicons name="chevron-forward" size={14} color="#CBD5E1" />
-                    </View>
+                    </Pressable>
                   );
                 })}
                 {hasMoreProd && (
@@ -616,6 +644,58 @@ export default function HomeScreen() {
                 </Pressable>
               ))}
             </ScrollView>
+          </Pressable>
+        </Pressable>
+      </Modal>
+
+      {/* Language picker — mirrors the portal globe menu without emoji flags. */}
+      <Modal
+        visible={languageModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setLanguageModalVisible(false)}
+      >
+        <Pressable style={styles.languageOverlay} onPress={() => setLanguageModalVisible(false)}>
+          <Pressable
+            style={[styles.languageCard, { backgroundColor: colors.card, borderColor: colors.border }]}
+            onPress={event => event.stopPropagation()}
+          >
+            <View style={styles.languageHeader}>
+              <View>
+                <Text style={[styles.languageTitle, { color: colors.foreground }]}>Ngôn ngữ</Text>
+                <Text style={[styles.languageSubtitle, { color: colors.mutedForeground }]}>Language</Text>
+              </View>
+              <Pressable onPress={() => setLanguageModalVisible(false)} hitSlop={10}>
+                <Ionicons name="close" size={20} color={colors.mutedForeground} />
+              </Pressable>
+            </View>
+            {[
+              { code: 'vi', label: 'Tiếng Việt' },
+              { code: 'en', label: 'English' },
+              { code: 'zh', label: '中文' },
+              { code: 'ko', label: '한국어' },
+            ].map(item => (
+              <Pressable
+                key={item.code}
+                onPress={() => {
+                  setLanguage(item.code);
+                  setLanguageModalVisible(false);
+                }}
+                style={({ pressed }) => [
+                  styles.languageOption,
+                  {
+                    borderColor: colors.border,
+                    backgroundColor: language === item.code ? colors.navyLight : colors.card,
+                    opacity: pressed ? 0.72 : 1,
+                  },
+                ]}
+              >
+                <Text style={[styles.languageOptionText, { color: language === item.code ? colors.primary : colors.foreground }]}>
+                  {item.label}
+                </Text>
+                {language === item.code && <Ionicons name="checkmark" size={18} color={colors.primary} />}
+              </Pressable>
+            ))}
           </Pressable>
         </Pressable>
       </Modal>
@@ -834,4 +914,11 @@ const styles = StyleSheet.create({
   modalTitle: { fontSize: 16, fontFamily: 'BeVietnamPro_700Bold', marginBottom: 12 },
   wardOption: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 13, borderBottomWidth: 1 },
   wardOptionText: { fontSize: 14 },
+  languageOverlay: { flex: 1, backgroundColor: 'rgba(15,23,42,0.32)', justifyContent: 'flex-start', alignItems: 'flex-end', paddingTop: 76, paddingHorizontal: 16 },
+  languageCard: { width: 220, borderRadius: 14, borderWidth: 1, padding: 12, shadowColor: '#0F172A', shadowOpacity: 0.16, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 8 },
+  languageHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 4, paddingBottom: 8 },
+  languageTitle: { fontSize: 15, fontFamily: 'BeVietnamPro_700Bold' },
+  languageSubtitle: { fontSize: 11, fontFamily: 'BeVietnamPro_400Regular', marginTop: 1 },
+  languageOption: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderRadius: 9, paddingHorizontal: 11, paddingVertical: 10, marginTop: 6 },
+  languageOptionText: { fontSize: 13, fontFamily: 'BeVietnamPro_500Medium' },
 });
