@@ -41,17 +41,6 @@ const CERT_COLORS: Record<string, string> = {
   HACCP: '#DC2626',
 };
 
-const CATEGORY_LIST = [
-  { name: 'Nông sản & Rau củ', img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=240&fit=crop' },
-  { name: 'Phân bón & Vật tư nông nghiệp', img: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=240&fit=crop' },
-  { name: 'Thủy sản', img: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400&h=240&fit=crop' },
-  { name: 'Thịt & Chăn nuôi', img: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400&h=240&fit=crop' },
-  { name: 'Thực phẩm chế biến', img: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=400&h=240&fit=crop' },
-  { name: 'Dược liệu', img: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=400&h=240&fit=crop' },
-  { name: 'Thủ công mỹ nghệ', img: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=400&h=240&fit=crop' },
-  { name: 'Công nghiệp chế biến', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=240&fit=crop' },
-];
-
 // ─── Map section data (matches portal MapSection) ────────────────────────────
 const MAP_BUSINESSES = [
   { id: 'b1',  name: 'HTX Nông nghiệp Bình Phước',      type: 'Hợp tác xã',   wardCode: '25195', wardName: 'Bình Phước',  phone: '0251 123 456' },
@@ -282,8 +271,6 @@ export default function HomeScreen() {
   const [selectedMapWard, setSelectedMapWard] = useState<{ code: string; name: string } | null>(null);
   const [wardModalVisible, setWardModalVisible] = useState(false);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
-  const [categoryOpen, setCategoryOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [scannerVisible, setScannerVisible] = useState(false);
   const [scannerLocked, setScannerLocked] = useState(false);
   const [language, setLanguage] = useState('vi');
@@ -864,87 +851,6 @@ export default function HomeScreen() {
         />
       </View>
 
-      {/* DANH MỤC NGÀNH HÀNG */}
-      <View style={[styles.sectionPadded, { marginTop: 28 }]}>
-        <View style={[styles.sectionHeader, { paddingHorizontal: 0 }]}>
-          <View>
-            <Text style={[styles.catSubLabel, { color: colors.mutedForeground }]}>DANH MỤC</Text>
-            <Text style={[styles.sectionTitle, { color: colors.primary, flex: undefined }]}>Danh mục đáng chú ý</Text>
-          </View>
-          <Pressable onPress={() => router.push('/(tabs)/search')} hitSlop={8}>
-            <Text style={[styles.sectionMore, { color: colors.accent }]}>Xem thêm</Text>
-          </Pressable>
-        </View>
-        <Pressable
-          onPress={() => setCategoryOpen(current => !current)}
-          accessibilityRole="button"
-          accessibilityLabel="Chọn danh mục sản phẩm"
-          accessibilityState={{ expanded: categoryOpen }}
-          style={({ pressed }) => [
-            styles.categoryPicker,
-            {
-              backgroundColor: colors.card,
-              borderColor: categoryOpen ? colors.primary : colors.border,
-              opacity: pressed ? 0.8 : 1,
-            },
-          ]}
-        >
-          <View style={[styles.categoryPickerIcon, { backgroundColor: colors.orangeLight }]}>
-            <Ionicons name="grid-outline" size={18} color={colors.accent} />
-          </View>
-          <Text
-            style={[
-              styles.categoryPickerText,
-              { color: selectedCategory ? colors.foreground : colors.mutedForeground },
-            ]}
-            numberOfLines={1}
-          >
-            {selectedCategory || 'Chọn danh mục sản phẩm'}
-          </Text>
-          <Ionicons name={categoryOpen ? 'chevron-up' : 'chevron-down'} size={18} color={colors.mutedForeground} />
-        </Pressable>
-
-        {categoryOpen ? (
-          <View style={[styles.categoryOptions, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Pressable
-              onPress={() => {
-                setSelectedCategory('');
-                setCategoryOpen(false);
-                router.push('/(tabs)/search');
-              }}
-              style={({ pressed }) => [
-                styles.categoryOption,
-                { backgroundColor: !selectedCategory ? colors.navyLight : colors.card, opacity: pressed ? 0.7 : 1 },
-              ]}
-            >
-              <Text style={[styles.categoryOptionText, { color: !selectedCategory ? colors.primary : colors.foreground }]}>
-                Tất cả danh mục
-              </Text>
-              {!selectedCategory ? <Ionicons name="checkmark" size={17} color={colors.primary} /> : null}
-            </Pressable>
-            {CATEGORY_LIST.map(cat => (
-              <Pressable
-                key={cat.name}
-                onPress={() => {
-                  setSelectedCategory(cat.name);
-                  setCategoryOpen(false);
-                  router.push('/(tabs)/search');
-                }}
-                style={({ pressed }) => [
-                  styles.categoryOption,
-                  { backgroundColor: selectedCategory === cat.name ? colors.navyLight : colors.card, opacity: pressed ? 0.7 : 1 },
-                ]}
-              >
-                <Text style={[styles.categoryOptionText, { color: selectedCategory === cat.name ? colors.primary : colors.foreground }]}>
-                  {cat.name}
-                </Text>
-                {selectedCategory === cat.name ? <Ionicons name="checkmark" size={17} color={colors.primary} /> : null}
-              </Pressable>
-            ))}
-          </View>
-        ) : null}
-      </View>
-
       {/* TIN TỨC MỚI NHẤT */}
       <View style={styles.sectionPadded}>
         <SectionHeading title="Tin tức mới nhất" onMore={() => router.push('/(tabs)/news')} />
@@ -1083,13 +989,6 @@ const styles = StyleSheet.create({
   bizName: { fontSize: 14, fontFamily: 'BeVietnamPro_600SemiBold' },
   bizMeta: { fontSize: 11, marginTop: 2, fontFamily: 'BeVietnamPro_400Regular' },
   // Categories
-  catSubLabel: { fontSize: 10, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 },
-  categoryPicker: { minHeight: 54, borderRadius: 13, borderWidth: 1, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 10 },
-  categoryPickerIcon: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  categoryPickerText: { flex: 1, fontSize: 14, fontFamily: 'BeVietnamPro_500Medium' },
-  categoryOptions: { marginTop: 7, borderRadius: 12, borderWidth: 1, overflow: 'hidden' },
-  categoryOption: { minHeight: 43, paddingHorizontal: 13, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#E2E8F0' },
-  categoryOptionText: { flex: 1, fontSize: 13, fontFamily: 'BeVietnamPro_400Regular' },
   // Enterprise guide
   guideSectionWrap: { marginBottom: 8 },
   guideCard: { borderRadius: 16, borderWidth: 1, padding: 20, gap: 16 },
