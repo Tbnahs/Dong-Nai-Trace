@@ -367,21 +367,6 @@ export default function HomeScreen() {
           >
             <Feather name="globe" size={19} color={colors.primary} />
           </Pressable>
-          {isLoggedIn && (
-            <Pressable
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                router.push('/(tabs)/notifications');
-              }}
-              style={styles.headerIcon}
-              hitSlop={8}
-              accessibilityRole="button"
-              accessibilityLabel="Thông báo"
-            >
-              <Feather name="bell" size={19} color={colors.primary} />
-              <View style={[styles.notificationDot, { backgroundColor: colors.accent }]} />
-            </Pressable>
-          )}
         </View>
       </View>
 
