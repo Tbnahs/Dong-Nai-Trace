@@ -72,7 +72,7 @@ export function PortalHome() {
                 <Search className="h-5 w-5 text-gray-400 mr-3" />
                 <Input 
                   type="text" 
-                  placeholder="Nhập tên sản phẩm, doanh nghiệp, mã GTIN hoặc mã lô/mẻ..." 
+                  placeholder=" Nhập tên sản phẩm, doanh nghiệp, mã GTIN hoặc mã lô/mẻ..." 
                   className="border-0 shadow-none focus-visible:ring-0 text-base h-12 w-full px-0 font-medium placeholder:text-gray-400 placeholder:font-normal"
                 />
               </div>
