@@ -20,13 +20,13 @@ Dependencies are managed with **pnpm** (workspace monorepo).
 pnpm install
 ```
 
-The default `Project` workflow runs only the Expo mobile app:
+The requested Replit setup runs only the Expo mobile app:
 
 ```bash
 pnpm --filter @workspace/mobile run dev
 ```
 
-Use the workflow panel to start the mobile preview. The portal, API server, and mockup sandbox are not part of the default run workflow.
+Use the `artifacts/mobile: expo` workflow to start the mobile preview. The portal, API server, and mockup sandbox are intentionally not started for this setup.
 
 ## Stack
 
