@@ -4,6 +4,7 @@ import {
   Alert,
   FlatList,
   Image,
+  Linking,
   Modal,
   Platform,
   Pressable,
@@ -16,6 +17,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useColors } from '@/hooks/useColors';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import WebView from 'react-native-webview';
@@ -280,11 +282,14 @@ export default function HomeScreen() {
   const [selectedMapWard, setSelectedMapWard] = useState<{ code: string; name: string } | null>(null);
   const [wardModalVisible, setWardModalVisible] = useState(false);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [scannerVisible, setScannerVisible] = useState(false);
+  const [scannerLocked, setScannerLocked] = useState(false);
   const [language, setLanguage] = useState('vi');
   const [bizPage, setBizPage] = useState(1);
   const [prodPage, setProdPage] = useState(1);
   const webViewRef = useRef<any>(null);
   const iframeRef = useRef<any>(null);
+  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
 
   // On web: listen for postMessage from the Leaflet iframe
@@ -345,6 +350,58 @@ export default function HomeScreen() {
     }
   };
 
+  const openScanner = async () => {
+    if (Platform.OS === 'web') {
+      Alert.alert('Quét mã trên điện thoại', 'Mở ứng dụng bằng Expo Go trên điện thoại để sử dụng camera quét mã.');
+      return;
+    }
+
+    if (!cameraPermission?.granted) {
+      if (cameraPermission?.status === 'denied' && !cameraPermission.canAskAgain) {
+        Alert.alert(
+          'Camera đang bị chặn',
+          'Vui lòng cho phép ứng dụng truy cập camera trong phần Cài đặt của thiết bị.',
+          [
+            { text: 'Để sau', style: 'cancel' },
+            { text: 'Mở Cài đặt', onPress: () => Linking.openSettings() },
+          ],
+        );
+        return;
+      }
+
+      const permission = await requestCameraPermission();
+      if (!permission.granted) return;
+    }
+
+    setScannerLocked(false);
+    setScannerVisible(true);
+  };
+
+  const handleBarcodeScanned = ({ data }: { data: string }) => {
+    if (scannerLocked || !data.trim()) return;
+    setScannerLocked(true);
+    if (useGtin) {
+      setGtin(data.trim());
+    } else {
+      setTraceCode(data.trim());
+    }
+    setNotFound(false);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    setScannerVisible(false);
+  };
+
+  const scanButton = (
+    <Pressable
+      onPress={openScanner}
+      accessibilityRole="button"
+      accessibilityLabel="Quét mã QR hoặc mã vạch bằng camera"
+      hitSlop={8}
+      style={({ pressed }) => [styles.scanButton, { opacity: pressed ? 0.55 : 1 }]}
+    >
+      <Ionicons name="scan-outline" size={22} color={colors.primary} />
+    </Pressable>
+  );
+
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
@@ -388,7 +445,7 @@ export default function HomeScreen() {
         <View style={styles.searchArea}>
           {!useGtin ? (
             <View style={[styles.inputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
-              <Ionicons name="barcode-outline" size={21} color={colors.primary} />
+              {scanButton}
               <TextInput
                 style={[styles.input, { color: colors.foreground }]}
                 placeholder="Nhập mã truy xuất sản phẩm"
@@ -403,7 +460,7 @@ export default function HomeScreen() {
           ) : (
             <View style={styles.gtinFields}>
               <View style={[styles.inputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                <Ionicons name="barcode-outline" size={20} color={colors.primary} />
+                {scanButton}
                 <TextInput style={[styles.input, { color: colors.foreground }]} placeholder="Nhập mã GTIN" placeholderTextColor={colors.mutedForeground} value={gtin} onChangeText={setGtin} keyboardType="numeric" />
               </View>
               <View style={[styles.inputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
@@ -438,6 +495,46 @@ export default function HomeScreen() {
 
         <Image source={HERO_GUIDE} style={styles.heroImage} resizeMode="contain" />
       </View>
+
+      <Modal
+        visible={scannerVisible}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        onRequestClose={() => setScannerVisible(false)}
+      >
+        <View style={styles.scannerContainer}>
+          <CameraView
+            style={StyleSheet.absoluteFill}
+            facing="back"
+            barcodeScannerSettings={{ barcodeTypes: ['qr', 'ean13', 'ean8', 'code128', 'code39', 'upc_a', 'upc_e', 'itf14', 'datamatrix', 'pdf417'] }}
+            onBarcodeScanned={scannerLocked ? undefined : handleBarcodeScanned}
+          />
+          <View style={[styles.scannerTopBar, { paddingTop: insets.top + 12 }]}>
+            <Pressable
+              onPress={() => setScannerVisible(false)}
+              accessibilityLabel="Đóng camera"
+              hitSlop={10}
+              style={styles.scannerCloseButton}
+            >
+              <Ionicons name="close" size={25} color="#FFFFFF" />
+            </Pressable>
+            <Text style={[styles.scannerTitle, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Quét mã tra cứu</Text>
+            <View style={styles.scannerCloseButton} />
+          </View>
+          <View style={styles.scannerGuideWrap} pointerEvents="none">
+            <View style={styles.scannerGuide}>
+              <View style={[styles.scannerCorner, styles.cornerTopLeft]} />
+              <View style={[styles.scannerCorner, styles.cornerTopRight]} />
+              <View style={[styles.scannerCorner, styles.cornerBottomLeft]} />
+              <View style={[styles.scannerCorner, styles.cornerBottomRight]} />
+            </View>
+            <View style={styles.scannerHint}>
+              <Ionicons name="scan-outline" size={16} color="#FFFFFF" />
+              <Text style={[styles.scannerHintText, { fontFamily: 'BeVietnamPro_500Medium' }]}>Đưa mã QR hoặc mã vạch vào khung</Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* STATS */}
       <View style={[styles.statsBox, { backgroundColor: colors.softBackground, borderColor: colors.border }]}>
@@ -873,6 +970,7 @@ const styles = StyleSheet.create({
   heroDesc: { fontSize: 14, lineHeight: 22, fontFamily: 'BeVietnamPro_400Regular', marginTop: 16 },
   searchArea: { marginTop: 20 },
   inputRow: { flexDirection: 'row', alignItems: 'center', minHeight: 54, borderRadius: 13, borderWidth: 1, paddingHorizontal: 15, boxShadow: '0px 3px 8px rgba(0, 0, 0, 0.07)', elevation: 2 },
+  scanButton: { width: 30, height: 36, alignItems: 'center', justifyContent: 'center' },
   input: { flex: 1, height: 52, paddingHorizontal: 11, fontSize: 14, fontFamily: 'BeVietnamPro_400Regular' },
   gtinFields: { gap: 9 },
   notFoundBox: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 10, marginTop: 10, borderRadius: 9, borderWidth: 1 },
@@ -885,6 +983,19 @@ const styles = StyleSheet.create({
   radioDot: { width: 9, height: 9, borderRadius: 5 },
   radioText: { fontSize: 12, fontFamily: 'BeVietnamPro_400Regular' },
   heroImage: { width: '100%', height: 230, marginTop: 10 },
+  scannerContainer: { flex: 1, backgroundColor: '#000000' },
+  scannerTopBar: { position: 'absolute', top: 0, left: 0, right: 0, minHeight: 86, paddingHorizontal: 18, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', backgroundColor: 'rgba(0,0,0,0.42)' },
+  scannerCloseButton: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  scannerTitle: { color: '#FFFFFF', fontSize: 16, marginTop: 7 },
+  scannerGuideWrap: { position: 'absolute', top: '35%', left: 0, right: 0, alignItems: 'center' },
+  scannerGuide: { width: 270, height: 190, position: 'relative' },
+  scannerCorner: { position: 'absolute', width: 30, height: 30, borderColor: '#FFFFFF' },
+  cornerTopLeft: { top: 0, left: 0, borderTopWidth: 3, borderLeftWidth: 3, borderTopLeftRadius: 8 },
+  cornerTopRight: { top: 0, right: 0, borderTopWidth: 3, borderRightWidth: 3, borderTopRightRadius: 8 },
+  cornerBottomLeft: { bottom: 0, left: 0, borderBottomWidth: 3, borderLeftWidth: 3, borderBottomLeftRadius: 8 },
+  cornerBottomRight: { bottom: 0, right: 0, borderBottomWidth: 3, borderRightWidth: 3, borderBottomRightRadius: 8 },
+  scannerHint: { flexDirection: 'row', alignItems: 'center', gap: 7, marginTop: 18, paddingHorizontal: 14, paddingVertical: 9, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.58)' },
+  scannerHintText: { color: '#FFFFFF', fontSize: 12 },
   statsBox: { flexDirection: 'row', marginHorizontal: 16, marginTop: 4, paddingVertical: 20, paddingHorizontal: 7, borderRadius: 20, borderWidth: 1 },
   statItem: { flex: 1, alignItems: 'center', gap: 4 },
   statValue: { fontSize: 22, fontFamily: 'BeVietnamPro_700Bold' },
