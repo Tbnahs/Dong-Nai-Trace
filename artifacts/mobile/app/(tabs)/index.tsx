@@ -194,12 +194,14 @@ const MAP_PAGE_SIZE = 5;
 
 // The map is rendered inside an iframe/WebView, so it must use the API's
 // absolute URL instead of a path that resolves against the inline document.
-const API_DOMAIN = process.env.EXPO_PUBLIC_DOMAIN;
+// The API is optional for the mobile-only workflow. Do not point at the
+// Replit dev domain by default: that domain serves Metro, not the API.
+const API_DOMAIN = process.env.EXPO_PUBLIC_API_DOMAIN?.trim();
 const GEOJSON_URL = API_DOMAIN
   ? `https://${API_DOMAIN}/api/geojson/wards`
-  : '/api/geojson/wards';
+  : null;
 
-function buildLeafletHTML(geojsonUrl: string) {
+function buildLeafletHTML(geojsonUrl: string | null) {
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -218,7 +220,7 @@ html,body,#map{width:100%;height:100%;overflow:hidden}
 <div id="map"></div>
 <div id="loading">Đang tải bản đồ...</div>
 <script>
-var GEOJSON_URL="${geojsonUrl}";
+var GEOJSON_URL=${JSON.stringify(geojsonUrl)};
 var sel=null,geoLayer=null,marker=null,provBounds=null;
 var PAL=["#2196F3","#FF9800","#9C27B0","#4CAF50","#F44336","#00BCD4","#FF5722","#3F51B5","#8BC34A","#E91E63","#009688","#FFC107"];
 function wColor(c){var n=parseInt(String(c),10);var i=isNaN(n)?String(c).split('').reduce(function(a,x){return a+x.charCodeAt(0)},0):n;return PAL[i%PAL.length]}
@@ -228,27 +230,31 @@ L.Icon.Default.mergeOptions({iconRetinaUrl:'https://unpkg.com/leaflet@1.9.4/dist
 var map=L.map('map',{center:[11.05,107.17],zoom:9,minZoom:8,maxZoom:13,zoomControl:true,attributionControl:false});
 function putMarker(ll,nm){if(marker)marker.remove();marker=L.marker(ll,{title:nm||''}).addTo(map);if(nm)marker.bindPopup('<div style="font-size:13px;font-weight:600;color:#2740BA">'+nm+'</div>',{closeButton:false}).openPopup();map.flyTo(ll,Math.max(map.getZoom(),11),{animate:true,duration:0.8})}
 function send(d){var s=JSON.stringify(d);if(window.ReactNativeWebView)window.ReactNativeWebView.postMessage(s);else if(window.parent)window.parent.postMessage(s,'*')}
-fetch(GEOJSON_URL).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(data){
-  document.getElementById('loading').style.display='none';
-  geoLayer=L.geoJSON(data,{style:fStyle(null),onEachFeature:function(f,ly){
-    var p=f.properties||{};
-    ly.on({
-      mouseover:function(e){e.target.setStyle({fillOpacity:0.85,weight:2})},
-      mouseout:function(e){geoLayer.resetStyle(e.target)},
-      click:function(e){
-        L.DomEvent.stopPropagation(e);
-        var nw=(!sel||String(sel.code)!==String(p.code))?{code:p.code,name:p.name}:null;
-        sel=nw;
-        geoLayer.setStyle(fStyle(sel?sel.code:null));
-        if(sel){putMarker(e.latlng,p.fullName||p.name)}
-        else{if(marker){marker.remove();marker=null}if(provBounds)map.flyToBounds(provBounds,{padding:[16,16]})}
-        send({type:'wardSelected',ward:sel});
-      }
-    });
-    ly.bindTooltip(p.fullName||p.name,{sticky:true,className:'leaflet-tooltip-custom'});
-  }}).addTo(map);
-  provBounds=geoLayer.getBounds();map.fitBounds(provBounds,{padding:[16,16]});
-}).catch(function(e){document.getElementById('loading').textContent='Không thể tải bản đồ. Thử lại sau.';console.error(e)});
+ if(GEOJSON_URL){
+   fetch(GEOJSON_URL).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(data){
+     document.getElementById('loading').style.display='none';
+     geoLayer=L.geoJSON(data,{style:fStyle(null),onEachFeature:function(f,ly){
+       var p=f.properties||{};
+       ly.on({
+         mouseover:function(e){e.target.setStyle({fillOpacity:0.85,weight:2})},
+         mouseout:function(e){geoLayer.resetStyle(e.target)},
+         click:function(e){
+           L.DomEvent.stopPropagation(e);
+           var nw=(!sel||String(sel.code)!==String(p.code))?{code:p.code,name:p.name}:null;
+           sel=nw;
+           geoLayer.setStyle(fStyle(sel?sel.code:null));
+           if(sel){putMarker(e.latlng,p.fullName||p.name)}
+           else{if(marker){marker.remove();marker=null}if(provBounds)map.flyToBounds(provBounds,{padding:[16,16]})}
+           send({type:'wardSelected',ward:sel});
+         }
+       });
+       ly.bindTooltip(p.fullName||p.name,{sticky:true,className:'leaflet-tooltip-custom'});
+     }}).addTo(map);
+     provBounds=geoLayer.getBounds();map.fitBounds(provBounds,{padding:[16,16]});
+   }).catch(function(){document.getElementById('loading').textContent='Bản đồ chưa được kết nối.'});
+ }else{
+   document.getElementById('loading').textContent='Bản đồ cần kết nối API.';
+ }
 function onMsg(raw){try{var m=typeof raw==='string'?JSON.parse(raw):raw;if(m.type==='selectWard'){sel=m.ward;if(!geoLayer)return;geoLayer.setStyle(fStyle(sel?sel.code:null));if(!sel){if(marker){marker.remove();marker=null}if(provBounds)map.flyToBounds(provBounds,{padding:[16,16]})}else{geoLayer.eachLayer(function(l){if(l.feature&&String(l.feature.properties.code)===String(sel.code)){var b=l.getBounds&&l.getBounds();if(b&&b.isValid())putMarker(b.getCenter(),sel.name)}})}}}catch(e){}}
 document.addEventListener('message',function(e){onMsg(e.data)});
 window.addEventListener('message',function(e){onMsg(e.data)});
@@ -866,7 +872,7 @@ const styles = StyleSheet.create({
   heroTitle: { fontSize: 27, lineHeight: 33, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: -0.3 },
   heroDesc: { fontSize: 14, lineHeight: 22, fontFamily: 'BeVietnamPro_400Regular', marginTop: 16 },
   searchArea: { marginTop: 20 },
-  inputRow: { flexDirection: 'row', alignItems: 'center', minHeight: 54, borderRadius: 13, borderWidth: 1, paddingHorizontal: 15, shadowColor: '#000', shadowOpacity: 0.07, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, elevation: 2 },
+  inputRow: { flexDirection: 'row', alignItems: 'center', minHeight: 54, borderRadius: 13, borderWidth: 1, paddingHorizontal: 15, boxShadow: '0px 3px 8px rgba(0, 0, 0, 0.07)', elevation: 2 },
   input: { flex: 1, height: 52, paddingHorizontal: 11, fontSize: 14, fontFamily: 'BeVietnamPro_400Regular' },
   gtinFields: { gap: 9 },
   notFoundBox: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 10, marginTop: 10, borderRadius: 9, borderWidth: 1 },
@@ -962,7 +968,7 @@ const styles = StyleSheet.create({
   wardOption: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 13, borderBottomWidth: 1 },
   wardOptionText: { fontSize: 14 },
   languageOverlay: { flex: 1, backgroundColor: 'rgba(15,23,42,0.32)', justifyContent: 'flex-start', alignItems: 'flex-end', paddingTop: 76, paddingHorizontal: 16 },
-  languageCard: { width: 220, borderRadius: 14, borderWidth: 1, padding: 12, shadowColor: '#0F172A', shadowOpacity: 0.16, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 8 },
+  languageCard: { width: 220, borderRadius: 14, borderWidth: 1, padding: 12, boxShadow: '0px 8px 18px rgba(15, 23, 42, 0.16)', elevation: 8 },
   languageHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 4, paddingBottom: 8 },
   languageTitle: { fontSize: 15, fontFamily: 'BeVietnamPro_700Bold' },
   languageSubtitle: { fontSize: 11, fontFamily: 'BeVietnamPro_400Regular', marginTop: 1 },
