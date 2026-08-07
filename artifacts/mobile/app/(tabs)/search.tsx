@@ -1,7 +1,11 @@
 import React, { useMemo, useState } from 'react';
 import {
+  Alert,
   FlatList,
   Image,
+  Linking,
+  Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -11,6 +15,9 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as Haptics from 'expo-haptics';
 import { useColors } from '@/hooks/useColors';
 import { ModalPicker } from '@/components/ModalPicker';
 import {
@@ -32,6 +39,7 @@ const PRODUCT_CATEGORIES = CATEGORIES.filter(item => item !== 'Phân bón & Vậ
 
 export default function SearchScreen() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<ResultTab>('products');
   const [searchType, setSearchType] = useState<SearchType>('gtin');
   const [traceCode, setTraceCode] = useState('');
@@ -45,6 +53,9 @@ export default function SearchScreen() {
   const [businessType, setBusinessType] = useState('Tất cả');
   const [sort, setSort] = useState<SortType>('newest');
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [scannerVisible, setScannerVisible] = useState(false);
+  const [scannerLocked, setScannerLocked] = useState(false);
+  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
 
   const filteredProducts = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -97,6 +108,47 @@ export default function SearchScreen() {
     setInputQuery(entered);
   };
 
+  const openScanner = async () => {
+    if (Platform.OS === 'web') {
+      Alert.alert('Quét mã trên điện thoại', 'Mở ứng dụng bằng Expo Go trên điện thoại để sử dụng camera quét mã.');
+      return;
+    }
+
+    if (!cameraPermission?.granted) {
+      if (cameraPermission?.status === 'denied' && !cameraPermission.canAskAgain) {
+        Alert.alert(
+          'Camera đang bị chặn',
+          'Vui lòng cho phép ứng dụng truy cập camera trong phần Cài đặt của thiết bị.',
+          [
+            { text: 'Để sau', style: 'cancel' },
+            { text: 'Mở Cài đặt', onPress: () => Linking.openSettings() },
+          ],
+        );
+        return;
+      }
+
+      const permission = await requestCameraPermission();
+      if (!permission.granted) return;
+    }
+
+    setScannerLocked(false);
+    setScannerVisible(true);
+  };
+
+  const handleBarcodeScanned = ({ data }: { data: string }) => {
+    const value = data.trim();
+    if (scannerLocked || !value) return;
+
+    setScannerLocked(true);
+    if (searchType === 'trace') {
+      setTraceCode(value);
+    } else {
+      setGtin(value);
+    }
+    setScannerVisible(false);
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.softBackground }]}>
       <FlatList<any>
@@ -120,10 +172,11 @@ export default function SearchScreen() {
                   value={traceCode}
                   onChangeText={setTraceCode}
                   colors={colors}
+                  onScan={openScanner}
                 />
               ) : (
                 <View style={styles.lookupInputs}>
-                  <LookupInput icon="barcode-outline" placeholder="Nhập mã GTIN" value={gtin} onChangeText={setGtin} colors={colors} />
+                  <LookupInput icon="barcode-outline" placeholder="Nhập mã GTIN" value={gtin} onChangeText={setGtin} colors={colors} onScan={openScanner} />
                   <LookupInput icon="cube-outline" placeholder="Nhập số lô" value={lot} onChangeText={setLot} colors={colors} />
                 </View>
               )}
@@ -236,6 +289,46 @@ export default function SearchScreen() {
            ? <ProductResult item={item as typeof PRODUCTS[number]} colors={colors} onPress={() => router.push(`/product/${item.id}`)} />
            : <BusinessResult item={item as typeof BUSINESSES[number]} colors={colors} onPress={() => router.push(`/business/${item.id}`)} />}
       />
+      <Modal
+        visible={scannerVisible}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        onRequestClose={() => setScannerVisible(false)}
+      >
+        <View style={styles.scannerContainer}>
+          <CameraView
+            style={StyleSheet.absoluteFill}
+            facing="back"
+            barcodeScannerSettings={{ barcodeTypes: ['qr', 'ean13', 'ean8', 'code128', 'code39', 'upc_a', 'upc_e', 'itf14', 'datamatrix', 'pdf417'] }}
+            onBarcodeScanned={scannerLocked ? undefined : handleBarcodeScanned}
+          />
+          <View style={[styles.scannerTopBar, { paddingTop: insets.top + 12 }]}>
+            <Pressable
+              onPress={() => setScannerVisible(false)}
+              accessibilityRole="button"
+              accessibilityLabel="Đóng camera"
+              hitSlop={10}
+              style={styles.scannerCloseButton}
+            >
+              <Ionicons name="close" size={25} color="#FFFFFF" />
+            </Pressable>
+            <Text style={[styles.scannerTitle, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Quét mã tra cứu</Text>
+            <View style={styles.scannerCloseButton} />
+          </View>
+          <View style={styles.scannerGuideWrap} pointerEvents="none">
+            <View style={styles.scannerGuide}>
+              <View style={[styles.scannerCorner, styles.cornerTopLeft]} />
+              <View style={[styles.scannerCorner, styles.cornerTopRight]} />
+              <View style={[styles.scannerCorner, styles.cornerBottomLeft]} />
+              <View style={[styles.scannerCorner, styles.cornerBottomRight]} />
+            </View>
+            <View style={styles.scannerHint}>
+              <Ionicons name="scan-outline" size={16} color="#FFFFFF" />
+              <Text style={[styles.scannerHintText, { fontFamily: 'BeVietnamPro_500Medium' }]}>Đưa mã QR hoặc mã vạch vào khung</Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -248,16 +341,29 @@ function sortResults<T>(items: T[], sort: SortType, name: (item: T) => string, d
       : 0);
 }
 
-function LookupInput({ icon, placeholder, value, onChangeText, colors }: {
+function LookupInput({ icon, placeholder, value, onChangeText, colors, onScan }: {
   icon: keyof typeof Ionicons.glyphMap;
   placeholder: string;
   value: string;
   onChangeText: (value: string) => void;
   colors: ReturnType<typeof useColors>;
+  onScan?: () => void;
 }) {
   return (
     <View style={[styles.lookupInput, { backgroundColor: colors.card }]}>
-      <Ionicons name={icon} size={19} color={colors.mutedForeground} />
+      {onScan ? (
+        <Pressable
+          onPress={onScan}
+          accessibilityRole="button"
+          accessibilityLabel="Quét mã QR hoặc mã vạch bằng camera"
+          hitSlop={8}
+          style={({ pressed }) => [styles.lookupScanButton, { opacity: pressed ? 0.55 : 1 }]}
+        >
+          <Ionicons name="scan-outline" size={19} color={colors.mutedForeground} />
+        </Pressable>
+      ) : (
+        <Ionicons name={icon} size={19} color={colors.mutedForeground} />
+      )}
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -344,6 +450,7 @@ const styles = StyleSheet.create({
   lookupDescription: { color: 'rgba(255,255,255,0.78)', fontSize: 13, lineHeight: 19, marginTop: 7, marginBottom: 15 },
   lookupInputs: { gap: 9 },
   lookupInput: { minHeight: 46, borderRadius: 23, flexDirection: 'row', alignItems: 'center', gap: 9, paddingHorizontal: 15 },
+  lookupScanButton: { width: 25, height: 30, alignItems: 'center', justifyContent: 'center' },
   lookupInputText: { flex: 1, fontSize: 13, paddingVertical: 0 },
   lookupButton: { height: 46, borderRadius: 23, alignItems: 'center', justifyContent: 'center', flexDirection: 'row', gap: 7, marginTop: 10 },
   lookupButtonText: { fontSize: 14 },
@@ -383,4 +490,17 @@ const styles = StyleSheet.create({
   emptyState: { borderWidth: 1, borderRadius: 13, marginHorizontal: 16, padding: 42, alignItems: 'center', gap: 8 },
   emptyTitle: { fontSize: 15, textAlign: 'center' },
   emptyDescription: { fontSize: 12, textAlign: 'center' },
+  scannerContainer: { flex: 1, backgroundColor: '#000000' },
+  scannerTopBar: { position: 'absolute', top: 0, left: 0, right: 0, minHeight: 86, paddingHorizontal: 18, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', backgroundColor: 'rgba(0,0,0,0.42)' },
+  scannerCloseButton: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  scannerTitle: { color: '#FFFFFF', fontSize: 16, marginTop: 7 },
+  scannerGuideWrap: { position: 'absolute', top: '35%', left: 0, right: 0, alignItems: 'center' },
+  scannerGuide: { width: 270, height: 190, position: 'relative' },
+  scannerCorner: { position: 'absolute', width: 30, height: 30, borderColor: '#FFFFFF' },
+  cornerTopLeft: { top: 0, left: 0, borderTopWidth: 3, borderLeftWidth: 3, borderTopLeftRadius: 8 },
+  cornerTopRight: { top: 0, right: 0, borderTopWidth: 3, borderRightWidth: 3, borderTopRightRadius: 8 },
+  cornerBottomLeft: { bottom: 0, left: 0, borderBottomWidth: 3, borderLeftWidth: 3, borderBottomLeftRadius: 8 },
+  cornerBottomRight: { bottom: 0, right: 0, borderBottomWidth: 3, borderRightWidth: 3, borderBottomRightRadius: 8 },
+  scannerHint: { flexDirection: 'row', alignItems: 'center', gap: 7, marginTop: 18, paddingHorizontal: 14, paddingVertical: 9, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.58)' },
+  scannerHintText: { color: '#FFFFFF', fontSize: 12 },
 });
