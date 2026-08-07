@@ -20,7 +20,13 @@ Dependencies are managed with **pnpm** (workspace monorepo).
 pnpm install
 ```
 
-Workflows auto-start the portal (port `$PORT`, base path `/portal/`) and the API server (port `8080`). Use the workflow panel to start the mobile or slides artifacts when needed.
+The default `Project` workflow runs only the Expo mobile app:
+
+```bash
+pnpm --filter @workspace/mobile run dev
+```
+
+Use the workflow panel to start the mobile preview. The portal, API server, and mockup sandbox are not part of the default run workflow.
 
 ## Stack
 
