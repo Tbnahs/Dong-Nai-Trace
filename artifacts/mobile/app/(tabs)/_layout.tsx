@@ -24,10 +24,6 @@ function NativeTabLayout() {
         <Icon sf={{ default: 'newspaper', selected: 'newspaper.fill' }} />
         <Label>Tin tức</Label>
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="contact">
-        <Icon sf={{ default: 'phone', selected: 'phone.fill' }} />
-        <Label>Liên hệ</Label>
-      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="account">
         <Icon sf={{ default: 'person', selected: 'person.fill' }} />
         <Label>Tài khoản</Label>
@@ -108,18 +104,6 @@ function ClassicTabLayout() {
               <SymbolView name="newspaper" tintColor={color} size={24} />
             ) : (
               <Feather name="book-open" size={22} color={color} />
-            ),
-        }}
-      />
-      <Tabs.Screen
-        name="contact"
-        options={{
-          title: 'Liên hệ',
-          tabBarIcon: ({ color }) =>
-            isIOS ? (
-              <SymbolView name="phone" tintColor={color} size={24} />
-            ) : (
-              <Feather name="phone" size={22} color={color} />
             ),
         }}
       />
