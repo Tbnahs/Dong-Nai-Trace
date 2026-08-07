@@ -8,11 +8,13 @@ import {
   Text,
   TextInput,
   View,
+  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import * as DocumentPicker from 'expo-document-picker';
 import { useAuth, OrgProfile } from '@/context/AuthContext';
 import { ModalPicker } from '@/components/ModalPicker';
 import { ORG_TYPE_OPTIONS, SECTOR_OPTIONS, DISTRICT_OPTIONS } from '@/data/mock';
@@ -51,6 +53,26 @@ export default function OrgProfileScreen() {
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  const pickDocument = async (key: 'businessLicense' | 'authorizationDocument' | 'certification' | 'businessImage') => {
+    const result = await DocumentPicker.getDocumentAsync({ type: ['application/pdf', 'image/*'], copyToCacheDirectory: true });
+    if (result.canceled || !result.assets?.[0]) return;
+    const asset = result.assets[0];
+    setForm(current => ({ ...current, [key]: {
+      name: asset.name,
+      uri: asset.uri,
+      mimeType: asset.mimeType,
+      size: asset.size,
+    } }));
+    setSaved(false);
+  };
+
+  const documentRows: Array<{ key: 'businessLicense' | 'authorizationDocument' | 'certification' | 'businessImage'; label: string }> = [
+    { key: 'businessLicense', label: 'Giấy phép kinh doanh' },
+    { key: 'authorizationDocument', label: 'Giấy ủy quyền' },
+    { key: 'certification', label: `Giấy chứng nhận${form.certificationType ? ` · ${form.certificationType}` : ''}` },
+    { key: 'businessImage', label: 'Hình ảnh doanh nghiệp' },
+  ];
 
   useEffect(() => {
     if (user?.profile) setForm(user.profile);
@@ -144,6 +166,24 @@ export default function OrgProfileScreen() {
       <Field label="Email đại diện" value={form.representativeEmail} onChange={set('representativeEmail')} keyboard="email-address" />
       <Field label="CMND / CCCD" value={form.cccd} onChange={set('cccd')} keyboard="phone-pad" />
 
+      <Text style={[styles.sectionTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold', marginTop: 8 }]}>Tài liệu đính kèm</Text>
+      <Text style={[styles.documentHint, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Hồ sơ số hóa dùng để xác minh doanh nghiệp.</Text>
+      {documentRows.map(row => {
+        const doc = form[row.key];
+        return (
+          <Pressable key={row.key} onPress={() => pickDocument(row.key)} style={[styles.documentRow, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            {row.key === 'businessImage' && doc?.uri
+              ? <Image source={{ uri: doc.uri }} style={styles.documentThumb} />
+              : <Ionicons name={doc ? 'document-text-outline' : 'cloud-upload-outline'} size={22} color={doc ? colors.primary : colors.mutedForeground} />}
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.documentLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{row.label}</Text>
+              <Text style={[styles.documentName, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]} numberOfLines={1}>{doc?.name ?? 'Chưa có tệp · Nhấn để tải lên'}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={colors.mutedForeground} />
+          </Pressable>
+        );
+      })}
+
       <Pressable
         onPress={handleSave}
         disabled={saving}
@@ -173,4 +213,9 @@ const styles = StyleSheet.create({
   inputField: { flex: 1, height: 44, paddingHorizontal: 12, fontSize: 14 },
   saveBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 14, borderRadius: 12, marginTop: 8 },
   saveBtnText: { fontSize: 16, color: '#FFF' },
+  documentHint: { fontSize: 12, marginTop: -8, marginBottom: 10 },
+  documentRow: { flexDirection: 'row', alignItems: 'center', gap: 10, borderRadius: 12, borderWidth: 1, padding: 12, marginBottom: 8 },
+  documentThumb: { width: 42, height: 42, borderRadius: 8 },
+  documentLabel: { fontSize: 13 },
+  documentName: { fontSize: 11, marginTop: 3 },
 });

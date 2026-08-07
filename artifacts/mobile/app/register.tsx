@@ -31,12 +31,12 @@ export default function RegisterScreen() {
     name: '', taxCode: '', type: 'Doanh nghiệp', industry: 'Nông sản & Rau củ',
     address: '', district: '', phone: '', email: '',
     representative: '', representativePhone: '', representativeEmail: '', cccd: '',
-    gcp: '', password: '', confirmPassword: '',
+    gcp: '', password: '', confirmPassword: '', certificationType: 'OCOP',
   });
 
   const set = (key: keyof typeof form) => (val: string) => setForm(f => ({ ...f, [key]: val }));
 
-  const pickDocument = async (key: 'businessLicense' | 'authorizationDocument') => {
+  const pickDocument = async (key: 'businessLicense' | 'authorizationDocument' | 'certification' | 'businessImage') => {
     const result = await DocumentPicker.getDocumentAsync({
       type: ['application/pdf', 'image/*'],
       copyToCacheDirectory: true,
@@ -56,7 +56,7 @@ export default function RegisterScreen() {
   function UploadZone({ label, hint, fieldKey }: {
     label: string;
     hint: string;
-    fieldKey: 'businessLicense' | 'authorizationDocument';
+    fieldKey: 'businessLicense' | 'authorizationDocument' | 'certification' | 'businessImage';
   }) {
     const document = form[fieldKey];
     return (
@@ -202,6 +202,18 @@ export default function RegisterScreen() {
               <Text style={[styles.uploadDescription, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Tải lên ảnh hoặc PDF để hồ sơ được xác minh nhanh hơn.</Text>
               <UploadZone fieldKey="businessLicense" label="Giấy phép kinh doanh / Hợp tác xã" hint="PDF, JPG hoặc PNG" />
               <UploadZone fieldKey="authorizationDocument" label="Giấy ủy quyền (nếu có)" hint="PDF, JPG hoặc PNG" />
+              <View style={[styles.optionalBox, { borderColor: colors.border, backgroundColor: colors.muted }]}>
+                <Text style={[styles.uploadTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Giấy chứng nhận (nếu có)</Text>
+                <ModalPicker
+                  label="Loại giấy chứng nhận"
+                  value={form.certificationType ?? ''}
+                  options={['OCOP', 'VietGAP', 'GlobalGAP', 'HACCP', 'ISO 22000', 'Hữu cơ', 'Khác']}
+                  placeholder="Chọn loại giấy chứng nhận..."
+                  onChange={set('certificationType')}
+                />
+                <UploadZone fieldKey="certification" label="Tệp giấy chứng nhận" hint="PDF, JPG hoặc PNG" />
+              </View>
+              <UploadZone fieldKey="businessImage" label="Hình ảnh doanh nghiệp" hint="JPG hoặc PNG" />
             </View>
           </>
         )}
@@ -280,6 +292,7 @@ const styles = StyleSheet.create({
   inputWrap: { borderRadius: 10, borderWidth: 1 },
   input: { height: 44, paddingHorizontal: 12, fontSize: 14 },
   uploadCard: { borderRadius: 14, borderWidth: 1, padding: 14, marginTop: 4 },
+  optionalBox: { borderRadius: 12, borderWidth: 1, padding: 12, marginBottom: 12 },
   uploadTitle: { fontSize: 15 },
   uploadDescription: { fontSize: 12, lineHeight: 18, marginTop: 4, marginBottom: 14 },
   uploadZone: { minHeight: 68, borderRadius: 10, borderWidth: 1.5, borderStyle: 'dashed', padding: 10, flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 },

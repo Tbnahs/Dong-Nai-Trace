@@ -294,6 +294,9 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
   const [touched, setTouched] = useState(false);
   const [licenseDoc, setLicenseDoc] = useState<import('../context/AuthContext').FileDoc | null>(null);
   const [authDoc, setAuthDoc] = useState<import('../context/AuthContext').FileDoc | null>(null);
+  const [certificationDoc, setCertificationDoc] = useState<import('../context/AuthContext').FileDoc | null>(null);
+  const [businessImage, setBusinessImage] = useState<import('../context/AuthContext').FileDoc | null>(null);
+  const [certificationType, setCertificationType] = useState('OCOP');
 
   const set = (key: keyof RegForm) => (val: string) => setForm(f => ({ ...f, [key]: val }));
   const e = touched ? errors : {};
@@ -386,6 +389,28 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
           <div className="sm:col-span-2">
             <UploadZone label="Giấy phép kinh doanh (bản scan)" hint="Kéo thả hoặc bấm để tải lên (PDF, JPG, PNG)" onChange={setLicenseDoc} />
           </div>
+          <div className="sm:col-span-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Giấy chứng nhận (nếu có)</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <select
+                value={certificationType}
+                onChange={ev => setCertificationType(ev.target.value)}
+                className={iCls() + ' bg-white'}
+              >
+                <option>OCOP</option>
+                <option>VietGAP</option>
+                <option>GlobalGAP</option>
+                <option>HACCP</option>
+                <option>ISO 22000</option>
+                <option>Hữu cơ</option>
+                <option>Khác</option>
+              </select>
+              <UploadZone label="" hint="Tải giấy chứng nhận (PDF, JPG, PNG)" onChange={setCertificationDoc} />
+            </div>
+          </div>
+          <div className="sm:col-span-2">
+            <UploadZone label="Hình ảnh doanh nghiệp" hint="Tải lên hình ảnh trụ sở, nhà xưởng hoặc vùng sản xuất (JPG, PNG)" accept=".jpg,.jpeg,.png" onChange={setBusinessImage} />
+          </div>
         </div>
       )}
 
@@ -464,6 +489,8 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
               saveRegistrationProfile(form.repEmail, profile, {
                 ...(licenseDoc ? { businessLicense: licenseDoc } : {}),
                 ...(authDoc ? { authorization: authDoc } : {}),
+                ...(certificationDoc ? { certification: certificationDoc, certificationType } : {}),
+                ...(businessImage ? { businessImage } : {}),
               });
               localStorage.setItem('pendingLoginEmail', form.repEmail);
               onSwitchToLogin();

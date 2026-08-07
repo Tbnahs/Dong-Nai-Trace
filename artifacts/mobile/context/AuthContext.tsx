@@ -17,6 +17,9 @@ export interface OrgProfile {
   gcp?: string;
   businessLicense?: UploadedDocument;
   authorizationDocument?: UploadedDocument;
+  certification?: UploadedDocument;
+  certificationType?: string;
+  businessImage?: UploadedDocument;
 }
 
 export interface UploadedDocument {

@@ -31,6 +31,9 @@ export interface AuthUser {
   documents: {
     businessLicense?: FileDoc;
     authorization?: FileDoc;
+    certification?: FileDoc;
+    certificationType?: string;
+    businessImage?: FileDoc;
   };
 }
 
@@ -41,16 +44,16 @@ interface AuthContextType {
   logout: () => void;
   saveRegistrationDocs: (
     email: string,
-    docs: { businessLicense?: FileDoc; authorization?: FileDoc },
+    docs: { businessLicense?: FileDoc; authorization?: FileDoc; certification?: FileDoc; certificationType?: string; businessImage?: FileDoc },
   ) => void;
   saveRegistrationProfile: (
     email: string,
     profile: OrgProfile,
-    docs: { businessLicense?: FileDoc; authorization?: FileDoc },
+    docs: { businessLicense?: FileDoc; authorization?: FileDoc; certification?: FileDoc; certificationType?: string; businessImage?: FileDoc },
   ) => void;
   updateProfile: (
     profile: OrgProfile,
-    docs: { businessLicense?: FileDoc; authorization?: FileDoc },
+    docs: { businessLicense?: FileDoc; authorization?: FileDoc; certification?: FileDoc; certificationType?: string; businessImage?: FileDoc },
   ) => void;
 }
 
@@ -64,7 +67,7 @@ const AuthContext = createContext<AuthContextType>({
   updateProfile: () => {},
 });
 
-function loadDocs(email: string): { businessLicense?: FileDoc; authorization?: FileDoc } {
+function loadDocs(email: string): AuthUser['documents'] {
   try {
     const raw = localStorage.getItem(`regDocs_${email}`);
     return raw ? JSON.parse(raw) : {};
@@ -121,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const saveRegistrationDocs = (
     email: string,
-    docs: { businessLicense?: FileDoc; authorization?: FileDoc },
+    docs: AuthUser['documents'],
   ) => {
     try {
       localStorage.setItem(`regDocs_${email}`, JSON.stringify(docs));
@@ -133,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const saveRegistrationProfile = (
     email: string,
     profile: OrgProfile,
-    docs: { businessLicense?: FileDoc; authorization?: FileDoc },
+    docs: AuthUser['documents'],
   ) => {
     try {
       localStorage.setItem(`regProfile_${email}`, JSON.stringify(profile));
@@ -145,7 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const updateProfile = (
     profile: OrgProfile,
-    docs: { businessLicense?: FileDoc; authorization?: FileDoc },
+    docs: AuthUser['documents'],
   ) => {
     const previousEmail = user?.email;
     const email = profile.representativeEmail || profile.email;

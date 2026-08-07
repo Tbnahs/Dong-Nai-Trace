@@ -526,7 +526,7 @@ export default function OrgProfilePage() {
               </div>
             </motion.section>
 
-            {(editing || documents.businessLicense || documents.authorization) && (
+            {(editing || documents.businessLicense || documents.authorization || documents.certification || documents.businessImage) && (
               <motion.section 
                 custom={5} initial="hidden" animate="visible" variants={sectionVariants}
                 className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 lg:p-8 lg:col-span-2"
@@ -553,11 +553,33 @@ export default function OrgProfilePage() {
                       doc={documents.authorization}
                       onChange={doc => setDocuments(current => ({ ...current, authorization: doc }))}
                     />
+                    <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+                      <label className="mb-3 block text-sm font-bold text-slate-700">Giấy chứng nhận (nếu có)</label>
+                      <select
+                        value={documents.certificationType ?? 'OCOP'}
+                        onChange={event => setDocuments(current => ({ ...current, certificationType: event.target.value }))}
+                        className="mb-3 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
+                      >
+                        {['OCOP', 'VietGAP', 'GlobalGAP', 'HACCP', 'ISO 22000', 'Hữu cơ', 'Khác'].map(type => <option key={type}>{type}</option>)}
+                      </select>
+                      <UploadField
+                        label="Tệp giấy chứng nhận"
+                        doc={documents.certification}
+                        onChange={doc => setDocuments(current => ({ ...current, certification: doc }))}
+                      />
+                    </div>
+                    <UploadField
+                      label="Hình ảnh doanh nghiệp"
+                      doc={documents.businessImage}
+                      onChange={doc => setDocuments(current => ({ ...current, businessImage: doc }))}
+                    />
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {documents.businessLicense && <DocCard doc={documents.businessLicense} label="Giấy phép kinh doanh" />}
                     {documents.authorization && <DocCard doc={documents.authorization} label="Giấy ủy quyền" />}
+                    {documents.certification && <DocCard doc={documents.certification} label={`Giấy chứng nhận · ${documents.certificationType ?? 'Đã cấp'}`} />}
+                    {documents.businessImage && <DocCard doc={documents.businessImage} label="Hình ảnh doanh nghiệp" />}
                   </div>
                 )}
               </motion.section>

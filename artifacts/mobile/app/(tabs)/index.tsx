@@ -189,7 +189,7 @@ function SectionHeading({ title, onMore }: { title: string; onMore: () => void }
   );
 }
 
-const MAP_PAGE_SIZE = 5;
+const MAP_PAGE_SIZE = 15;
 
 // The map is rendered inside an iframe/WebView, so it must use the API's
 // absolute URL instead of a path that resolves against the inline document.
@@ -928,11 +928,11 @@ const styles = StyleSheet.create({
   mapTitle: { fontSize: 17, fontFamily: 'BeVietnamPro_700Bold', lineHeight: 24, textTransform: 'uppercase' },
   wardPickerBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 10, borderWidth: 1, maxWidth: 160, flexShrink: 1 },
   wardPickerText: { flex: 1, fontSize: 12, fontFamily: 'BeVietnamPro_500Medium' },
-  mapImageWrap: { borderRadius: 14, overflow: 'hidden', height: 240, position: 'relative' },
+  mapImageWrap: { borderRadius: 14, overflow: 'hidden', height: 300, position: 'relative' },
   mapWebView: { flex: 1, borderRadius: 14 },
   mapChip: { position: 'absolute', top: 10, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 },
   mapChipText: { color: '#FFF', fontSize: 12, fontFamily: 'BeVietnamPro_700Bold' },
-  mapPanel: { borderRadius: 16, borderWidth: 1, overflow: 'hidden' },
+  mapPanel: { borderRadius: 16, borderWidth: 1, overflow: 'hidden', minHeight: 400 },
   mapTabs: { flexDirection: 'row', borderBottomWidth: 1 },
   mapTab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 12, borderBottomWidth: 2, borderBottomColor: 'transparent' },
   mapTabText: { fontSize: 13, fontFamily: 'BeVietnamPro_600SemiBold' },
