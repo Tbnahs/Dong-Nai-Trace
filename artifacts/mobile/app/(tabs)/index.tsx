@@ -282,6 +282,8 @@ export default function HomeScreen() {
   const [selectedMapWard, setSelectedMapWard] = useState<{ code: string; name: string } | null>(null);
   const [wardModalVisible, setWardModalVisible] = useState(false);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [scannerVisible, setScannerVisible] = useState(false);
   const [scannerLocked, setScannerLocked] = useState(false);
   const [language, setLanguage] = useState('vi');
@@ -873,21 +875,74 @@ export default function HomeScreen() {
             <Text style={[styles.sectionMore, { color: colors.accent }]}>Xem thêm</Text>
           </Pressable>
         </View>
-        <View style={styles.categoryGrid}>
-          {CATEGORY_LIST.map((cat, idx) => (
+        <Pressable
+          onPress={() => setCategoryOpen(current => !current)}
+          accessibilityRole="button"
+          accessibilityLabel="Chọn danh mục sản phẩm"
+          accessibilityState={{ expanded: categoryOpen }}
+          style={({ pressed }) => [
+            styles.categoryPicker,
+            {
+              backgroundColor: colors.card,
+              borderColor: categoryOpen ? colors.primary : colors.border,
+              opacity: pressed ? 0.8 : 1,
+            },
+          ]}
+        >
+          <View style={[styles.categoryPickerIcon, { backgroundColor: colors.orangeLight }]}>
+            <Ionicons name="grid-outline" size={18} color={colors.accent} />
+          </View>
+          <Text
+            style={[
+              styles.categoryPickerText,
+              { color: selectedCategory ? colors.foreground : colors.mutedForeground },
+            ]}
+            numberOfLines={1}
+          >
+            {selectedCategory || 'Chọn danh mục sản phẩm'}
+          </Text>
+          <Ionicons name={categoryOpen ? 'chevron-up' : 'chevron-down'} size={18} color={colors.mutedForeground} />
+        </Pressable>
+
+        {categoryOpen ? (
+          <View style={[styles.categoryOptions, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <Pressable
-              key={idx}
-              onPress={() => router.push(`/(tabs)/search`)}
-              style={({ pressed }) => [styles.categoryCard, { borderColor: colors.border, opacity: pressed ? 0.85 : 1 }]}
+              onPress={() => {
+                setSelectedCategory('');
+                setCategoryOpen(false);
+                router.push('/(tabs)/search');
+              }}
+              style={({ pressed }) => [
+                styles.categoryOption,
+                { backgroundColor: !selectedCategory ? colors.navyLight : colors.card, opacity: pressed ? 0.7 : 1 },
+              ]}
             >
-              <Image source={{ uri: cat.img }} style={styles.categoryImage} resizeMode="cover" />
-              <View style={[styles.categoryLabel, { backgroundColor: colors.card }]}>
-                <Text style={[styles.categoryName, { color: colors.foreground }]} numberOfLines={2}>{cat.name}</Text>
-                <Text style={[styles.categoryArrow, { color: colors.accent }]}>→</Text>
-              </View>
+              <Text style={[styles.categoryOptionText, { color: !selectedCategory ? colors.primary : colors.foreground }]}>
+                Tất cả danh mục
+              </Text>
+              {!selectedCategory ? <Ionicons name="checkmark" size={17} color={colors.primary} /> : null}
             </Pressable>
-          ))}
-        </View>
+            {CATEGORY_LIST.map(cat => (
+              <Pressable
+                key={cat.name}
+                onPress={() => {
+                  setSelectedCategory(cat.name);
+                  setCategoryOpen(false);
+                  router.push('/(tabs)/search');
+                }}
+                style={({ pressed }) => [
+                  styles.categoryOption,
+                  { backgroundColor: selectedCategory === cat.name ? colors.navyLight : colors.card, opacity: pressed ? 0.7 : 1 },
+                ]}
+              >
+                <Text style={[styles.categoryOptionText, { color: selectedCategory === cat.name ? colors.primary : colors.foreground }]}>
+                  {cat.name}
+                </Text>
+                {selectedCategory === cat.name ? <Ionicons name="checkmark" size={17} color={colors.primary} /> : null}
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
       </View>
 
       {/* TIN TỨC MỚI NHẤT */}
@@ -1029,12 +1084,12 @@ const styles = StyleSheet.create({
   bizMeta: { fontSize: 11, marginTop: 2, fontFamily: 'BeVietnamPro_400Regular' },
   // Categories
   catSubLabel: { fontSize: 10, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 2 },
-  categoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 4 },
-  categoryCard: { width: '47.5%', borderRadius: 10, borderWidth: 1, overflow: 'hidden' },
-  categoryImage: { width: '100%', height: 90 },
-  categoryLabel: { paddingHorizontal: 8, paddingVertical: 7, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 4 },
-  categoryName: { flex: 1, fontSize: 11, fontFamily: 'BeVietnamPro_600SemiBold', lineHeight: 15 },
-  categoryArrow: { fontSize: 15, fontFamily: 'BeVietnamPro_700Bold' },
+  categoryPicker: { minHeight: 54, borderRadius: 13, borderWidth: 1, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', gap: 10 },
+  categoryPickerIcon: { width: 34, height: 34, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
+  categoryPickerText: { flex: 1, fontSize: 14, fontFamily: 'BeVietnamPro_500Medium' },
+  categoryOptions: { marginTop: 7, borderRadius: 12, borderWidth: 1, overflow: 'hidden' },
+  categoryOption: { minHeight: 43, paddingHorizontal: 13, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#E2E8F0' },
+  categoryOptionText: { flex: 1, fontSize: 13, fontFamily: 'BeVietnamPro_400Regular' },
   // Enterprise guide
   guideSectionWrap: { marginBottom: 8 },
   guideCard: { borderRadius: 16, borderWidth: 1, padding: 20, gap: 16 },
