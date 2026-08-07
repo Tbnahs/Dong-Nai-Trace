@@ -485,6 +485,7 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
                 representativePhone: form.repPhone,
                 representativeEmail: form.repEmail,
                 cccd: form.cccd,
+                gcp: form.gcp,
               };
               saveRegistrationProfile(form.repEmail, profile, {
                 ...(licenseDoc ? { businessLicense: licenseDoc } : {}),

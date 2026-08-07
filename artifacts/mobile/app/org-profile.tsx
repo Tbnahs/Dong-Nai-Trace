@@ -3,6 +3,9 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  Linking,
+  Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -10,8 +13,10 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as DocumentPicker from 'expo-document-picker';
 import { useColors } from '@/hooks/useColors';
 import { useAuth, OrgProfile, UploadedDocument } from '@/context/AuthContext';
@@ -28,6 +33,7 @@ function Field({
   icon,
   editable = true,
   keyboardType = 'default',
+  onScan,
 }: {
   label: string;
   value: string;
@@ -36,6 +42,7 @@ function Field({
   icon: keyof typeof Ionicons.glyphMap;
   editable?: boolean;
   keyboardType?: 'default' | 'phone-pad' | 'email-address';
+  onScan?: () => void;
 }) {
   const colors = useColors();
   return (
@@ -45,13 +52,26 @@ function Field({
         <Text style={[styles.fieldLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>{label}</Text>
       </View>
       {editing && editable ? (
-        <TextInput
-          value={value}
-          onChangeText={onChange}
-          keyboardType={keyboardType}
-          autoCapitalize={keyboardType === 'email-address' ? 'none' : 'sentences'}
-          style={[styles.editInput, { color: colors.foreground, borderColor: colors.border, fontFamily: 'BeVietnamPro_500Medium' }]}
-        />
+        <View style={[styles.editInputRow, { borderColor: colors.border, backgroundColor: '#FFF' }]}>
+          <TextInput
+            value={value}
+            onChangeText={onChange}
+            keyboardType={keyboardType}
+            autoCapitalize={keyboardType === 'email-address' ? 'none' : 'sentences'}
+            style={[styles.editInput, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}
+          />
+          {onScan && (
+            <Pressable
+              onPress={onScan}
+              accessibilityRole="button"
+              accessibilityLabel="Quét mã GCP bằng camera"
+              hitSlop={8}
+              style={({ pressed }) => [styles.scanButton, { opacity: pressed ? 0.55 : 1 }]}
+            >
+              <Ionicons name="scan-outline" size={21} color={colors.primary} />
+            </Pressable>
+          )}
+        </View>
       ) : (
         <View style={[styles.readValue, { backgroundColor: colors.muted, borderColor: colors.border }]}>
           <Text style={[styles.readValueText, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>
@@ -134,10 +154,14 @@ function DocumentCard({
 
 export default function OrgProfileScreen() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const { user, updateProfile, isLoggedIn } = useAuth();
+  const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [editing, setEditing] = useState(false);
   const [saved, setSaved] = useState(false);
   const [form, setForm] = useState<OrgProfile | null>(null);
+  const [scannerVisible, setScannerVisible] = useState(false);
+  const [scannerLocked, setScannerLocked] = useState(false);
 
   useEffect(() => {
     if (user?.profile) setForm({ ...user.profile });
@@ -165,6 +189,40 @@ export default function OrgProfileScreen() {
     if (result.canceled || !asset) return;
     const document: UploadedDocument = { name: asset.name, uri: asset.uri, mimeType: asset.mimeType, size: asset.size };
     setForm(current => current ? { ...current, [key]: document } : current);
+  };
+
+  const openGcpScanner = async () => {
+    if (Platform.OS === 'web') {
+      Alert.alert('Quét mã trên điện thoại', 'Mở ứng dụng bằng Expo Go trên điện thoại để sử dụng camera quét mã.');
+      return;
+    }
+
+    if (!cameraPermission?.granted) {
+      if (cameraPermission?.status === 'denied' && !cameraPermission.canAskAgain) {
+        Alert.alert(
+          'Camera đang bị chặn',
+          'Vui lòng cho phép ứng dụng truy cập camera trong phần Cài đặt của thiết bị.',
+          [
+            { text: 'Để sau', style: 'cancel' },
+            { text: 'Mở Cài đặt', onPress: () => Linking.openSettings() },
+          ],
+        );
+        return;
+      }
+
+      const permission = await requestCameraPermission();
+      if (!permission.granted) return;
+    }
+
+    setScannerLocked(false);
+    setScannerVisible(true);
+  };
+
+  const handleGcpScanned = ({ data }: { data: string }) => {
+    if (scannerLocked || !data.trim()) return;
+    setScannerLocked(true);
+    set('gcp', data.trim());
+    setScannerVisible(false);
   };
 
   const handleSave = async () => {
@@ -232,6 +290,15 @@ export default function OrgProfileScreen() {
         <View style={styles.fieldsGrid}>
           <Field label="Tên doanh nghiệp / tổ chức" value={form.name} editing={editing} onChange={value => set('name', value)} icon="business-outline" />
           <Field label="Mã số thuế" value={form.taxCode} editing={false} onChange={() => {}} icon="document-text-outline" />
+          <Field
+            label="Mã GCP"
+            value={form.gcp ?? ''}
+            editing={editing}
+            onChange={value => set('gcp', value)}
+            icon="finger-print-outline"
+            keyboardType="phone-pad"
+            onScan={openGcpScanner}
+          />
           {editing ? (
             <ModalPicker label="Loại hình" value={form.type} options={ORG_TYPE_OPTIONS} onChange={value => set('type', value)} />
           ) : (
@@ -301,6 +368,46 @@ export default function OrgProfileScreen() {
           </Section>
         )}
       </View>
+
+      <Modal
+        visible={scannerVisible}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        onRequestClose={() => setScannerVisible(false)}
+      >
+        <View style={styles.scannerContainer}>
+          <CameraView
+            style={StyleSheet.absoluteFill}
+            facing="back"
+            barcodeScannerSettings={{ barcodeTypes: ['qr', 'ean13', 'ean8', 'code128', 'code39', 'upc_a', 'upc_e', 'itf14', 'datamatrix', 'pdf417'] }}
+            onBarcodeScanned={scannerLocked ? undefined : handleGcpScanned}
+          />
+          <View style={[styles.scannerTopBar, { paddingTop: insets.top + 12 }]}>
+            <Pressable
+              onPress={() => setScannerVisible(false)}
+              accessibilityLabel="Đóng camera"
+              hitSlop={10}
+              style={styles.scannerCloseButton}
+            >
+              <Ionicons name="close" size={25} color="#FFFFFF" />
+            </Pressable>
+            <Text style={[styles.scannerTitle, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Quét mã GCP</Text>
+            <View style={styles.scannerCloseButton} />
+          </View>
+          <View style={styles.scannerGuideWrap} pointerEvents="none">
+            <View style={styles.scannerGuide}>
+              <View style={[styles.scannerCorner, styles.cornerTopLeft]} />
+              <View style={[styles.scannerCorner, styles.cornerTopRight]} />
+              <View style={[styles.scannerCorner, styles.cornerBottomLeft]} />
+              <View style={[styles.scannerCorner, styles.cornerBottomRight]} />
+            </View>
+            <View style={styles.scannerHint}>
+              <Ionicons name="scan-outline" size={16} color="#FFFFFF" />
+              <Text style={[styles.scannerHintText, { fontFamily: 'BeVietnamPro_500Medium' }]}>Đưa mã GCP vào khung quét</Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
@@ -342,7 +449,9 @@ const styles = StyleSheet.create({
   field: { gap: 6 },
   fieldLabelRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   fieldLabel: { fontSize: 10, letterSpacing: 0.5, textTransform: 'uppercase' },
-  editInput: { height: 44, borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, fontSize: 14, backgroundColor: '#FFF' },
+  editInputRow: { height: 44, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 10 },
+  editInput: { flex: 1, height: 42, paddingHorizontal: 12, fontSize: 14 },
+  scanButton: { width: 38, height: 42, alignItems: 'center', justifyContent: 'center' },
   readValue: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 12, borderRadius: 10, borderWidth: 1 },
   readValueText: { fontSize: 14 },
   bottomGrid: { gap: 14 },
@@ -360,4 +469,17 @@ const styles = StyleSheet.create({
   documentPreview: { flexDirection: 'row', alignItems: 'center', gap: 9, padding: 10, borderRadius: 9, borderWidth: 1 },
   documentImage: { width: 42, height: 42, borderRadius: 7 },
   documentName: { flex: 1, fontSize: 12 },
+  scannerContainer: { flex: 1, backgroundColor: '#000000' },
+  scannerTopBar: { position: 'absolute', top: 0, left: 0, right: 0, minHeight: 86, paddingHorizontal: 18, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', backgroundColor: 'rgba(0,0,0,0.42)' },
+  scannerCloseButton: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  scannerTitle: { color: '#FFFFFF', fontSize: 16, marginTop: 7 },
+  scannerGuideWrap: { position: 'absolute', top: '35%', left: 0, right: 0, alignItems: 'center' },
+  scannerGuide: { width: 270, height: 190, position: 'relative' },
+  scannerCorner: { position: 'absolute', width: 30, height: 30, borderColor: '#FFFFFF' },
+  cornerTopLeft: { top: 0, left: 0, borderTopWidth: 3, borderLeftWidth: 3 },
+  cornerTopRight: { top: 0, right: 0, borderTopWidth: 3, borderRightWidth: 3 },
+  cornerBottomLeft: { bottom: 0, left: 0, borderBottomWidth: 3, borderLeftWidth: 3 },
+  cornerBottomRight: { bottom: 0, right: 0, borderBottomWidth: 3, borderRightWidth: 3 },
+  scannerHint: { flexDirection: 'row', alignItems: 'center', gap: 7, marginTop: 18, paddingHorizontal: 14, paddingVertical: 9, borderRadius: 18, backgroundColor: 'rgba(0,0,0,0.58)' },
+  scannerHintText: { color: '#FFFFFF', fontSize: 12 },
 });

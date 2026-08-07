@@ -3,7 +3,7 @@ import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { 
   Edit2, CheckCircle2, Save, X, FileText, Download, UploadCloud,
   ImageIcon, Building2, MapPin, Phone, Mail,
-  ShieldCheck, Briefcase, FileSignature, Map, UserRound, CreditCard 
+  ShieldCheck, Briefcase, FileSignature, Map, UserRound, CreditCard, Fingerprint
 } from 'lucide-react';
 import { useAuth, type FileDoc, type OrgProfile } from '../context/AuthContext';
 
@@ -246,6 +246,7 @@ export default function OrgProfilePage() {
   const legalFields = [
     { label: 'Tên doanh nghiệp / tổ chức', key: 'name', icon: Building2, fullWidth: true },
     { label: 'Mã số thuế', key: 'taxCode', icon: FileSignature },
+    { label: 'Mã GCP', key: 'gcp', icon: Fingerprint },
     { label: 'Loại hình', key: 'type', icon: Briefcase, options: ORG_TYPES },
     { label: 'Ngành nghề', key: 'industry', icon: ShieldCheck, fullWidth: true },
   ];

@@ -41,6 +41,7 @@ export default function OrgProfilePage() {
   const [form, setForm] = useState({
     name: 'HTX Nông nghiệp Xanh',
     mst: '3601234567',
+    gcp: '4466',
     address: 'Xã Bình Lộc, Huyện Vĩnh Cửu, Tỉnh Đồng Nai',
     representative: 'Nguyễn Văn A',
     phone: '0901234567',
@@ -140,6 +141,17 @@ export default function OrgProfilePage() {
                     className="w-full border border-gray-200 bg-gray-50 rounded-md p-2.5 text-gray-500 cursor-not-allowed"
                   />
                   <p className="text-xs text-gray-400 mt-1">MST không thể thay đổi. Liên hệ Sở KH&CN nếu cần.</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Mã GCP</label>
+                  <input
+                    type="text"
+                    value={form.gcp}
+                    onChange={e => handleChange('gcp', e.target.value)}
+                    placeholder="Nhập mã GCP"
+                    className="w-full border border-gray-300 rounded-md p-2.5 focus:ring-[#2740BA] focus:border-[#2740BA]"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">Mã định danh cơ sở theo tiêu chuẩn GCP (nếu có).</p>
                 </div>
 
                 <div className="md:col-span-2">
