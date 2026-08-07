@@ -12,6 +12,8 @@ import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { NOTIFICATIONS, NotificationItem } from '@/data/mock';
+import { useAuth } from '@/context/AuthContext';
+import { Redirect } from 'expo-router';
 
 const TYPE_ICONS: Record<string, { name: string; color: string; bg: string }> = {
   success: { name: 'checkmark-circle', color: '#16A34A', bg: '#DCFCE7' },
@@ -23,6 +25,7 @@ const TYPE_ICONS: Record<string, { name: string; color: string; bg: string }> = 
 export default function NotificationsScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const { isLoggedIn, isLoading } = useAuth();
   const [notifications, setNotifications] = useState<NotificationItem[]>(NOTIFICATIONS);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
@@ -39,6 +42,9 @@ export default function NotificationsScreen() {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
+
+  if (isLoading) return null;
+  if (!isLoggedIn) return <Redirect href="/(tabs)/account" />;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

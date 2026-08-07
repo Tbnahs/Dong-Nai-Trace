@@ -1,1 +1,2 @@
 - [Hồ sơ sản phẩm](product-profile-management.md) — luôn là màn hình quản lý danh sách; chỉ cải thiện giao diện, không chuyển thành hồ sơ tĩnh.
+- [Mobile–portal parity](mobile-portal-parity.md) — các luồng doanh nghiệp trên mobile phải giữ cùng nội dung, trạng thái và hành vi cốt lõi với portal.

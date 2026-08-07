@@ -99,7 +99,7 @@ export default function SearchScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.softBackground }]}>
-      <FlatList
+      <FlatList<any>
         data={results}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}
@@ -233,8 +233,8 @@ export default function SearchScreen() {
           </View>
         }
         renderItem={({ item }) => tab === 'products'
-          ? <ProductResult item={item} colors={colors} onPress={() => router.push(`/product/${item.id}`)} />
-          : <BusinessResult item={item} colors={colors} onPress={() => router.push(`/business/${item.id}`)} />}
+           ? <ProductResult item={item as typeof PRODUCTS[number]} colors={colors} onPress={() => router.push(`/product/${item.id}`)} />
+           : <BusinessResult item={item as typeof BUSINESSES[number]} colors={colors} onPress={() => router.push(`/business/${item.id}`)} />}
       />
     </View>
   );

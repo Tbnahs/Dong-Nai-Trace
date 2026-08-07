@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Linking,
   Platform,
   Pressable,
   ScrollView,
@@ -58,7 +59,7 @@ export default function ContactScreen() {
   const [sent, setSent] = useState(false);
 
   const handleSend = async () => {
-    if (!name.trim() || !email.trim() || !message.trim()) {
+    if (!name.trim() || !message.trim()) {
       Alert.alert('Thông báo', 'Vui lòng điền đầy đủ thông tin');
       return;
     }
@@ -77,25 +78,41 @@ export default function ContactScreen() {
       contentContainerStyle={{ padding: 16, paddingBottom: 80, gap: 16 }}
       showsVerticalScrollIndicator={false}
     >
+      <View style={[styles.hero, { backgroundColor: colors.primary }]}>
+        <Text style={[styles.heroEyebrow, { fontFamily: 'BeVietnamPro_700Bold' }]}>LIÊN HỆ</Text>
+        <Text style={[styles.heroTitle, { fontFamily: 'BeVietnamPro_700Bold' }]}>KÊNH HỖ TRỢ & LIÊN HỆ</Text>
+        <Text style={[styles.heroDesc, { fontFamily: 'BeVietnamPro_400Regular' }]}>
+          Liên hệ với Sở Khoa học và Công nghệ Thành phố Đồng Nai để được hỗ trợ về hệ thống truy xuất nguồn gốc sản phẩm.
+        </Text>
+      </View>
       {/* Contact cards */}
       <Text style={[styles.sectionTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Thông tin liên hệ</Text>
 
       {[
-        { icon: 'location-outline', label: 'Địa chỉ', sub: '1592 Nguyễn Ái Quốc, KP6, P.Trung Dũng, Biên Hoà, Đồng Nai', color: colors.accent },
-        { icon: 'call-outline', label: 'Điện thoại', sub: '0251.3822297', color: colors.primary },
-        { icon: 'mail-outline', label: 'Email', sub: 'skhcn@dongnai.gov.vn', color: colors.primary },
+        { icon: 'location-outline', label: 'Địa chỉ', sub: '1592 Nguyễn Ái Quốc, KP6, P.Trung Dũng, Biên Hoà, Đồng Nai', color: colors.accent, href: 'https://maps.google.com/?q=1592+Nguyễn+Ái+Quốc+Biên+Hoà+Đồng+Nai' },
+        { icon: 'call-outline', label: 'Điện thoại', sub: '0251.3822297', color: colors.primary, href: 'tel:02513822297' },
+        { icon: 'mail-outline', label: 'Email', sub: 'skhcn@dongnai.gov.vn', color: colors.primary, href: 'mailto:skhcn@dongnai.gov.vn' },
         { icon: 'time-outline', label: 'Giờ làm việc', sub: 'Thứ 2 – Thứ 6: 7:30 – 11:30 & 13:30 – 17:00', color: colors.primary },
       ].map((item, idx) => (
-        <View key={idx} style={[styles.contactCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        <Pressable
+          key={idx}
+          disabled={!item.href}
+          onPress={() => item.href && Linking.openURL(item.href)}
+          style={({ pressed }) => [styles.contactCard, { backgroundColor: colors.card, borderColor: colors.border, opacity: pressed ? 0.8 : 1 }]}
+        >
           <View style={[styles.contactIcon, { backgroundColor: item.color + '18' }]}>
             <Ionicons name={item.icon as any} size={22} color={item.color} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={[styles.contactLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{item.label}</Text>
-            <Text style={[styles.contactValue, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{item.sub}</Text>
+            <Text style={[styles.contactValue, { color: item.href ? colors.primary : colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{item.sub}</Text>
           </View>
-        </View>
+        </Pressable>
       ))}
+      <Pressable onPress={() => Linking.openURL('https://dongnai.gov.vn')} style={styles.externalLink}>
+        <Ionicons name="open-outline" size={16} color={colors.primary} />
+        <Text style={[styles.externalLinkText, { color: colors.primary, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Cổng thông tin điện tử tỉnh Đồng Nai</Text>
+      </Pressable>
 
       {/* FAQ */}
       <Text style={[styles.sectionTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold', marginTop: 8 }]}>Câu hỏi thường gặp</Text>
@@ -226,11 +243,17 @@ export default function ContactScreen() {
 }
 
 const styles = StyleSheet.create({
+  hero: { marginHorizontal: -16, marginTop: -16, paddingHorizontal: 20, paddingVertical: 28, marginBottom: 2 },
+  heroEyebrow: { color: '#BFDBFE', fontSize: 11, letterSpacing: 1.5, marginBottom: 6 },
+  heroTitle: { color: '#FFF', fontSize: 23, lineHeight: 30 },
+  heroDesc: { color: '#DBEAFE', fontSize: 13, lineHeight: 20, marginTop: 8 },
   sectionTitle: { fontSize: 18 },
   contactCard: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: 12, borderWidth: 1 },
   contactIcon: { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },
   contactLabel: { fontSize: 11, marginBottom: 2 },
   contactValue: { fontSize: 14 },
+  externalLink: { flexDirection: 'row', alignItems: 'center', gap: 7, marginTop: -4, marginBottom: 2 },
+  externalLinkText: { fontSize: 13 },
   faqItem: { borderRadius: 12, borderWidth: 1, overflow: 'hidden' },
   faqHeader: { flexDirection: 'row', alignItems: 'center', padding: 14, gap: 10 },
   faqQ: { fontSize: 13, lineHeight: 19 },

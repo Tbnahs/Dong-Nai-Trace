@@ -28,10 +28,6 @@ function NativeTabLayout() {
         <Icon sf={{ default: 'phone', selected: 'phone.fill' }} />
         <Label>Liên hệ</Label>
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="notifications">
-        <Icon sf={{ default: 'bell', selected: 'bell.fill' }} />
-        <Label>Thông báo</Label>
-      </NativeTabs.Trigger>
       <NativeTabs.Trigger name="account">
         <Icon sf={{ default: 'person', selected: 'person.fill' }} />
         <Label>Tài khoản</Label>
@@ -124,18 +120,6 @@ function ClassicTabLayout() {
               <SymbolView name="phone" tintColor={color} size={24} />
             ) : (
               <Feather name="phone" size={22} color={color} />
-            ),
-        }}
-      />
-      <Tabs.Screen
-        name="notifications"
-        options={{
-          title: 'Thông báo',
-          tabBarIcon: ({ color }) =>
-            isIOS ? (
-              <SymbolView name="bell" tintColor={color} size={24} />
-            ) : (
-              <Feather name="bell" size={22} color={color} />
             ),
         }}
       />

@@ -19,6 +19,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import WebView from 'react-native-webview';
+import { useAuth } from '@/context/AuthContext';
 import {
   BUSINESSES,
   NEWS,
@@ -189,7 +190,7 @@ function SectionHeading({ title, onMore }: { title: string; onMore: () => void }
   );
 }
 
-const MAP_PAGE_SIZE = 15;
+const MAP_PAGE_SIZE = 5;
 
 // The map is rendered inside an iframe/WebView, so it must use the API's
 // absolute URL instead of a path that resolves against the inline document.
@@ -261,6 +262,7 @@ const LEAFLET_HTML = buildLeafletHTML(GEOJSON_URL);
 export default function HomeScreen() {
   const colors = useColors();
   const insets = useSafeAreaInsets();
+  const { isLoggedIn } = useAuth();
   const [traceCode, setTraceCode] = useState('');
   const [useGtin, setUseGtin] = useState(false);
   const [gtin, setGtin] = useState('');
@@ -352,16 +354,35 @@ export default function HomeScreen() {
             <Text style={[styles.brandTagline, { color: colors.mutedForeground }]}>HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM</Text>
           </View>
         </Pressable>
-        <Pressable
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            setLanguageModalVisible(true);
-          }}
-          style={styles.headerIcon}
-          hitSlop={8}
-        >
-          <Feather name="globe" size={19} color={colors.primary} />
-        </Pressable>
+        <View style={styles.headerActions}>
+          <Pressable
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setLanguageModalVisible(true);
+            }}
+            style={styles.headerIcon}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel="Ngôn ngữ"
+          >
+            <Feather name="globe" size={19} color={colors.primary} />
+          </Pressable>
+          {isLoggedIn && (
+            <Pressable
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/(tabs)/notifications');
+              }}
+              style={styles.headerIcon}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel="Thông báo"
+            >
+              <Feather name="bell" size={19} color={colors.primary} />
+              <View style={[styles.notificationDot, { backgroundColor: colors.accent }]} />
+            </Pressable>
+          )}
+        </View>
       </View>
 
       {/* HERO */}
@@ -853,7 +874,9 @@ const styles = StyleSheet.create({
   logo: { width: 39, height: 39 },
   brandName: { fontSize: 15, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: 0.1 },
   brandTagline: { fontSize: 7, fontFamily: 'BeVietnamPro_500Medium', marginTop: 2 },
-  headerIcon: { padding: 7 },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+  headerIcon: { padding: 7, position: 'relative' },
+  notificationDot: { position: 'absolute', right: 4, top: 4, width: 6, height: 6, borderRadius: 3, borderWidth: 1, borderColor: '#FFF' },
   hero: { paddingTop: 24, paddingHorizontal: 20, alignItems: 'stretch' },
   heroTitle: { fontSize: 27, lineHeight: 33, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: -0.3 },
   heroDesc: { fontSize: 14, lineHeight: 22, fontFamily: 'BeVietnamPro_400Regular', marginTop: 16 },
