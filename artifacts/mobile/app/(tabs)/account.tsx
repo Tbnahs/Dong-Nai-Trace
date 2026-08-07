@@ -224,13 +224,6 @@ function ProfileView() {
       </View>
 
       <View style={[styles.menuSection, { backgroundColor: colors.background }]}>
-        <Text style={[styles.menuSectionTitle, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>HỖ TRỢ</Text>
-        <View style={[styles.menuGroup, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <MenuItem icon="call-outline" label="Liên hệ & Hỗ trợ" onPress={() => router.push('/contact')} />
-        </View>
-      </View>
-
-      <View style={[styles.menuSection, { backgroundColor: colors.background }]}>
         <View style={[styles.menuGroup, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <MenuItem icon="log-out-outline" label="Đăng xuất" onPress={handleLogout} danger />
         </View>

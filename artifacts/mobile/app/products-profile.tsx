@@ -101,6 +101,7 @@ function ProductEditor({ initial, onClose, onSave }: { initial: ProductForm; onC
   const colors = useColors();
   const [form, setForm] = useState<ProductForm>(initial);
   const [error, setError] = useState('');
+  const [certSearch, setCertSearch] = useState('');
   const set = <K extends keyof ProductForm>(key: K, value: ProductForm[K]) => setForm(current => ({ ...current, [key]: value }));
 
   const pickImage = async () => {
@@ -136,7 +137,65 @@ function ProductEditor({ initial, onClose, onSave }: { initial: ProductForm; onC
       <Text style={[styles.label, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Mô tả sản phẩm</Text>
       <TextInput value={form.description} onChangeText={value => set('description', value)} placeholder="Mô tả ngắn gọn về sản phẩm, vùng trồng, quy trình sản xuất..." placeholderTextColor={colors.mutedForeground} multiline textAlignVertical="top" style={[styles.textArea, { color: colors.foreground, borderColor: colors.border, fontFamily: 'BeVietnamPro_400Regular' }]} />
       <Text style={[styles.editorSection, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>CHỨNG NHẬN CHẤT LƯỢNG</Text>
-      <View style={styles.optionWrap}>{CERTS.map(cert => <Pressable key={cert} onPress={() => set('certs', form.certs.includes(cert) ? form.certs.filter(item => item !== cert) : [...form.certs, cert])} style={[styles.option, { borderColor: form.certs.includes(cert) ? colors.primary : colors.border, backgroundColor: form.certs.includes(cert) ? colors.navyLight : colors.muted }]}><Ionicons name={form.certs.includes(cert) ? 'checkmark-circle' : 'ellipse-outline'} size={15} color={form.certs.includes(cert) ? colors.primary : colors.mutedForeground} /><Text style={[styles.optionText, { color: form.certs.includes(cert) ? colors.primary : colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>{cert}</Text></Pressable>)}</View>
+      {form.certs.length > 0 && (
+        <View style={styles.selectedCerts}>
+          {form.certs.map(cert => (
+            <View key={cert} style={[styles.selectedCert, { backgroundColor: colors.navyLight, borderColor: `${colors.primary}55` }]}>
+              <Ionicons name="checkmark-circle" size={14} color={colors.primary} />
+              <Text style={[styles.optionText, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>{cert}</Text>
+              <Pressable onPress={() => set('certs', form.certs.filter(item => item !== cert))} hitSlop={6}>
+                <Ionicons name="close" size={13} color={colors.primary} />
+              </Pressable>
+            </View>
+          ))}
+        </View>
+      )}
+      <View style={styles.certSearchRow}>
+        <TextInput
+          value={certSearch}
+          onChangeText={setCertSearch}
+          placeholder="Tìm hoặc nhập tên chứng nhận..."
+          placeholderTextColor={colors.mutedForeground}
+          style={[styles.certSearchInput, { color: colors.foreground, borderColor: colors.border, fontFamily: 'BeVietnamPro_400Regular' }]}
+        />
+        <Pressable
+          onPress={() => {
+            const custom = certSearch.trim();
+            if (custom && !form.certs.some(cert => cert.toLowerCase() === custom.toLowerCase())) {
+              set('certs', [...form.certs, custom]);
+              setCertSearch('');
+            }
+          }}
+          disabled={!certSearch.trim()}
+          style={[styles.addCertButton, { borderColor: colors.border, opacity: certSearch.trim() ? 1 : 0.4 }]}
+          accessibilityLabel="Thêm chứng nhận mới"
+        >
+          <Ionicons name="add" size={20} color={colors.primary} />
+        </Pressable>
+      </View>
+      {certSearch.trim() && (
+        <View style={[styles.certSuggestions, { borderColor: colors.border, backgroundColor: colors.card }]}>
+          {CERTS.filter(cert => cert.toLowerCase().includes(certSearch.trim().toLowerCase()) && !form.certs.includes(cert)).map(cert => (
+            <Pressable
+              key={cert}
+              onPress={() => { set('certs', [...form.certs, cert]); setCertSearch(''); }}
+              style={[styles.certSuggestion, { borderBottomColor: colors.border }]}
+            >
+              <Ionicons name="shield-checkmark-outline" size={15} color={colors.mutedForeground} />
+              <Text style={[styles.optionText, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{cert}</Text>
+            </Pressable>
+          ))}
+          {!CERTS.some(cert => cert.toLowerCase() === certSearch.trim().toLowerCase()) && (
+            <Pressable
+              onPress={() => { set('certs', [...form.certs, certSearch.trim()]); setCertSearch(''); }}
+              style={[styles.certSuggestion, { borderBottomColor: colors.border }]}
+            >
+              <Ionicons name="add" size={15} color={colors.primary} />
+              <Text style={[styles.optionText, { color: colors.primary, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Thêm "{certSearch.trim()}"</Text>
+            </Pressable>
+          )}
+        </View>
+      )}
       <Text style={[styles.editorSection, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>HÌNH ẢNH SẢN PHẨM</Text>
       <Pressable onPress={pickImage} style={[styles.upload, { borderColor: colors.border, backgroundColor: colors.muted }]}>
         {form.image ? <Image source={{ uri: form.image }} style={styles.uploadImage} /> : <Ionicons name="cloud-upload-outline" size={28} color={colors.primary} />}
@@ -274,6 +333,13 @@ const styles = StyleSheet.create({
   optionWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 11 },
   option: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 7, borderRadius: 7, borderWidth: 1 },
   optionText: { fontSize: 10 },
+  selectedCerts: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 9 },
+  selectedCert: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 8, paddingVertical: 6, borderRadius: 8, borderWidth: 1 },
+  certSearchRow: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  certSearchInput: { flex: 1, height: 43, borderWidth: 1, borderRadius: 9, paddingHorizontal: 11, fontSize: 13 },
+  addCertButton: { width: 43, height: 43, borderRadius: 9, borderWidth: 1, borderStyle: 'dashed', alignItems: 'center', justifyContent: 'center' },
+  certSuggestions: { borderWidth: 1, borderRadius: 9, marginTop: 5, overflow: 'hidden' },
+  certSuggestion: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: 11, paddingVertical: 9, borderBottomWidth: StyleSheet.hairlineWidth },
   upload: { flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: 60, padding: 9, borderRadius: 10, borderWidth: 1, borderStyle: 'dashed' },
   uploadImage: { width: 48, height: 48, borderRadius: 7 },
   uploadTitle: { fontSize: 12 },

@@ -237,11 +237,7 @@ export default function OrgProfileScreen() {
           ) : (
             <Field label="Loại hình" value={form.type} editing={false} onChange={() => {}} icon="briefcase-outline" />
           )}
-          {editing ? (
-            <ModalPicker label="Ngành nghề" value={form.industry} options={SECTOR_OPTIONS} onChange={value => set('industry', value)} />
-          ) : (
-            <Field label="Ngành nghề" value={form.industry} editing={false} onChange={() => {}} icon="shield-checkmark-outline" />
-          )}
+          <Field label="Ngành nghề" value={form.industry} editing={editing} onChange={value => set('industry', value)} icon="shield-checkmark-outline" />
         </View>
       </Section>
 
