@@ -221,7 +221,7 @@ export default function LandingPage() {
                         type="text"
                         value={traceCode}
                         onChange={(e) => setTraceCode(e.target.value)}
-                        placeholder="Nhập mã truy xuất sản phẩm"
+                        placeholder="Quét hoặc nhập mã truy xuất sản phẩm"
                         className="ml-3 sm:ml-4 w-full bg-transparent outline-none text-base sm:text-lg text-gray-700 placeholder:text-gray-400"
                       />
                     </div>
