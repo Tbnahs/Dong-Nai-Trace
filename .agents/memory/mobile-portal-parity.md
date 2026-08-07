@@ -8,3 +8,9 @@ Mobile là phiên bản đồng hành của portal, không phải một luồng 
 **Why:** Người dùng chuyển đổi giữa portal và mobile cho cùng một tài khoản; khác biệt về trường biểu mẫu hoặc trạng thái dễ gây nhầm lẫn và mất dữ liệu.
 
 **How to apply:** Khi sửa một luồng doanh nghiệp ở portal, đối chiếu ngay màn hình mobile tương ứng, đặc biệt các trường tạo/chỉnh sửa, trạng thái duyệt, tài liệu đính kèm và điều kiện đăng nhập.
+
+Đối với bản đồ, mobile phải tải trực tiếp cùng endpoint GeoJSON từ API như portal; không thay thế bằng dữ liệu hình học giả hoặc fallback rút gọn.
+
+**Why:** Ranh giới phường/xã là dữ liệu sản phẩm cần nhất quán; fallback đơn giản làm bản đồ nhìn sai so với portal và khiến thao tác chọn khu vực không đáng tin cậy.
+
+**How to apply:** Giữ mobile gọi `/api/geojson/wards` qua domain được inject bởi workflow/deployment. Nếu API lỗi, hiển thị trạng thái kết nối rõ ràng thay vì vẽ bản đồ thay thế.

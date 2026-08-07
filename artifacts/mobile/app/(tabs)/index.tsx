@@ -185,54 +185,18 @@ const MAP_PAGE_SIZE = 5;
 
 // The map is rendered inside an iframe/WebView, so it must use the API's
 // absolute URL instead of a path that resolves against the inline document.
-// The API is optional for the mobile-only workflow. Do not point at the
-// Replit dev domain by default: that domain serves Metro, not the API.
-const API_DOMAIN = process.env.EXPO_PUBLIC_API_DOMAIN?.trim();
+// Mobile and portal must use the same ward boundaries. The artifact workflow
+// injects EXPO_PUBLIC_DOMAIN with the Replit dev/deployment domain, where the
+// API is routed at /api.
+const API_DOMAIN = (
+  process.env.EXPO_PUBLIC_API_DOMAIN?.trim() ||
+  process.env.EXPO_PUBLIC_DOMAIN?.trim()
+);
 const GEOJSON_URL = API_DOMAIN
   ? `https://${API_DOMAIN}/api/geojson/wards`
-  : null;
+  : '';
 
-// Lightweight offline fallback for the mobile-only workflow. The full ward
-// boundaries remain served by the API when it is available, but the mobile
-// app must still show a useful interactive map when only Expo is running.
-const FALLBACK_WARD_BOUNDS = [
-  { code: '25195', name: 'Bình Phước', fullName: 'Phường Bình Phước', center: [106.87115, 11.51606], half: [0.068, 0.058] },
-  { code: '25210', name: 'Đồng Xoài', fullName: 'Phường Đồng Xoài', center: [106.81518, 11.52053], half: [0.069, 0.045] },
-  { code: '25217', name: 'Phước Long', fullName: 'Phường Phước Long', center: [106.99477, 11.82421], half: [0.058, 0.048] },
-  { code: '25246', name: 'Bình Tân', fullName: 'Xã Bình Tân', center: [106.84365, 11.81419], half: [0.106, 0.069] },
-  { code: '25255', name: 'Long Hà', fullName: 'Xã Long Hà', center: [106.82112, 11.71075], half: [0.073, 0.089] },
-  { code: '25270', name: 'Lộc Ninh', fullName: 'Phường Lộc Ninh', center: [106.63199, 11.82965], half: [0.061, 0.046] },
-  { code: '25279', name: 'Lộc Tấn', fullName: 'Xã Lộc Tấn', center: [106.516, 11.87709], half: [0.115, 0.072] },
-  { code: '26068', name: 'Biên Hòa', fullName: 'Phường Biên Hòa', center: [106.78974, 10.93674], half: [0.039, 0.031] },
-  { code: '26104', name: 'Xuân Lập', fullName: 'Phường Xuân Lập', center: [107.18708, 10.90525], half: [0.039, 0.032] },
-  { code: '26170', name: 'Trị An', fullName: 'Phường Trị An', center: [106.99764, 11.29375], half: [0.147, 0.161] },
-  { code: '26188', name: 'Tân Triều', fullName: 'Phường Tân Triều', center: [106.813, 11.01262], half: [0.041, 0.054] },
-  { code: '26281', name: 'Hưng Thịnh', fullName: 'Xã Hưng Thịnh', center: [107.06755, 10.92926], half: [0.036, 0.054] },
-  { code: '26326', name: 'Dầu Giây', fullName: 'Phường Dầu Giây', center: [107.11356, 10.89417], half: [0.07, 0.074] },
-  { code: '26341', name: 'Cẩm Mỹ', fullName: 'Xã Cẩm Mỹ', center: [107.26807, 10.81099], half: [0.066, 0.052] },
-  { code: '26485', name: 'Nhơn Trạch', fullName: 'Phường Nhơn Trạch', center: [106.90729, 10.75395], half: [0.069, 0.049] },
-] as const;
-
-const FALLBACK_GEOJSON = {
-  type: 'FeatureCollection',
-  features: FALLBACK_WARD_BOUNDS.map(({ code, name, fullName, center: [lng, lat], half: [lngHalf, latHalf] }) => ({
-    type: 'Feature',
-    id: code,
-    properties: { code, name, fullName },
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[
-        [lng - lngHalf, lat - latHalf],
-        [lng + lngHalf, lat - latHalf],
-        [lng + lngHalf, lat + latHalf],
-        [lng - lngHalf, lat + latHalf],
-        [lng - lngHalf, lat - latHalf],
-      ]],
-    },
-  })),
-};
-
-function buildLeafletHTML(geojsonUrl: string | null, fallbackGeojson: typeof FALLBACK_GEOJSON) {
+function buildLeafletHTML(geojsonUrl: string) {
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -252,7 +216,6 @@ html,body,#map{width:100%;height:100%;overflow:hidden}
 <div id="loading">Đang tải bản đồ...</div>
 <script>
 var GEOJSON_URL=${JSON.stringify(geojsonUrl)};
-var FALLBACK_GEOJSON=${JSON.stringify(fallbackGeojson)};
 var sel=null,geoLayer=null,marker=null,provBounds=null;
 var PAL=["#2196F3","#FF9800","#9C27B0","#4CAF50","#F44336","#00BCD4","#FF5722","#3F51B5","#8BC34A","#E91E63","#009688","#FFC107"];
 function wColor(c){var n=parseInt(String(c),10);var i=isNaN(n)?String(c).split('').reduce(function(a,x){return a+x.charCodeAt(0)},0):n;return PAL[i%PAL.length]}
@@ -284,10 +247,10 @@ function send(d){var s=JSON.stringify(d);if(window.ReactNativeWebView)window.Rea
      provBounds=geoLayer.getBounds();map.fitBounds(provBounds,{padding:[16,16]});
   }
   if(GEOJSON_URL){
-    fetch(GEOJSON_URL).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(renderGeoJSON).catch(function(){renderGeoJSON(FALLBACK_GEOJSON)});
- }else{
-    renderGeoJSON(FALLBACK_GEOJSON);
- }
+    fetch(GEOJSON_URL).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(renderGeoJSON).catch(function(){document.getElementById('loading').textContent='Không thể kết nối dữ liệu bản đồ.'});
+  }else{
+    document.getElementById('loading').textContent='Chưa cấu hình kết nối API bản đồ.';
+  }
 function onMsg(raw){try{var m=typeof raw==='string'?JSON.parse(raw):raw;if(m.type==='selectWard'){sel=m.ward;if(!geoLayer)return;geoLayer.setStyle(fStyle(sel?sel.code:null));if(!sel){if(marker){marker.remove();marker=null}if(provBounds)map.flyToBounds(provBounds,{padding:[16,16]})}else{geoLayer.eachLayer(function(l){if(l.feature&&String(l.feature.properties.code)===String(sel.code)){var b=l.getBounds&&l.getBounds();if(b&&b.isValid())putMarker(b.getCenter(),sel.name)}})}}}catch(e){}}
 document.addEventListener('message',function(e){onMsg(e.data)});
 window.addEventListener('message',function(e){onMsg(e.data)});
@@ -296,7 +259,7 @@ window.addEventListener('message',function(e){onMsg(e.data)});
 </html>`;
 }
 
-const LEAFLET_HTML = buildLeafletHTML(GEOJSON_URL, FALLBACK_GEOJSON);
+const LEAFLET_HTML = buildLeafletHTML(GEOJSON_URL);
 
 export default function HomeScreen() {
   const colors = useColors();
