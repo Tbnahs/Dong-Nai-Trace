@@ -459,40 +459,41 @@ export default function SearchResultsPage() {
                   {filteredBusinesses.map(b => {
                     const isHighlighted = highlighted === b.id;
                     return (
-                      <div
-                        key={b.id}
-                        id={`item-${b.id}`}
-                        className={`bg-white rounded-xl border shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 overflow-hidden cursor-pointer group h-full flex flex-col
-                          ${isHighlighted ? 'border-[#E8650A]' : 'border-slate-200'}`}
-                        style={isHighlighted ? { animation: 'highlight-pulse 2s ease-out forwards' } : undefined}
-                      >
-                        <div className="h-44 overflow-hidden">
-                          <img src={b.img} alt={b.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                        </div>
-                        <div className="p-4 flex-1 flex flex-col">
-                          <div className="flex items-start justify-between gap-2 mb-2">
-                            <h4 className="font-bold text-[#2740BA] group-hover:text-[#E8650A] transition-colors leading-tight">{b.name}</h4>
-                            <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" aria-label="Đã xác thực" />
+                      <Link key={b.id} href={`/doanh-nghiep/${b.id}`}>
+                        <div
+                          id={`item-${b.id}`}
+                          className={`bg-white rounded-xl border shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 overflow-hidden cursor-pointer group h-full flex flex-col
+                            ${isHighlighted ? 'border-[#E8650A]' : 'border-slate-200'}`}
+                          style={isHighlighted ? { animation: 'highlight-pulse 2s ease-out forwards' } : undefined}
+                        >
+                          <div className="h-44 overflow-hidden">
+                            <img src={b.img} alt={b.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                           </div>
-                          <div className="flex items-center gap-1.5 mb-1">
-                            <MapPin className="w-3.5 h-3.5 text-gray-400" />
-                            <span className="text-sm text-gray-500">{b.district}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 mb-3">
-                            <Phone className="w-3.5 h-3.5 text-gray-400" />
-                            <span className="text-sm text-gray-500">{b.phone}</span>
-                          </div>
-                          <div className="flex items-center justify-between mt-auto">
-                            <div className="flex gap-1.5 flex-wrap">
-                              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${typeColor[b.type] || 'bg-gray-100 text-gray-600'}`}>{b.type}</span>
-                              {b.cert && (
-                                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${certColor[b.cert] || 'bg-gray-100 text-gray-600'}`}>{b.cert}</span>
-                              )}
+                          <div className="p-4 flex-1 flex flex-col">
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <h4 className="font-bold text-[#2740BA] group-hover:text-[#E8650A] transition-colors leading-tight">{b.name}</h4>
+                              <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" aria-label="Đã xác thực" />
                             </div>
-                            <span className="text-xs text-gray-400 shrink-0">{b.products} sản phẩm</span>
+                            <div className="flex items-center gap-1.5 mb-1">
+                              <MapPin className="w-3.5 h-3.5 text-gray-400" />
+                              <span className="text-sm text-gray-500">{b.district}</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 mb-3">
+                              <Phone className="w-3.5 h-3.5 text-gray-400" />
+                              <span className="text-sm text-gray-500">{b.phone}</span>
+                            </div>
+                            <div className="flex items-center justify-between mt-auto">
+                              <div className="flex gap-1.5 flex-wrap">
+                                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${typeColor[b.type] || 'bg-gray-100 text-gray-600'}`}>{b.type}</span>
+                                {b.cert && (
+                                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${certColor[b.cert] || 'bg-gray-100 text-gray-600'}`}>{b.cert}</span>
+                                )}
+                              </div>
+                              <span className="text-xs text-gray-400 shrink-0">{b.products} sản phẩm</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     );
                   })}
                 </div>
