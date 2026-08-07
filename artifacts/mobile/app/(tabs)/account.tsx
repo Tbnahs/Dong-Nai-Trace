@@ -218,8 +218,8 @@ function ProfileView() {
       <View style={[styles.menuSection, { backgroundColor: colors.background }]}>
         <Text style={[styles.menuSectionTitle, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>QUẢN LÝ</Text>
         <View style={[styles.menuGroup, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <MenuItem icon="business-outline" label="Hồ sơ tổ chức" onPress={() => router.push('/org-profile')} />
-          <MenuItem icon="cube-outline" label="Quản lý sản phẩm" onPress={() => router.push('/products-profile')} />
+          <MenuItem icon="business-outline" label="Hồ sơ doanh nghiệp" onPress={() => router.push('/org-profile')} />
+          <MenuItem icon="cube-outline" label="Hồ sơ sản phẩm" onPress={() => router.push('/products-profile')} />
         </View>
       </View>
 
@@ -227,7 +227,6 @@ function ProfileView() {
         <Text style={[styles.menuSectionTitle, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>HỖ TRỢ</Text>
         <View style={[styles.menuGroup, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <MenuItem icon="call-outline" label="Liên hệ & Hỗ trợ" onPress={() => router.push('/contact')} />
-          <MenuItem icon="help-circle-outline" label="Hướng dẫn sử dụng" onPress={() => {}} />
         </View>
       </View>
 
