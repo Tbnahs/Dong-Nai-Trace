@@ -22,9 +22,12 @@ import {
   CERTIFICATIONS,
   DISTRICTS,
   PRODUCTS,
+  lookupByGTIN,
+  lookupByTraceCode,
 } from '@/data/mock';
 
 type Tab = 'products' | 'businesses';
+type LookupMode = 'trace' | 'gtin' | 'lot';
 
 export default function SearchScreen() {
   const colors = useColors();
@@ -34,16 +37,26 @@ export default function SearchScreen() {
   const [district, setDistrict] = useState('Tất cả');
   const [category, setCategory] = useState('Tất cả');
   const [bizType, setBizType] = useState('Tất cả');
+  const [certification, setCertification] = useState('Tất cả');
+  const [lookupMode, setLookupMode] = useState<LookupMode>('trace');
+  const [lookupResult, setLookupResult] = useState<string | null>(null);
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
 
   const filteredProducts = useMemo(() => {
     return PRODUCTS.filter(p => {
-      const matchesQuery = !query || p.name.toLowerCase().includes(query.toLowerCase()) || p.traceCode.toLowerCase().includes(query.toLowerCase()) || p.businessName.toLowerCase().includes(query.toLowerCase());
+      const normalizedQuery = query.trim().toLowerCase();
+      const matchesQuery = !normalizedQuery
+        || p.name.toLowerCase().includes(normalizedQuery)
+        || p.traceCode.toLowerCase().includes(normalizedQuery)
+        || p.gtin.toLowerCase().includes(normalizedQuery)
+        || p.lotNumber.toLowerCase().includes(normalizedQuery)
+        || p.businessName.toLowerCase().includes(normalizedQuery);
       const matchesDistrict = district === 'Tất cả' || p.district === district;
       const matchesCategory = category === 'Tất cả' || p.category === category;
-      return matchesQuery && matchesDistrict && matchesCategory;
+      const matchesCertification = certification === 'Tất cả' || p.certifications.some(c => c.includes(certification));
+      return matchesQuery && matchesDistrict && matchesCategory && matchesCertification;
     });
-  }, [query, district, category]);
+  }, [query, district, category, certification]);
 
   const filteredBusinesses = useMemo(() => {
     return BUSINESSES.filter(b => {
@@ -53,6 +66,22 @@ export default function SearchScreen() {
       return matchesQuery && matchesDistrict && matchesType;
     });
   }, [query, district, bizType]);
+
+  const runLookup = () => {
+    const value = query.trim();
+    if (!value) {
+      setLookupResult(null);
+      return;
+    }
+    const product = lookupMode === 'trace'
+      ? lookupByTraceCode(value)
+      : lookupByGTIN(lookupMode === 'gtin' ? value : '', lookupMode === 'lot' ? value : undefined);
+    setLookupResult(product?.id ?? 'not-found');
+    if (product) {
+      setTab('products');
+      setQuery(product.traceCode);
+    }
+  };
 
   function FilterChip({ label, active, onPress }: { label: string; active: boolean; onPress: () => void }) {
     return (
@@ -71,11 +100,12 @@ export default function SearchScreen() {
           <Ionicons name="search-outline" size={18} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
           <TextInput
             style={[styles.searchInput, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
-            placeholder="Tên sản phẩm, doanh nghiệp..."
+            placeholder={lookupMode === 'trace' ? 'Tên, mã truy xuất...' : lookupMode === 'gtin' ? 'Nhập mã GTIN...' : 'Nhập số lô...'}
             placeholderTextColor={colors.mutedForeground}
             value={query}
-            onChangeText={setQuery}
+            onChangeText={(value) => { setQuery(value); setLookupResult(null); }}
             returnKeyType="search"
+            onSubmitEditing={runLookup}
           />
           {query.length > 0 && (
             <Pressable onPress={() => setQuery('')} style={{ padding: 10 }}>
@@ -83,6 +113,27 @@ export default function SearchScreen() {
             </Pressable>
           )}
         </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.lookupModes}>
+          {([
+            ['trace', 'Mã truy xuất'],
+            ['gtin', 'GTIN'],
+            ['lot', 'Số lô'],
+          ] as const).map(([mode, label]) => (
+            <FilterChip key={mode} label={label} active={lookupMode === mode} onPress={() => { setLookupMode(mode); setLookupResult(null); }} />
+          ))}
+          <Pressable onPress={runLookup} style={[styles.lookupButton, { backgroundColor: colors.accent }]}>
+            <Ionicons name="scan-outline" size={15} color="#FFF" />
+            <Text style={[styles.lookupButtonText, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Tra cứu mã</Text>
+          </Pressable>
+        </ScrollView>
+        {lookupResult && (
+          <View style={[styles.lookupNotice, { backgroundColor: lookupResult === 'not-found' ? '#FEF2F2' : '#F0FDF4', borderColor: lookupResult === 'not-found' ? '#FECACA' : '#BBF7D0' }]}>
+            <Ionicons name={lookupResult === 'not-found' ? 'alert-circle-outline' : 'checkmark-circle-outline'} size={16} color={lookupResult === 'not-found' ? '#DC2626' : '#16A34A'} />
+            <Text style={[styles.lookupNoticeText, { color: lookupResult === 'not-found' ? '#B91C1C' : '#15803D', fontFamily: 'BeVietnamPro_500Medium' }]}>
+              {lookupResult === 'not-found' ? 'Không tìm thấy sản phẩm với mã này.' : 'Đã tìm thấy sản phẩm truy xuất.'}
+            </Text>
+          </View>
+        )}
 
         {/* Tabs */}
         <View style={[styles.tabRow, { borderColor: colors.border }]}>
@@ -107,6 +158,11 @@ export default function SearchScreen() {
             {CATEGORIES.map(c => <FilterChip key={c} label={c} active={category === c} onPress={() => setCategory(c)} />)}
           </ScrollView>
         )}
+        {tab === 'products' && (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+            {CERTIFICATIONS.map(c => <FilterChip key={c} label={c} active={certification === c} onPress={() => setCertification(c)} />)}
+          </ScrollView>
+        )}
         {tab === 'businesses' && (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
             {BUSINESS_TYPES.map(t => <FilterChip key={t} label={t} active={bizType === t} onPress={() => setBizType(t)} />)}
@@ -124,7 +180,7 @@ export default function SearchScreen() {
             <View style={styles.emptyState}>
               <Ionicons name="search-outline" size={48} color={colors.mutedForeground} />
               <Text style={[styles.emptyTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Không tìm thấy sản phẩm</Text>
-              <Text style={[styles.emptyDesc, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Thử điều chỉnh bộ lọc hoặc từ khóa tìm kiếm</Text>
+              <Text style={[styles.emptyDesc, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Thử điều chỉnh bộ lọc, từ khóa hoặc mã truy xuất</Text>
             </View>
           }
           renderItem={({ item }) => (
@@ -208,6 +264,11 @@ const styles = StyleSheet.create({
   tabBtnActive: {},
   tabBtnText: { fontSize: 14 },
   filterRow: { paddingHorizontal: 16, gap: 8, paddingVertical: 8 },
+  lookupModes: { paddingHorizontal: 16, gap: 8, paddingBottom: 4, alignItems: 'center' },
+  lookupButton: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 },
+  lookupButtonText: { fontSize: 12, color: '#FFF' },
+  lookupNotice: { marginHorizontal: 16, marginBottom: 4, paddingHorizontal: 10, paddingVertical: 8, borderRadius: 8, borderWidth: 1, flexDirection: 'row', alignItems: 'center', gap: 6 },
+  lookupNoticeText: { flex: 1, fontSize: 12 },
   chip: { paddingHorizontal: 12, paddingVertical: 5, borderRadius: 20, borderWidth: 1 },
   chipText: { fontSize: 12 },
   emptyState: { alignItems: 'center', paddingVertical: 60, gap: 8 },

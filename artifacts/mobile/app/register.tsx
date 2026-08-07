@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,7 +15,8 @@ import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
-import { useAuth, OrgProfile } from '@/context/AuthContext';
+import * as DocumentPicker from 'expo-document-picker';
+import { useAuth, OrgProfile, UploadedDocument } from '@/context/AuthContext';
 import { ModalPicker } from '@/components/ModalPicker';
 import { ORG_TYPE_OPTIONS, SECTOR_OPTIONS, DISTRICT_OPTIONS } from '@/data/mock';
 
@@ -33,6 +35,53 @@ export default function RegisterScreen() {
   });
 
   const set = (key: keyof typeof form) => (val: string) => setForm(f => ({ ...f, [key]: val }));
+
+  const pickDocument = async (key: 'businessLicense' | 'authorizationDocument') => {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: ['application/pdf', 'image/*'],
+      copyToCacheDirectory: true,
+      multiple: false,
+    });
+    if (result.canceled || !result.assets?.[0]) return;
+    const asset = result.assets[0];
+    const document: UploadedDocument = {
+      name: asset.name,
+      uri: asset.uri,
+      mimeType: asset.mimeType,
+      size: asset.size,
+    };
+    setForm(current => ({ ...current, [key]: document }));
+  };
+
+  function UploadZone({ label, hint, fieldKey }: {
+    label: string;
+    hint: string;
+    fieldKey: 'businessLicense' | 'authorizationDocument';
+  }) {
+    const document = form[fieldKey];
+    return (
+      <View style={{ marginBottom: 14 }}>
+        <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{label}</Text>
+        <Pressable
+          onPress={() => pickDocument(fieldKey)}
+          style={({ pressed }) => [styles.uploadZone, { borderColor: document ? colors.primary : colors.border, backgroundColor: document ? colors.navyLight : colors.muted, opacity: pressed ? 0.8 : 1 }]}
+        >
+          {document?.mimeType?.startsWith('image/') ? (
+            <Image source={{ uri: document.uri }} style={styles.uploadPreview} resizeMode="cover" />
+          ) : (
+            <Ionicons name={document ? 'document-text-outline' : 'cloud-upload-outline'} size={28} color={document ? colors.primary : colors.mutedForeground} />
+          )}
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.uploadName, { color: document ? colors.primary : colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]} numberOfLines={1}>
+              {document?.name ?? 'Chọn ảnh hoặc tệp'}
+            </Text>
+            <Text style={[styles.uploadHint, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{document ? 'Nhấn để thay đổi tệp' : hint}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={colors.mutedForeground} />
+        </Pressable>
+      </View>
+    );
+  }
 
   function Field({ label, fieldKey, keyboard = 'default', secure = false, placeholder, required = false }: {
     label: string; fieldKey: keyof typeof form;
@@ -79,7 +128,12 @@ export default function RegisterScreen() {
     if (step < 2) { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); setStep(s => s + 1); return; }
     setLoading(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    await register({ name: form.name, taxCode: form.taxCode, type: form.type, industry: form.industry, address: form.address, district: form.district, phone: form.phone, email: form.email, representative: form.representative, representativePhone: form.representativePhone, representativeEmail: form.representativeEmail, cccd: form.cccd, gcp: form.gcp }, form.password);
+    const {
+      password: _password,
+      confirmPassword: _confirmPassword,
+      ...profile
+    } = form;
+    await register(profile, form.password);
     setLoading(false);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     router.replace('/(tabs)/account');
@@ -143,6 +197,12 @@ export default function RegisterScreen() {
 
             <Field label="Số điện thoại" fieldKey="phone" keyboard="phone-pad" />
             <Field label="Email đăng nhập" fieldKey="email" keyboard="email-address" placeholder="email@doanhnghiep.vn" required />
+            <View style={[styles.uploadCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+              <Text style={[styles.uploadTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Hồ sơ pháp lý</Text>
+              <Text style={[styles.uploadDescription, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Tải lên ảnh hoặc PDF để hồ sơ được xác minh nhanh hơn.</Text>
+              <UploadZone fieldKey="businessLicense" label="Giấy phép kinh doanh / Hợp tác xã" hint="PDF, JPG hoặc PNG" />
+              <UploadZone fieldKey="authorizationDocument" label="Giấy ủy quyền (nếu có)" hint="PDF, JPG hoặc PNG" />
+            </View>
           </>
         )}
         {step === 1 && (
@@ -219,6 +279,13 @@ const styles = StyleSheet.create({
   fieldLabel: { fontSize: 13, marginBottom: 6 },
   inputWrap: { borderRadius: 10, borderWidth: 1 },
   input: { height: 44, paddingHorizontal: 12, fontSize: 14 },
+  uploadCard: { borderRadius: 14, borderWidth: 1, padding: 14, marginTop: 4 },
+  uploadTitle: { fontSize: 15 },
+  uploadDescription: { fontSize: 12, lineHeight: 18, marginTop: 4, marginBottom: 14 },
+  uploadZone: { minHeight: 68, borderRadius: 10, borderWidth: 1.5, borderStyle: 'dashed', padding: 10, flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 10 },
+  uploadPreview: { width: 46, height: 46, borderRadius: 8 },
+  uploadName: { fontSize: 13 },
+  uploadHint: { fontSize: 11, marginTop: 3 },
   reviewCard: { borderRadius: 14, borderWidth: 1, overflow: 'hidden', marginBottom: 16 },
   reviewTitle: { fontSize: 15, padding: 14, paddingBottom: 10 },
   reviewRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10, borderBottomWidth: 1 },

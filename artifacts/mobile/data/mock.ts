@@ -8,6 +8,7 @@ export interface ProcessStep {
   description: string;
   date: string;
   location: string;
+  images?: string[];
 }
 
 export interface Product {
@@ -28,7 +29,16 @@ export interface Product {
   expiryDate: string;
   weight: string;
   image: string;
+  images?: string[];
+  certificationDocuments?: CertificationDocument[];
   process: ProcessStep[];
+}
+
+export interface CertificationDocument {
+  name: string;
+  issuer: string;
+  expiry: string;
+  image: string;
 }
 
 export interface Business {
@@ -91,12 +101,24 @@ export const PRODUCTS: Product[] = [
     expiryDate: '30/07/2024',
     weight: '1.0 – 1.5 kg/quả',
     image: 'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=600&h=500&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600',
+      'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600',
+      'https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=600',
+      'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600',
+    ],
+    certificationDocuments: [{
+      name: 'VietGAP',
+      issuer: 'Sở NN&PTNT tỉnh Đồng Nai',
+      expiry: '30/09/2025',
+      image: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?w=900&h=620&fit=crop',
+    }],
     process: [
-      { step: 'Gieo trồng', description: 'Gieo hạt giống được kiểm định, đất được xử lý theo chuẩn VietGAP.', date: '01/07/2024', location: 'Vườn A – Tân Triều' },
-      { step: 'Chăm sóc', description: 'Tưới nước, bón phân hữu cơ theo lịch, kiểm tra sâu bệnh định kỳ.', date: '08/07/2024', location: 'Vườn A – Tân Triều' },
-      { step: 'Thu hoạch', description: 'Thu hoạch đợt 1, đạt tiêu chuẩn kích thước và màu sắc, không có dấu hiệu bệnh.', date: '14/07/2024', location: 'Vườn A – Tân Triều' },
+      { step: 'Gieo trồng', description: 'Gieo hạt giống được kiểm định, đất được xử lý theo chuẩn VietGAP.', date: '01/07/2024', location: 'Vườn A – Tân Triều', images: ['https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600', 'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600'] },
+      { step: 'Chăm sóc', description: 'Tưới nước, bón phân hữu cơ theo lịch, kiểm tra sâu bệnh định kỳ.', date: '08/07/2024', location: 'Vườn A – Tân Triều', images: ['https://images.unsplash.com/photo-1516253593875-bd7ba052fbc5?w=600', 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600'] },
+      { step: 'Thu hoạch', description: 'Thu hoạch đợt 1, đạt tiêu chuẩn kích thước và màu sắc, không có dấu hiệu bệnh.', date: '14/07/2024', location: 'Vườn A – Tân Triều', images: ['https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600', 'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600'] },
       { step: 'Đóng gói', description: 'Đóng gói, dán nhãn mã QR truy xuất nguồn gốc, kiểm tra VSATTP.', date: '14/07/2024', location: 'Nhà đóng gói HTX' },
-      { step: 'Vận chuyển & Phân phối', description: 'Vận chuyển bằng xe lạnh đến điểm phân phối Co.opmart Biên Hòa.', date: '15/07/2024', location: 'Co.opmart Biên Hòa' },
+      { step: 'Vận chuyển & Phân phối', description: 'Vận chuyển bằng xe lạnh đến điểm phân phối Co.opmart Biên Hòa.', date: '15/07/2024', location: 'Co.opmart Biên Hòa', images: ['https://images.unsplash.com/photo-1501004318641-b39e6451bec6?w=600'] },
     ],
   },
   {

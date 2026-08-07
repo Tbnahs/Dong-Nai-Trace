@@ -197,6 +197,13 @@ export default function ProductDetailScreen() {
                       <Ionicons name="location-outline" size={12} color={colors.mutedForeground} />
                       <Text style={[styles.timelineMetaText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]} numberOfLines={1}>{step.location}</Text>
                     </View>
+                    {step.images?.length ? (
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.imageStrip}>
+                        {step.images.map((image, imageIndex) => (
+                          <Image key={`${image}-${imageIndex}`} source={{ uri: image }} style={styles.journeyImage} resizeMode="cover" />
+                        ))}
+                      </ScrollView>
+                    ) : null}
                   </View>
                 </View>
               ))}
@@ -237,6 +244,16 @@ export default function ProductDetailScreen() {
                       );
                     })}
                   </View>
+                  {product.certificationDocuments?.map(document => (
+                    <View key={document.name} style={[styles.documentCard, { backgroundColor: colors.background, borderColor: colors.border }]}>
+                      <Image source={{ uri: document.image }} style={styles.documentImage} resizeMode="cover" />
+                      <View style={{ flex: 1 }}>
+                        <Text style={[styles.documentName, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>{document.name}</Text>
+                        <Text style={[styles.documentMeta, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Cấp bởi: {document.issuer}</Text>
+                        <Text style={[styles.documentMeta, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Hiệu lực đến {document.expiry}</Text>
+                      </View>
+                    </View>
+                  ))}
                 </View>
               )}
             </View>
@@ -363,6 +380,8 @@ const styles = StyleSheet.create({
   timelineDesc: { fontSize: 12, lineHeight: 18, marginBottom: 6 },
   timelineMeta: { flexDirection: 'row', alignItems: 'center', gap: 4, flexWrap: 'wrap' },
   timelineMetaText: { fontSize: 11 },
+  imageStrip: { gap: 8, paddingTop: 10 },
+  journeyImage: { width: 112, height: 78, borderRadius: 8, borderWidth: 1, borderColor: '#E2E8F0' },
 
   infoRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 14, paddingVertical: 10, borderBottomWidth: 1 },
   infoLabel: { fontSize: 13, width: 100 },
@@ -372,6 +391,10 @@ const styles = StyleSheet.create({
   certsWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   certBadge: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8, borderWidth: 1 },
   certText: { fontSize: 12 },
+  documentCard: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 10, borderRadius: 10, borderWidth: 1, marginTop: 10 },
+  documentImage: { width: 92, height: 62, borderRadius: 7 },
+  documentName: { fontSize: 13, marginBottom: 3 },
+  documentMeta: { fontSize: 11, lineHeight: 16 },
 
   orgHero: { flexDirection: 'row', alignItems: 'center', padding: 14, gap: 12 },
   orgAvatar: { width: 48, height: 48, borderRadius: 12, alignItems: 'center', justifyContent: 'center' },

@@ -191,10 +191,11 @@ function SectionHeading({ title, onMore }: { title: string; onMore: () => void }
 
 const MAP_PAGE_SIZE = 5;
 
-// On Expo web the iframe fetches directly from the Portal's static GeoJSON
-// (same domain, path-based routing). On native WebView the API server serves it.
-const GEOJSON_URL = Platform.OS === 'web'
-  ? '/portal/geojson/dongnai_wards.geojson'
+// The map is rendered inside an iframe/WebView, so it must use the API's
+// absolute URL instead of a path that resolves against the inline document.
+const API_DOMAIN = process.env.EXPO_PUBLIC_DOMAIN;
+const GEOJSON_URL = API_DOMAIN
+  ? `https://${API_DOMAIN}/api/geojson/wards`
   : '/api/geojson/wards';
 
 function buildLeafletHTML(geojsonUrl: string) {

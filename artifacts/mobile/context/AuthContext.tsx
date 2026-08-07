@@ -15,6 +15,15 @@ export interface OrgProfile {
   representativeEmail: string;
   cccd: string;
   gcp?: string;
+  businessLicense?: UploadedDocument;
+  authorizationDocument?: UploadedDocument;
+}
+
+export interface UploadedDocument {
+  name: string;
+  uri: string;
+  mimeType?: string;
+  size?: number;
 }
 
 export interface AuthUser {

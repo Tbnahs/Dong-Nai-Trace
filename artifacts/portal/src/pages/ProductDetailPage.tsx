@@ -24,7 +24,7 @@ const PRODUCTS: Record<string, any> = {
     weight: '1.0 – 1.5 kg/quả',
     expiry: '15 ngày (nhiệt độ thường)',
     ingredients: 'Bưởi nguyên quả 100% tự nhiên',
-    certs: [{ name: 'VietGAP', issuer: 'Sở NN&PTNT tỉnh Đồng Nai', date: '01/10/2023', expiry: '30/09/2025' }],
+    certs: [{ name: 'VietGAP', issuer: 'Sở NN&PTNT tỉnh Đồng Nai', date: '01/10/2023', expiry: '30/09/2025', image: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?w=900&h=620&fit=crop' }],
     org: { name: 'HTX Nông nghiệp Xanh Tân Triều', address: 'Xã Tân Triều, Vĩnh Cửu, Đồng Nai', phone: '0251 890 123', email: 'htx@nongnghi.vn', type: 'Hợp tác xã', products: 5, cert: 'VietGAP',images: [
            'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=600',
            'https://images.unsplash.com/photo-1471193945509-9ad0617afabf?w=600',
@@ -70,7 +70,7 @@ const PRODUCTS: Record<string, any> = {
     weight: '300g/bó',
     expiry: '3–5 ngày (bảo quản lạnh)',
     ingredients: 'Rau muống hữu cơ 100%',
-    certs: [{ name: 'VietGAP', issuer: 'Sở NN&PTNT tỉnh Đồng Nai', date: '20/08/2023', expiry: '19/08/2025' }],
+    certs: [{ name: 'VietGAP', issuer: 'Sở NN&PTNT tỉnh Đồng Nai', date: '20/08/2023', expiry: '19/08/2025', image: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?w=900&h=620&fit=crop' }],
     org: { name: 'HTX Nông nghiệp Xuân Lộc', address: 'Xã Xuân Thọ, Xuân Lộc, Đồng Nai', phone: '0251 555 666', email: 'htx@xuanloc.vn', type: 'Hợp tác xã', products: 4, cert: 'VietGAP' },
     journey: [
       { icon: 'leaf', label: 'Gieo trồng', date: '1/7/2024', detail: 'Gieo hạt giống được kiểm định, đất được xử lý theo chuẩn VietGAP.', location: 'Vườn A – Xuân Lộc', org: 'HTX Nông nghiệp Xuân Lộc' },
@@ -104,7 +104,7 @@ const PRODUCTS: Record<string, any> = {
     weight: '500g/hộp',
     expiry: '24 tháng (đông lạnh)',
     ingredients: 'Tôm sú 100%',
-    certs: [{ name: 'HACCP', issuer: 'Cục An toàn thực phẩm', date: '01/06/2023', expiry: '31/05/2026' }],
+    certs: [{ name: 'HACCP', issuer: 'Cục An toàn thực phẩm', date: '01/06/2023', expiry: '31/05/2026', image: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?w=900&h=620&fit=crop' }],
     org: { name: 'Công ty Thủy sản Đồng Nai', address: 'KCN Long Thành, Đồng Nai', phone: '0251 234 567', email: 'info@thuysandn.vn', type: 'Doanh nghiệp', products: 8, cert: 'HACCP' },
     journey: [
       { icon: 'leaf', label: 'Nuôi trồng', date: '1/6/2024', detail: 'Tôm sú được nuôi trong ao sạch, kiểm soát môi trường nước theo tiêu chuẩn HACCP.', location: 'Ao nuôi A1 – Long Thành', org: 'Cty Thủy sản Đồng Nai' },
@@ -124,7 +124,7 @@ const buildGeneric = (id: string, name: string, cert: string, origin: string, or
   img,
   gtin: `89340000${id.replace(/\D/g,'')}`, lotCode: `L-2024-${id.toUpperCase()}`, weight: 'Xem nhãn', expiry: 'Xem nhãn',
   ingredients: `${name} tự nhiên 100%`,
-  certs: [{ name: cert, issuer: 'Sở NN&PTNT tỉnh Đồng Nai', date: '01/01/2024', expiry: '31/12/2025' }],
+  certs: [{ name: cert, issuer: 'Sở NN&PTNT tỉnh Đồng Nai', date: '01/01/2024', expiry: '31/12/2025', image: 'https://images.unsplash.com/photo-1589330694653-ded6df03f754?w=900&h=620&fit=crop' }],
   org: { name: orgName, address: `${origin}, Đồng Nai`, phone: '0251 000 000', email: 'lienhe@dongnai.gov.vn', type: 'Tổ chức', products: 3, cert },
   journey: [
     { icon: 'leaf', label: 'Gieo trồng / Sản xuất', date: '01/01/2024', detail: `Sản xuất ${name} theo tiêu chuẩn ${cert}.`, location: origin, org: orgName },
@@ -378,6 +378,13 @@ export default function ProductDetailPage() {
                           <p className="text-sm font-bold text-emerald-700">{c.name}</p>
                           <p className="text-xs text-gray-500">Cấp bởi: {c.issuer} — Hiệu lực đến {c.expiry}</p>
                         </div>
+                        {c.image && (
+                          <img
+                            src={c.image}
+                            alt={`Chứng chỉ ${c.name}`}
+                            className="ml-auto h-16 w-24 rounded-lg border border-emerald-200 object-cover"
+                          />
+                        )}
                       </div>
                     ))}
                   </div>
