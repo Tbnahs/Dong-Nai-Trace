@@ -69,6 +69,37 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+function CopyableCode({
+  value,
+  copied,
+  onCopy,
+  label,
+}: {
+  value?: string;
+  copied: boolean;
+  onCopy: () => void;
+  label: string;
+}) {
+  if (!value) {
+    return <span className="text-xs text-slate-400">—</span>;
+  }
+
+  return (
+    <div className="inline-flex max-w-full items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 pl-2.5 pr-1 py-1">
+      <span className="truncate text-[11px] font-mono font-bold text-slate-700" title={value}>{value}</span>
+      <button
+        type="button"
+        onClick={onCopy}
+        className={`shrink-0 rounded-md p-1 transition-colors ${copied ? 'text-emerald-700' : 'text-slate-400 hover:bg-slate-200 hover:text-slate-700'}`}
+        title={copied ? `Đã sao chép ${label}` : `Sao chép ${label}`}
+        aria-label={copied ? `Đã sao chép ${label}` : `Sao chép ${label} ${value}`}
+      >
+        {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+      </button>
+    </div>
+  );
+}
+
 // ─── Detail view ──────────────────────────────────────────────────────────────
 type JourneyStep = {
   icon: 'leaf' | 'flask' | 'calendar' | 'package' | 'truck' | 'store';
@@ -736,7 +767,7 @@ export default function ProductsProfilePage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [viewId, setViewId] = useState<string | null>(null);
-  const [copiedTraceId, setCopiedTraceId] = useState<string | null>(null);
+  const [copiedCodeKey, setCopiedCodeKey] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'approved' | 'pending'>('all');
   const [catFilter, setCatFilter] = useState('all');
@@ -755,13 +786,14 @@ export default function ProductsProfilePage() {
     return matchQ && matchS && matchC;
   });
 
-  const handleCopyTraceCode = async (traceCode: string, productId: string) => {
+  const handleCopyCode = async (value: string, productId: string, field: 'trace' | 'gtin' | 'lot') => {
+    const codeKey = `${productId}:${field}`;
     try {
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(traceCode);
+        await navigator.clipboard.writeText(value);
       } else {
         const textarea = document.createElement('textarea');
-        textarea.value = traceCode;
+        textarea.value = value;
         textarea.setAttribute('readonly', '');
         textarea.style.position = 'fixed';
         textarea.style.opacity = '0';
@@ -771,12 +803,12 @@ export default function ProductsProfilePage() {
         textarea.remove();
       }
 
-      setCopiedTraceId(productId);
+      setCopiedCodeKey(codeKey);
       window.setTimeout(() => {
-        setCopiedTraceId(current => current === productId ? null : current);
+        setCopiedCodeKey(current => current === codeKey ? null : current);
       }, 2200);
     } catch {
-      setCopiedTraceId(null);
+      setCopiedCodeKey(null);
     }
   };
 
@@ -930,6 +962,8 @@ export default function ProductsProfilePage() {
                       <th className="px-6 py-3.5">Sản phẩm</th>
                       <th className="px-4 py-3.5">Danh mục</th>
                       <th className="px-4 py-3.5">Chứng nhận</th>
+                      <th className="px-4 py-3.5">GTIN</th>
+                      <th className="px-4 py-3.5">Lô/mẻ</th>
                       <th className="px-4 py-3.5">Dòng sản phẩm</th>
                       <th className="px-4 py-3.5">Trạng thái</th>
                       <th className="px-4 py-3.5">Cập nhật</th>
@@ -980,18 +1014,34 @@ export default function ProductsProfilePage() {
                                   </span>
                                   <button
                                     type="button"
-                                    onClick={() => handleCopyTraceCode(p.traceCode!, p.id)}
-                                    className={`rounded-md p-1 transition-colors ${copiedTraceId === p.id ? 'text-emerald-700' : 'text-emerald-500 hover:bg-emerald-100 hover:text-emerald-800'}`}
-                                    title={copiedTraceId === p.id ? 'Đã sao chép mã TXNG' : 'Sao chép mã TXNG'}
-                                    aria-label={copiedTraceId === p.id ? 'Đã sao chép mã TXNG' : `Sao chép mã TXNG ${p.traceCode}`}
+                                     onClick={() => handleCopyCode(p.traceCode!, p.id, 'trace')}
+                                     className={`rounded-md p-1 transition-colors ${copiedCodeKey === `${p.id}:trace` ? 'text-emerald-700' : 'text-emerald-500 hover:bg-emerald-100 hover:text-emerald-800'}`}
+                                     title={copiedCodeKey === `${p.id}:trace` ? 'Đã sao chép mã TXNG' : 'Sao chép mã TXNG'}
+                                     aria-label={copiedCodeKey === `${p.id}:trace` ? 'Đã sao chép mã TXNG' : `Sao chép mã TXNG ${p.traceCode}`}
                                   >
-                                    {copiedTraceId === p.id ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                                     {copiedCodeKey === `${p.id}:trace` ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                                   </button>
                                 </div>
                               )
                               : <span className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-600 whitespace-nowrap"><span className="h-1.5 w-1.5 rounded-full bg-amber-400" />Chưa cấp</span>
                             }
                           </td>
+                           <td className="px-4 py-4">
+                             <CopyableCode
+                               value={p.gtin}
+                               copied={copiedCodeKey === `${p.id}:gtin`}
+                               onCopy={() => handleCopyCode(p.gtin!, p.id, 'gtin')}
+                               label="mã GTIN"
+                             />
+                           </td>
+                           <td className="px-4 py-4">
+                             <CopyableCode
+                               value={p.lotCode}
+                               copied={copiedCodeKey === `${p.id}:lot`}
+                               onCopy={() => handleCopyCode(p.lotCode!, p.id, 'lot')}
+                               label="mã lô/mẻ"
+                             />
+                           </td>
                           <td className="px-4 py-4"><StatusBadge status={p.status} /></td>
                           <td className="px-4 py-4 text-xs font-semibold text-slate-500 whitespace-nowrap">{p.updatedAt}</td>
                           <td className="px-6 py-4">
@@ -1058,17 +1108,37 @@ export default function ProductsProfilePage() {
                                 <p className="text-[11px] font-mono font-bold text-emerald-700">{p.traceCode}</p>
                                 <button
                                   type="button"
-                                  onClick={() => handleCopyTraceCode(p.traceCode!, p.id)}
-                                  className={`rounded-md p-1 transition-colors ${copiedTraceId === p.id ? 'text-emerald-700' : 'text-emerald-500 hover:bg-emerald-50 hover:text-emerald-800'}`}
-                                  title={copiedTraceId === p.id ? 'Đã sao chép mã TXNG' : 'Sao chép mã TXNG'}
-                                  aria-label={copiedTraceId === p.id ? 'Đã sao chép mã TXNG' : `Sao chép mã TXNG ${p.traceCode}`}
+                                   onClick={() => handleCopyCode(p.traceCode!, p.id, 'trace')}
+                                   className={`rounded-md p-1 transition-colors ${copiedCodeKey === `${p.id}:trace` ? 'text-emerald-700' : 'text-emerald-500 hover:bg-emerald-50 hover:text-emerald-800'}`}
+                                   title={copiedCodeKey === `${p.id}:trace` ? 'Đã sao chép mã TXNG' : 'Sao chép mã TXNG'}
+                                   aria-label={copiedCodeKey === `${p.id}:trace` ? 'Đã sao chép mã TXNG' : `Sao chép mã TXNG ${p.traceCode}`}
                                 >
-                                  {copiedTraceId === p.id ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                                   {copiedCodeKey === `${p.id}:trace` ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                                 </button>
                               </div>
                             )
                             : <p className="mt-1.5 text-[11px] font-semibold text-amber-600">Chưa cấp mã TXNG</p>
                           }
+                           <div className="mt-2 space-y-1.5 border-t border-slate-100 pt-2">
+                             <div className="flex items-center justify-between gap-2">
+                               <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">GTIN</span>
+                               <CopyableCode
+                                 value={p.gtin}
+                                 copied={copiedCodeKey === `${p.id}:gtin`}
+                                 onCopy={() => handleCopyCode(p.gtin!, p.id, 'gtin')}
+                                 label="mã GTIN"
+                               />
+                             </div>
+                             <div className="flex items-center justify-between gap-2">
+                               <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Lô/mẻ</span>
+                               <CopyableCode
+                                 value={p.lotCode}
+                                 copied={copiedCodeKey === `${p.id}:lot`}
+                                 onCopy={() => handleCopyCode(p.lotCode!, p.id, 'lot')}
+                                 label="mã lô/mẻ"
+                               />
+                             </div>
+                           </div>
                         </div>
                       </div>
                       <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
