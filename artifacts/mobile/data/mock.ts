@@ -771,6 +771,12 @@ const LOT_MAP: Record<string, string> = {
   'L-20240810-03': 'sp003',
 };
 
+const GTIN_LOT_MAP: Record<string, string> = {
+  '8934113001234|L-20241015-01': 'sp001',
+  '8934567890123|L-20240715-02': 'sp002',
+  '8934000003000|L-20240810-03': 'sp003',
+};
+
 export function lookupByTraceCode(code: string): Product | null {
   const normalized = code.trim().toUpperCase();
   const id = TRACE_CODE_MAP[normalized] ?? TRACE_CODE_MAP[code.trim()];
@@ -791,6 +797,11 @@ export function lookupByGTIN(gtin: string, lot?: string): Product | null {
   const id = GTIN_MAP[g];
   if (!id) return null;
   return PRODUCTS.find(p => p.id === id) ?? null;
+}
+
+export function lookupByGTINAndLot(gtin: string, lot: string): Product | null {
+  const id = GTIN_LOT_MAP[`${gtin.trim()}|${lot.trim()}`];
+  return id ? PRODUCTS.find(p => p.id === id) ?? null : null;
 }
 
 export function getProduct(id: string): Product | null {

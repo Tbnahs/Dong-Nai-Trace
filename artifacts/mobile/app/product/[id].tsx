@@ -30,7 +30,6 @@ export default function ProductDetailScreen() {
   const business = product ? getBusiness(product.businessId) : null;
   const hasJourneyAccess = access === 'gtin';
   const [activeTab, setActiveTab] = useState<Tab>(hasJourneyAccess ? 'journey' : 'info');
-  const [selectedLot, setSelectedLot] = useState(product?.lotNumber ?? '');
 
   if (!product) {
     return (
@@ -178,23 +177,6 @@ export default function ProductDetailScreen() {
               );
             })}
           </View>
-
-          {activeTab === 'journey' && product.traceCode && (
-            <View style={[styles.lotPicker, { borderBottomColor: colors.border }]}>
-              <Text style={[styles.lotLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Lô / mẻ</Text>
-              <Pressable
-                onPress={() => setSelectedLot(selectedLot === product.lotNumber ? '' : product.lotNumber)}
-                style={[styles.lotSelect, { borderColor: colors.border, backgroundColor: colors.background }]}
-                accessibilityRole="button"
-                accessibilityLabel="Chọn lô hoặc mẻ"
-              >
-                <Text style={[styles.lotValue, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}>
-                  {selectedLot || 'Chưa có thông tin lô / mẻ'}
-                </Text>
-                <Ionicons name="chevron-down" size={17} color={colors.mutedForeground} />
-              </Pressable>
-            </View>
-          )}
 
           {/* ── Tab: Hành trình ── */}
           {activeTab === 'journey' && (
@@ -388,11 +370,6 @@ const styles = StyleSheet.create({
   tabRow: { flexDirection: 'row', borderBottomWidth: 1 },
   tabBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, paddingVertical: 12, borderBottomWidth: 2, borderBottomColor: 'transparent' },
   tabBtnText: { fontSize: 12 },
-  lotPicker: { padding: 14, borderBottomWidth: 1 },
-  lotLabel: { fontSize: 11, marginBottom: 6 },
-  lotSelect: { minHeight: 42, borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  lotValue: { fontSize: 13, flex: 1 },
-
   timelineItem: { flexDirection: 'row', marginBottom: 4 },
   timelineLeft: { alignItems: 'center', width: 32 },
   timelineDot: { width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },

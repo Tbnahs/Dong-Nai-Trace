@@ -28,6 +28,7 @@ import {
   PRODUCTS,
   STATS,
   lookupByGTIN,
+  lookupByGTINAndLot,
   lookupByTraceCode,
 } from '@/data/mock';
 
@@ -332,13 +333,15 @@ export default function HomeScreen() {
     setSearching(true);
     await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     await new Promise(resolve => setTimeout(resolve, 300));
+    const hasFullGtinLookup = Boolean(gtin.trim() && lot.trim());
     const found = useGtin
-      ? lookupByGTIN(gtin.trim(), lot.trim())
+      ? hasFullGtinLookup
+        ? lookupByGTINAndLot(gtin.trim(), lot.trim())
+        : lookupByGTIN(gtin.trim())
       : lookupByTraceCode(traceCode.trim()) ?? lookupByGTIN(traceCode.trim());
     setSearching(false);
     if (found) {
-      const searchedByGtin = useGtin || !lookupByTraceCode(traceCode.trim());
-      router.push(`/product/${found.id}${searchedByGtin ? '?access=gtin' : ''}`);
+      router.push(`/product/${found.id}${useGtin && hasFullGtinLookup ? '?access=gtin' : ''}`);
     } else {
       setNotFound(true);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

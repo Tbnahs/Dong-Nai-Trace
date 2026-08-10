@@ -28,6 +28,7 @@ import {
   DISTRICTS,
   PRODUCTS,
   lookupByGTIN,
+  lookupByGTINAndLot,
   lookupByTraceCode,
 } from '@/data/mock';
 
@@ -94,12 +95,15 @@ export default function SearchScreen() {
   };
 
   const runLookup = () => {
+    const hasFullGtinLookup = Boolean(gtin.trim() && lot.trim());
     const product = searchType === 'trace'
-      ? lookupByTraceCode(traceCode)
-      : lookupByGTIN(gtin, lot || undefined);
+      ? lookupByTraceCode(traceCode) ?? lookupByGTIN(traceCode)
+      : hasFullGtinLookup
+        ? lookupByGTINAndLot(gtin, lot)
+        : lookupByGTIN(gtin);
 
     if (product) {
-      router.push(`/product/${product.id}${searchType === 'gtin' ? '?access=gtin' : ''}`);
+      router.push(`/product/${product.id}${searchType === 'gtin' && hasFullGtinLookup ? '?access=gtin' : ''}`);
       return;
     }
 
