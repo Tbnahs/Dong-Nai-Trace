@@ -964,7 +964,6 @@ export default function ProductsProfilePage() {
                       <th className="px-4 py-3.5">Chứng nhận</th>
                       <th className="px-4 py-3.5">GTIN</th>
                       <th className="px-4 py-3.5">Lô/mẻ</th>
-                      <th className="px-4 py-3.5">Dòng sản phẩm</th>
                       <th className="px-4 py-3.5">Trạng thái</th>
                       <th className="px-4 py-3.5">Cập nhật</th>
                       <th className="px-6 py-3.5 text-right">Thao tác</th>
@@ -1004,27 +1003,6 @@ export default function ProductsProfilePage() {
                               }
                               {p.certs.length > 2 && <span className="text-[10px] font-bold text-slate-400">+{p.certs.length - 2}</span>}
                             </div>
-                          </td>
-                          <td className="px-4 py-4">
-                            {p.traceCode
-                              ? (
-                                <div className="inline-flex items-center gap-1 rounded-lg border border-emerald-100 bg-emerald-50 pl-2.5 pr-1 py-1">
-                                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold text-emerald-700 whitespace-nowrap">
-                                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />{p.traceCode}
-                                  </span>
-                                  <button
-                                    type="button"
-                                     onClick={() => handleCopyCode(p.traceCode!, p.id, 'trace')}
-                                     className={`rounded-md p-1 transition-colors ${copiedCodeKey === `${p.id}:trace` ? 'text-emerald-700' : 'text-emerald-500 hover:bg-emerald-100 hover:text-emerald-800'}`}
-                                     title={copiedCodeKey === `${p.id}:trace` ? 'Đã sao chép mã TXNG' : 'Sao chép mã TXNG'}
-                                     aria-label={copiedCodeKey === `${p.id}:trace` ? 'Đã sao chép mã TXNG' : `Sao chép mã TXNG ${p.traceCode}`}
-                                  >
-                                     {copiedCodeKey === `${p.id}:trace` ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                                  </button>
-                                </div>
-                              )
-                              : <span className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-semibold text-amber-600 whitespace-nowrap"><span className="h-1.5 w-1.5 rounded-full bg-amber-400" />Chưa cấp</span>
-                            }
                           </td>
                            <td className="px-4 py-4">
                              <CopyableCode
