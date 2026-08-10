@@ -456,11 +456,12 @@ function InfoRow({ icon: Icon, label, value, highlight }: { icon: React.ElementT
 
 // ─── Add / Edit Modal ─────────────────────────────────────────────────────────
 function ProductModal({
-  title, initial, hasTrace = false, onClose, onSave,
+  title, initial, hasTrace = false, requiredGtin = false, onClose, onSave,
 }: {
   title: string;
   initial?: Partial<ProductForm>;
   hasTrace?: boolean;
+  requiredGtin?: boolean;
   onClose: () => void;
   onSave: (form: ProductForm) => void;
 }) {
@@ -492,6 +493,7 @@ function ProductModal({
     const e: Partial<Record<keyof ProductForm, string>> = {};
     if (!form.name.trim()) e.name = 'Vui lòng nhập tên sản phẩm';
     if (!form.unit.trim()) e.unit = 'Vui lòng nhập đơn vị tính';
+    if (requiredGtin && !form.gtin.trim()) e.gtin = 'Vui lòng nhập mã GTIN';
     return e;
   };
 
@@ -594,13 +596,20 @@ function ProductModal({
                 )}
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mã GTIN</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                  Mã GTIN {requiredGtin && <span className="text-red-500">*</span>}
+                </label>
                 <input
-                  className={inputCls()}
+                  className={inputCls(errors.gtin)}
                   placeholder="VD: 8934113001234"
                   value={form.gtin}
-                  onChange={e => set('gtin', e.target.value)}
+                  onChange={e => { set('gtin', e.target.value); setErrors(er => ({ ...er, gtin: undefined })); }}
                 />
+                {errors.gtin && (
+                  <p className="mt-1.5 text-xs font-medium text-red-500 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />{errors.gtin}
+                  </p>
+                )}
               </div>
                {hasTrace && (
                  <div>
@@ -963,7 +972,6 @@ export default function ProductsProfilePage() {
                       <th className="px-4 py-3.5">Danh mục</th>
                       <th className="px-4 py-3.5">Chứng nhận</th>
                       <th className="px-4 py-3.5">GTIN</th>
-                      <th className="px-4 py-3.5">Lô/mẻ</th>
                       <th className="px-4 py-3.5">Trạng thái</th>
                       <th className="px-4 py-3.5">Cập nhật</th>
                       <th className="px-6 py-3.5 text-right">Thao tác</th>
@@ -1010,14 +1018,6 @@ export default function ProductsProfilePage() {
                                copied={copiedCodeKey === `${p.id}:gtin`}
                                onCopy={() => handleCopyCode(p.gtin!, p.id, 'gtin')}
                                label="mã GTIN"
-                             />
-                           </td>
-                           <td className="px-4 py-4">
-                             <CopyableCode
-                               value={p.lotCode}
-                               copied={copiedCodeKey === `${p.id}:lot`}
-                               onCopy={() => handleCopyCode(p.lotCode!, p.id, 'lot')}
-                               label="mã lô/mẻ"
                              />
                            </td>
                           <td className="px-4 py-4"><StatusBadge status={p.status} /></td>
@@ -1107,15 +1107,6 @@ export default function ProductsProfilePage() {
                                  label="mã GTIN"
                                />
                              </div>
-                             <div className="flex items-center justify-between gap-2">
-                               <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">Lô/mẻ</span>
-                               <CopyableCode
-                                 value={p.lotCode}
-                                 copied={copiedCodeKey === `${p.id}:lot`}
-                                 onCopy={() => handleCopyCode(p.lotCode!, p.id, 'lot')}
-                                 label="mã lô/mẻ"
-                               />
-                             </div>
                            </div>
                         </div>
                       </div>
@@ -1161,6 +1152,7 @@ export default function ProductsProfilePage() {
           <ProductModal
             title="Thêm sản phẩm mới"
             hasTrace={false}
+            requiredGtin
             onClose={() => setShowAdd(false)}
             onSave={form => { handleAdd(form); setShowAdd(false); }}
           />
