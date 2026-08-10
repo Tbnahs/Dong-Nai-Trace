@@ -39,6 +39,7 @@ function RootLayoutNav() {
       <Stack.Screen name="news/[id]" options={{ title: 'Tin tức' }} />
       <Stack.Screen name="org-profile" options={{ title: 'Hồ sơ tổ chức' }} />
       <Stack.Screen name="products-profile" options={{ title: 'Sản phẩm' }} />
+      <Stack.Screen name="notifications" options={{ title: 'Thông báo' }} />
       <Stack.Screen name="register" options={{ title: 'Đăng ký' }} />
     </Stack>
   );

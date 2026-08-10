@@ -413,6 +413,23 @@ export default function HomeScreen() {
           </View>
         </Pressable>
         <View style={styles.headerActions}>
+          {isLoggedIn && (
+            <Pressable
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/notifications');
+              }}
+              style={styles.headerIcon}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel="Thông báo"
+            >
+              <Ionicons name="notifications-outline" size={20} color={colors.primary} />
+              <View style={[styles.notificationBadge, { backgroundColor: colors.accent, borderColor: colors.background }]}>
+                <Text style={styles.notificationBadgeText}>2</Text>
+              </View>
+            </Pressable>
+          )}
           <Pressable
             onPress={() => {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -932,6 +949,8 @@ const styles = StyleSheet.create({
   headerActions: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   headerIcon: { padding: 7, position: 'relative' },
   notificationDot: { position: 'absolute', right: 4, top: 4, width: 6, height: 6, borderRadius: 3, borderWidth: 1, borderColor: '#FFF' },
+  notificationBadge: { position: 'absolute', right: 0, top: 0, minWidth: 16, height: 16, paddingHorizontal: 3, borderRadius: 8, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
+  notificationBadgeText: { color: '#FFF', fontSize: 8, lineHeight: 10, fontFamily: 'BeVietnamPro_700Bold' },
   hero: { paddingTop: 24, paddingHorizontal: 20, alignItems: 'stretch' },
   heroTitle: { fontSize: 27, lineHeight: 33, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: -0.3 },
   heroDesc: { fontSize: 14, lineHeight: 22, fontFamily: 'BeVietnamPro_400Regular', marginTop: 16 },

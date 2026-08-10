@@ -123,50 +123,63 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               )}
             </div>{isLoggedIn && user ? (
               /* ── Avatar dropdown (logged in) ── */
-              (<div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setAvatarOpen((o) => !o)}
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+              (<>
+                <Link
+                  href="/thong-bao"
+                  aria-label="Thông báo"
+                  title="Thông báo"
+                  className="relative flex items-center justify-center p-2.5 rounded-xl text-[#2740BA] hover:bg-blue-50 transition-colors"
                 >
-                  <div className="w-9 h-9 rounded-full bg-[#2740BA] text-white flex items-center justify-center font-bold text-sm shrink-0">
-                    {user.initials}
-                  </div>
-                  <div className="text-left hidden xl:block">
-                    <p className="text-sm font-bold text-slate-800 leading-tight">{user.name}</p>
-                    <p className="text-xs text-gray-400">{user.type}</p>
-                  </div>
-                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${avatarOpen ? "rotate-180" : ""}`} />
-                </button>
-                {avatarOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 overflow-hidden" style={{ zIndex: 1002 }}>
-                    <div className="px-4 py-2.5 border-b border-gray-100">
+                  <Bell className="w-5 h-5" />
+                  <span className="absolute right-1.5 top-1.5 min-w-4 h-4 px-1 rounded-full bg-[#E8650A] text-white text-[9px] font-bold leading-4 text-center border-2 border-white">
+                    2
+                  </span>
+                </Link>
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={() => setAvatarOpen((o) => !o)}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+                  >
+                    <div className="w-9 h-9 rounded-full bg-[#2740BA] text-white flex items-center justify-center font-bold text-sm shrink-0">
+                      {user.initials}
+                    </div>
+                    <div className="text-left hidden xl:block">
                       <p className="text-sm font-bold text-slate-800 leading-tight">{user.name}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{user.email}</p>
+                      <p className="text-xs text-gray-400">{user.type}</p>
                     </div>
-                    {[
-                      { icon: User,    label: "Hồ sơ doanh nghiệp", href: "/ho-so-doanh-nghiep" },
-                      { icon: Package, label: "Dòng sản phẩm",     href: "/ho-so-san-pham" },
-                      { icon: Bell,    label: "Thông báo",           href: "/thong-bao" },
-                    ].map(({ icon: Icon, label, href }) => (
-                      <Link key={href} href={href} onClick={() => setAvatarOpen(false)}>
-                        <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 transition-colors cursor-pointer">
-                          <Icon className="w-4 h-4 text-[#2740BA]" />
-                          <span className="text-sm text-slate-700 font-medium">{label}</span>
-                        </div>
-                      </Link>
-                    ))}
-                    <div className="border-t border-gray-100 mt-1 pt-1">
-                      <button
-                        onClick={() => { logout(); setAvatarOpen(false); }}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 transition-colors"
-                      >
-                        <LogOut className="w-4 h-4 text-red-400" />
-                        <span className="text-sm text-red-500 font-medium">Đăng xuất</span>
-                      </button>
+                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${avatarOpen ? "rotate-180" : ""}`} />
+                  </button>
+                  {avatarOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 overflow-hidden" style={{ zIndex: 1002 }}>
+                      <div className="px-4 py-2.5 border-b border-gray-100">
+                        <p className="text-sm font-bold text-slate-800 leading-tight">{user.name}</p>
+                        <p className="text-xs text-gray-400 mt-0.5">{user.email}</p>
+                      </div>
+                      {[
+                        { icon: User,    label: "Hồ sơ doanh nghiệp", href: "/ho-so-doanh-nghiep" },
+                        { icon: Package, label: "Dòng sản phẩm",     href: "/ho-so-san-pham" },
+                        { icon: Bell,    label: "Thông báo",           href: "/thong-bao" },
+                      ].map(({ icon: Icon, label, href }) => (
+                        <Link key={href} href={href} onClick={() => setAvatarOpen(false)}>
+                          <div className="flex items-center gap-3 px-4 py-2.5 hover:bg-blue-50 transition-colors cursor-pointer">
+                            <Icon className="w-4 h-4 text-[#2740BA]" />
+                            <span className="text-sm text-slate-700 font-medium">{label}</span>
+                          </div>
+                        </Link>
+                      ))}
+                      <div className="border-t border-gray-100 mt-1 pt-1">
+                        <button
+                          onClick={() => { logout(); setAvatarOpen(false); }}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut className="w-4 h-4 text-red-400" />
+                          <span className="text-sm text-red-500 font-medium">Đăng xuất</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>)
+                  )}
+                </div>
+              </>)
             ) : (
               /* ── Guest: register / login buttons ── */
               (<>
