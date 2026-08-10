@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { MapPin, Phone, Mail, Clock, ExternalLink, Send, X } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 function nowStamp() {
@@ -222,23 +223,38 @@ function ChatView({
 // ── Main page ──────────────────────────────────────────────────────────────────
 export default function ContactPage() {
   const logoUrl = import.meta.env.BASE_URL + "images/logo-skhcn.png";
+  const { isLoggedIn, user } = useAuth();
 
   const [form, setForm] = useState<FormData>({
     name: "",
-    phone: "",
-    email: "",
+    phone: user?.profile.phone ?? "",
+    email: user?.email ?? "",
     topic: "",
     content: "",
   });
   const [submitted, setSubmitted] = useState(false);
   const [ticketId, setTicketId] = useState("");
 
+  useEffect(() => {
+    if (!isLoggedIn || !user) return;
+    setForm((current) => ({
+      ...current,
+      name: current.name || user.name,
+      phone: current.phone || user.profile.phone,
+      email: current.email || user.email,
+    }));
+  }, [isLoggedIn, user]);
+
   const set = (k: keyof FormData, v: string) =>
     setForm((f) => ({ ...f, [k]: v }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.content.trim()) return;
+    if (
+      !form.name.trim() ||
+      !form.content.trim() ||
+      (!isLoggedIn && (!form.phone.trim() || !form.email.trim()))
+    ) return;
     setTicketId(nextTicketId());
     setSubmitted(true);
   };
@@ -361,6 +377,9 @@ export default function ContactPage() {
                 <h2 className="text-xl font-bold text-[#2740BA] mb-6">
                   Gửi yêu cầu hỗ trợ
                 </h2>
+                <p className="text-sm text-gray-500 -mt-4 mb-6">
+                  Vui lòng giữ liên lạc để được hỗ trợ sớm nhất
+                </p>
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
@@ -378,24 +397,28 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                        Số điện thoại
+                        Số điện thoại {!isLoggedIn && <span className="text-red-500">*</span>}
                       </label>
                       <input
                         type="tel"
                         placeholder="0912 345 678"
                         value={form.phone}
                         onChange={(e) => set("phone", e.target.value)}
+                        required={!isLoggedIn}
                         className={inputCls}
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email *</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                      Email {!isLoggedIn && <span className="text-red-500">*</span>}
+                    </label>
                     <input
                       type="email"
                       placeholder="email@example.com"
                       value={form.email}
                       onChange={(e) => set("email", e.target.value)}
+                      required={!isLoggedIn}
                       className={inputCls}
                     />
                   </div>

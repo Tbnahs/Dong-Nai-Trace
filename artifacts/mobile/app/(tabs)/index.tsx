@@ -337,7 +337,7 @@ export default function HomeScreen() {
       : lookupByTraceCode(traceCode.trim());
     setSearching(false);
     if (found) {
-      router.push(`/product/${found.id}`);
+      router.push(`/product/${found.id}${useGtin ? '?access=gtin' : ''}`);
     } else {
       setNotFound(true);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

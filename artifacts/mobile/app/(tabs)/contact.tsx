@@ -15,6 +15,7 @@ import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useColors } from '@/hooks/useColors';
+import { useAuth } from '@/context/AuthContext';
 
 type ContactForm = {
   name: string;
@@ -266,19 +267,40 @@ function ChatView({
 
 export default function ContactScreen() {
   const colors = useColors();
+  const { isLoggedIn, user } = useAuth();
   const insets = useSafeAreaInsets();
-  const [form, setForm] = useState<ContactForm>({ name: '', phone: '', email: '', topic: '', content: '' });
+  const [form, setForm] = useState<ContactForm>({
+    name: user?.name ?? '',
+    phone: user?.profile.phone ?? '',
+    email: user?.email ?? '',
+    topic: '',
+    content: '',
+  });
   const [topicOpen, setTopicOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [ticketId, setTicketId] = useState('');
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
+
+  useEffect(() => {
+    if (!isLoggedIn || !user) return;
+    setForm(current => ({
+      ...current,
+      name: current.name || user.name,
+      phone: current.phone || user.profile.phone,
+      email: current.email || user.email,
+    }));
+  }, [isLoggedIn, user]);
 
   const updateForm = (key: keyof ContactForm, value: string) => {
     setForm(current => ({ ...current, [key]: value }));
   };
 
   const submit = () => {
-    if (!form.name.trim() || !form.content.trim()) return;
+    if (
+      !form.name.trim() ||
+      !form.content.trim() ||
+      (!isLoggedIn && (!form.phone.trim() || !form.email.trim()))
+    ) return;
     setTicketId(`TK-${String(ticketCounter++).padStart(3, '0')}`);
     setSubmitted(true);
   };
@@ -356,6 +378,9 @@ export default function ContactScreen() {
         <Text style={[styles.formDescription, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>
           Điền thông tin bên dưới, bộ phận hỗ trợ sẽ phản hồi sớm nhất.
         </Text>
+         <Text style={[styles.formDescription, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular', marginTop: -8 }]}>
+           Vui lòng giữ liên lạc để được hỗ trợ sớm nhất
+         </Text>
 
         <View style={styles.formField}>
           <FieldLabel required>HỌ VÀ TÊN</FieldLabel>
@@ -368,7 +393,7 @@ export default function ContactScreen() {
           />
         </View>
         <View style={styles.formField}>
-          <FieldLabel>SỐ ĐIỆN THOẠI</FieldLabel>
+           <FieldLabel required={!isLoggedIn}>SỐ ĐIỆN THOẠI</FieldLabel>
           <TextInput
             value={form.phone}
             onChangeText={value => updateForm('phone', value)}
@@ -379,7 +404,7 @@ export default function ContactScreen() {
           />
         </View>
         <View style={styles.formField}>
-          <FieldLabel>EMAIL</FieldLabel>
+           <FieldLabel required={!isLoggedIn}>EMAIL</FieldLabel>
           <TextInput
             value={form.email}
             onChangeText={value => updateForm('email', value)}
@@ -451,8 +476,8 @@ export default function ContactScreen() {
         </View>
         <Pressable
           onPress={submit}
-          disabled={!form.name.trim() || !form.content.trim()}
-          style={({ pressed }) => [styles.submitButton, { backgroundColor: colors.primary, opacity: !form.name.trim() || !form.content.trim() || pressed ? 0.5 : 1 }]}
+           disabled={!form.name.trim() || !form.content.trim() || (!isLoggedIn && (!form.phone.trim() || !form.email.trim()))}
+           style={({ pressed }) => [styles.submitButton, { backgroundColor: colors.primary, opacity: !form.name.trim() || !form.content.trim() || (!isLoggedIn && (!form.phone.trim() || !form.email.trim())) || pressed ? 0.5 : 1 }]}
         >
           <Text style={[styles.submitText, { color: colors.primaryForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>Gửi yêu cầu</Text>
           <Ionicons name="send-outline" size={17} color={colors.primaryForeground} />

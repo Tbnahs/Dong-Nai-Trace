@@ -24,11 +24,12 @@ const CERT_COLORS: Record<string, string> = {
 type Tab = 'journey' | 'info' | 'org';
 
 export default function ProductDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, access } = useLocalSearchParams<{ id: string; access?: string }>();
   const colors = useColors();
   const product = getProduct(id);
   const business = product ? getBusiness(product.businessId) : null;
-  const [activeTab, setActiveTab] = useState<Tab>('journey');
+  const hasJourneyAccess = access === 'gtin';
+  const [activeTab, setActiveTab] = useState<Tab>(hasJourneyAccess ? 'journey' : 'info');
   const [selectedLot, setSelectedLot] = useState(product?.lotNumber ?? '');
 
   if (!product) {
@@ -47,7 +48,7 @@ export default function ProductDetailScreen() {
   const certColor = Object.entries(CERT_COLORS).find(([k]) => primaryCert.includes(k))?.[1] ?? '#64748B';
 
   const TABS: { key: Tab; icon: string; label: string }[] = [
-    { key: 'journey', icon: 'git-branch-outline', label: 'Hành trình' },
+    ...(hasJourneyAccess ? [{ key: 'journey' as Tab, icon: 'git-branch-outline', label: 'Hành trình' }] : []),
     { key: 'info',    icon: 'information-circle-outline', label: 'Thông tin' },
     { key: 'org',     icon: 'business-outline', label: 'Doanh nghiệp' },
   ];
@@ -387,6 +388,10 @@ const styles = StyleSheet.create({
   tabRow: { flexDirection: 'row', borderBottomWidth: 1 },
   tabBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, paddingVertical: 12, borderBottomWidth: 2, borderBottomColor: 'transparent' },
   tabBtnText: { fontSize: 12 },
+  lotPicker: { padding: 14, borderBottomWidth: 1 },
+  lotLabel: { fontSize: 11, marginBottom: 6 },
+  lotSelect: { minHeight: 42, borderWidth: 1, borderRadius: 10, paddingHorizontal: 12, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  lotValue: { fontSize: 13, flex: 1 },
 
   timelineItem: { flexDirection: 'row', marginBottom: 4 },
   timelineLeft: { alignItems: 'center', width: 32 },

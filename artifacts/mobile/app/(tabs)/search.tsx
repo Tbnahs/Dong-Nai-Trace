@@ -99,7 +99,7 @@ export default function SearchScreen() {
       : lookupByGTIN(gtin, lot || undefined);
 
     if (product) {
-      router.push(`/product/${product.id}`);
+      router.push(`/product/${product.id}${searchType === 'gtin' ? '?access=gtin' : ''}`);
       return;
     }
 

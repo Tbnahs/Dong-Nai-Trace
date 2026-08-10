@@ -166,7 +166,7 @@ export default function LandingPage() {
 
     if (searchType === "gtin" && gtin.trim()) {
       const id = lookupByGtin(gtin.trim(), lot.trim() || undefined);
-      if (id) { setLocation(`/san-pham/${id}`); return; }
+      if (id) { setLocation(`/san-pham/${id}?access=gtin`); return; }
       setLocation(`/tra-cuu?q=${encodeURIComponent(gtin.trim())}`);
       return;
     }
