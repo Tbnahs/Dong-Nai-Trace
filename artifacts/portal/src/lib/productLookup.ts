@@ -41,6 +41,12 @@ const LOT_MAP: Record<string, string> = {
   'L-20240810-03': 'sp003',
 };
 
+const GTIN_LOT_MAP: Record<string, string> = {
+  '8934113001234|L-20241015-01': 'sp001',
+  '8934567890123|L-20240715-02': 'sp002',
+  '8934000003000|L-20240810-03': 'sp003',
+};
+
 // ─── Public API ───────────────────────────────────────────────────────────────
 /** Returns product ID for an exact trace code match (case-insensitive), or null. */
 export function lookupByTraceCode(code: string): string | null {
@@ -59,4 +65,9 @@ export function lookupByGtin(gtin: string, lot?: string): string | null {
 
   // Fall back to GTIN-only
   return GTIN_MAP[g] ?? null;
+}
+
+/** Returns product ID only when both GTIN and lot form an exact match. */
+export function lookupByGtinAndLot(gtin: string, lot: string): string | null {
+  return GTIN_LOT_MAP[`${gtin.trim()}|${lot.trim()}`] ?? null;
 }

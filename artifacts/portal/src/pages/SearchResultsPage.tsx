@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useSearch, useLocation } from 'wouter';
-import { lookupByTraceCode, lookupByGtin } from '../lib/productLookup';
+import { lookupByTraceCode, lookupByGtin, lookupByGtinAndLot } from '../lib/productLookup';
 import {
   Search, ShieldCheck, ChevronDown, ChevronRight,
   SlidersHorizontal, X, ArrowLeft, Building2, Package, MapPin, Phone, Barcode
@@ -151,8 +151,16 @@ export default function SearchResultsPage() {
     }
 
     if (searchType === 'gtin' && (gtin.trim() || lot.trim())) {
-      const id = lookupByGtin(gtin.trim(), lot.trim() || undefined);
-      if (id) { setLocation(`/san-pham/${id}?access=gtin`); return; }
+      const hasFullGtinLookup = Boolean(gtin.trim() && lot.trim());
+      const id = hasFullGtinLookup
+        ? lookupByGtinAndLot(gtin.trim(), lot.trim())
+        : gtin.trim()
+          ? lookupByGtin(gtin.trim())
+          : null;
+      if (id) {
+        setLocation(hasFullGtinLookup ? `/san-pham/${id}?access=gtin` : `/san-pham/${id}`);
+        return;
+      }
       // No exact match — show filtered results
       const q = `${gtin} ${lot}`.trim();
       setQuery(q);

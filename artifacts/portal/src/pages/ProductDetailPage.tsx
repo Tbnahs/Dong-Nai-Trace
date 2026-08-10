@@ -176,17 +176,17 @@ export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
   const search = useSearch();
   const product = ALL_PRODUCTS[params.id] ?? PRODUCTS['sp002'];
-  const isGtinLookup = new URLSearchParams(search).get('access') === 'gtin';
-  const [activeTab, setActiveTab] = useState<'journey' | 'info' | 'org'>(isGtinLookup ? 'info' : 'journey');
+  const hasJourneyAccess = new URLSearchParams(search).get('access') === 'gtin';
+  const [activeTab, setActiveTab] = useState<'journey' | 'info' | 'org'>(hasJourneyAccess ? 'journey' : 'info');
 
   useEffect(() => {
-    if (isGtinLookup && activeTab === 'journey') {
+    if (!hasJourneyAccess && activeTab === 'journey') {
       setActiveTab('info');
     }
-  }, [isGtinLookup, activeTab]);
+  }, [hasJourneyAccess, activeTab]);
 
   const TABS = [
-    ...(!isGtinLookup ? [{ key: 'journey', icon: <CheckCircle2 className="w-4 h-4" />, label: 'Hành trình sản phẩm' }] : []),
+    ...(hasJourneyAccess ? [{ key: 'journey', icon: <CheckCircle2 className="w-4 h-4" />, label: 'Hành trình sản phẩm' }] : []),
     { key: 'info',    icon: <Info          className="w-4 h-4" />, label: 'Thông tin sản phẩm' },
     { key: 'org',     icon: <Building2     className="w-4 h-4" />, label: 'Doanh nghiệp' },
   ];
@@ -268,7 +268,7 @@ export default function ProductDetailPage() {
             <div
               role="tablist"
               aria-label="Thông tin sản phẩm"
-              className={`grid ${isGtinLookup ? 'grid-cols-2' : 'grid-cols-3'} gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 mb-6`}
+              className={`grid ${hasJourneyAccess ? 'grid-cols-3' : 'grid-cols-2'} gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 mb-6`}
             >
               {TABS.map(t => (
                 <button

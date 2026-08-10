@@ -4,7 +4,7 @@ import hero3d from "../assets/hero-3d.png";
 import heroGuide from "../assets/hero-guide.png";
 import MapSection from "../components/MapSection";
 import { Link, useLocation } from "wouter";
-import { lookupByTraceCode, lookupByGtin } from "../lib/productLookup";
+import { lookupByTraceCode, lookupByGtin, lookupByGtinAndLot } from "../lib/productLookup";
 import {
   CheckCircle2,
   Search,
@@ -159,16 +159,19 @@ export default function LandingPage() {
     if (searchType === "trace" && traceCode.trim()) {
       const id = lookupByTraceCode(traceCode.trim());
       if (id) { setLocation(`/san-pham/${id}`); return; }
-      const gtinId = lookupByGtin(traceCode.trim());
-      if (gtinId) { setLocation(`/san-pham/${gtinId}?access=gtin`); return; }
       // No exact match → go to search results with the typed code as query
       setLocation(`/tra-cuu?q=${encodeURIComponent(traceCode.trim())}`);
       return;
     }
 
     if (searchType === "gtin" && gtin.trim()) {
-      const id = lookupByGtin(gtin.trim(), lot.trim() || undefined);
-      if (id) { setLocation(`/san-pham/${id}?access=gtin`); return; }
+      const id = lot.trim()
+        ? lookupByGtinAndLot(gtin.trim(), lot.trim())
+        : lookupByGtin(gtin.trim());
+      if (id) {
+        setLocation(lot.trim() ? `/san-pham/${id}?access=gtin` : `/san-pham/${id}`);
+        return;
+      }
       setLocation(`/tra-cuu?q=${encodeURIComponent(gtin.trim())}`);
       return;
     }
