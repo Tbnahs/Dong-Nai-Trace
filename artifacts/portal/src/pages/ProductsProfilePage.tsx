@@ -260,19 +260,21 @@ function ProductDetailDrawer({ product, onClose, onEdit }: { product: Product; o
                 Mã truy xuất:{' '}
                 <span className="font-mono font-bold text-[#2740BA]">{product.traceCode ?? ''}</span>
               </p>
-              <div className="mt-3">
-                <label htmlFor="product-lot" className="mb-1.5 block text-[11px] font-semibold text-slate-500">Lô / mẻ</label>
-                <div className="relative">
-                  <select
-                    id="product-lot"
-                    defaultValue={product.lotCode ?? ''}
-                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-9 text-xs font-medium text-slate-700 outline-none focus:border-[#2740BA] focus:ring-4 focus:ring-[#2740BA]/10"
-                  >
-                    <option value={product.lotCode ?? ''}>{product.lotCode || 'Chưa có thông tin lô / mẻ'}</option>
-                  </select>
-                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              {hasTrace && (
+                <div className="mt-3">
+                  <label htmlFor="product-lot" className="mb-1.5 block text-[11px] font-semibold text-slate-500">Lô / mẻ</label>
+                  <div className="relative">
+                    <select
+                      id="product-lot"
+                      defaultValue={product.lotCode ?? ''}
+                      className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-9 text-xs font-medium text-slate-700 outline-none focus:border-[#2740BA] focus:ring-4 focus:ring-[#2740BA]/10"
+                    >
+                      <option value={product.lotCode ?? ''}>{product.lotCode || 'Chưa có thông tin lô / mẻ'}</option>
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                  </div>
                 </div>
-              </div>
+              )}
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">{product.description}</p>
 
               <div className="my-5 grid grid-cols-2 gap-3 border-y border-slate-100 py-4 sm:grid-cols-4">
@@ -338,7 +340,7 @@ function ProductDetailDrawer({ product, onClose, onEdit }: { product: Product; o
                   <div className="space-y-3">
                     {[
                       { label: 'Mã GTIN', value: trace?.gtin ?? '' },
-                      { label: 'Mã lô / Batch', value: trace?.lotCode ?? '' },
+                      ...(hasTrace ? [{ label: 'Mã lô / Batch', value: trace?.lotCode ?? '' }] : []),
                       { label: 'Khối lượng / Quy cách', value: trace?.weight ?? '' },
                       { label: 'Hạn sử dụng', value: trace?.expiry ?? '' },
                       { label: 'Xuất xứ', value: trace?.origin ?? '' },
@@ -423,10 +425,11 @@ function InfoRow({ icon: Icon, label, value, highlight }: { icon: React.ElementT
 
 // ─── Add / Edit Modal ─────────────────────────────────────────────────────────
 function ProductModal({
-  title, initial, onClose, onSave,
+  title, initial, hasTrace = false, onClose, onSave,
 }: {
   title: string;
   initial?: Partial<ProductForm>;
+  hasTrace?: boolean;
   onClose: () => void;
   onSave: (form: ProductForm) => void;
 }) {
@@ -568,8 +571,19 @@ function ProductModal({
                   onChange={e => set('gtin', e.target.value)}
                 />
               </div>
-              <div className="sm:col-span-2">
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mô tả sản phẩm</label>
+               {hasTrace && (
+                 <div>
+                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Lô / mẻ</label>
+                   <input
+                     className={inputCls()}
+                     placeholder="VD: Lô 8 — Mồng Tơi VietGAP — 10/05/2026"
+                     value={form.lotCode}
+                     onChange={e => set('lotCode', e.target.value)}
+                   />
+                 </div>
+               )}
+               <div className="sm:col-span-2">
+                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mô tả sản phẩm</label>
                 <textarea
                   className={inputCls() + ' min-h-[90px] resize-y'}
                   placeholder="Mô tả ngắn gọn về sản phẩm, vùng trồng, quy trình sản xuất..."
@@ -775,7 +789,7 @@ export default function ProductsProfilePage() {
       certs: form.certs,
       description: form.description,
       gtin: form.gtin,
-      lotCode: form.lotCode,
+      lotCode: undefined,
       img: `https://picsum.photos/seed/${Date.now()}/400/300`,
       status: 'pending',
       updatedAt: new Date().toLocaleDateString('vi-VN'),
@@ -786,7 +800,7 @@ export default function ProductsProfilePage() {
     if (!editingId) return;
     setProducts(prev => prev.map(p =>
       p.id === editingId
-         ? { ...p, name: form.name, category: form.category, unit: form.unit, certs: form.certs, description: form.description, gtin: form.gtin, lotCode: form.lotCode, updatedAt: new Date().toLocaleDateString('vi-VN') }
+         ? { ...p, name: form.name, category: form.category, unit: form.unit, certs: form.certs, description: form.description, gtin: form.gtin, lotCode: p.traceCode ? form.lotCode : undefined, updatedAt: new Date().toLocaleDateString('vi-VN') }
         : p
     ));
   };
@@ -1098,6 +1112,7 @@ export default function ProductsProfilePage() {
         {showAdd && (
           <ProductModal
             title="Thêm sản phẩm mới"
+            hasTrace={false}
             onClose={() => setShowAdd(false)}
             onSave={form => { handleAdd(form); setShowAdd(false); }}
           />
@@ -1108,6 +1123,7 @@ export default function ProductsProfilePage() {
         {editingProduct && (
           <ProductModal
             title={`Chỉnh sửa: ${editingProduct.name}`}
+            hasTrace={Boolean(editingProduct.traceCode)}
             initial={{
               name: editingProduct.name,
               category: editingProduct.category,

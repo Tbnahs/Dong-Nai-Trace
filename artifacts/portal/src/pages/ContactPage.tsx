@@ -141,13 +141,12 @@ function ChatView({
           </button>
         </div>
       </div>
-
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-5 space-y-4 bg-[#F8FAFC]">
         {messages.map((msg) =>
           msg.from === "user" ? (
             // Người dùng → bên PHẢI, bong bóng xanh
-            <div key={msg.id} className="flex items-end gap-2 flex-row-reverse">
+            (<div key={msg.id} className="flex items-end gap-2 flex-row-reverse">
               <div className="w-7 h-7 rounded-full bg-[#2740BA] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                 {initials}
               </div>
@@ -157,10 +156,10 @@ function ChatView({
                 </div>
                 <p className="text-[10px] text-gray-400 mt-1 mr-1 text-right">{msg.time}</p>
               </div>
-            </div>
+            </div>)
           ) : (
             // Admin → bên TRÁI, bong bóng xám
-            <div key={msg.id} className="flex items-end gap-2">
+            (<div key={msg.id} className="flex items-end gap-2">
               <div className="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px] font-bold shrink-0">
                 AD
               </div>
@@ -170,7 +169,7 @@ function ChatView({
                 </div>
                 <p className="text-[10px] text-gray-400 mt-1 ml-1">{msg.time}</p>
               </div>
-            </div>
+            </div>)
           )
         )}
 
@@ -190,7 +189,6 @@ function ChatView({
 
         <div ref={bottomRef} />
       </div>
-
       {/* Input */}
       <div className="px-5 sm:px-6 py-4 border-t border-gray-100 bg-white shrink-0">
         {closed ? (
@@ -265,7 +263,6 @@ export default function ContactPage() {
           </p>
         </div>
       </div>
-
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 py-10 sm:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact cards */}
@@ -393,9 +390,7 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Email
-                    </label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email *</label>
                     <input
                       type="email"
                       placeholder="email@example.com"

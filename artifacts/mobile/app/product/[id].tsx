@@ -178,7 +178,7 @@ export default function ProductDetailScreen() {
             })}
           </View>
 
-          {activeTab === 'journey' && (
+          {activeTab === 'journey' && product.traceCode && (
             <View style={[styles.lotPicker, { borderBottomColor: colors.border }]}>
               <Text style={[styles.lotLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Lô / mẻ</Text>
               <Pressable
@@ -235,7 +235,7 @@ export default function ProductDetailScreen() {
                 { icon: 'location-outline',  label: 'Xuất xứ',        value: product.origin },
                 { icon: 'calendar-outline',  label: 'Ngày sản xuất',  value: product.productionDate },
                 { icon: 'time-outline',      label: 'Hạn sử dụng',    value: product.expiryDate },
-                { icon: 'layers-outline',    label: 'Số lô',           value: product.lotNumber },
+                ...(product.traceCode ? [{ icon: 'layers-outline', label: 'Số lô', value: product.lotNumber }] : []),
                 { icon: 'scale-outline',     label: 'Quy cách',        value: product.weight },
                 { icon: 'barcode-outline',   label: 'GTIN',            value: product.gtin },
                 { icon: 'ribbon-outline',    label: 'Chứng nhận',      value: product.certifications.join(', ') || '—' },
