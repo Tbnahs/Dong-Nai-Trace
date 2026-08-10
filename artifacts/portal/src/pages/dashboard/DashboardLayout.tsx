@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const navItems = [
     { href: '/dashboard', icon: LayoutDashboard, label: 'Tổng quan' },
     { href: '/dashboard/ho-so-to-chuc', icon: Building2, label: 'Hồ sơ tổ chức' },
-    { href: '/dashboard/ho-so-san-pham', icon: Package, label: 'Hồ sơ sản phẩm' },
+    { href: '/dashboard/ho-so-san-pham', icon: Package, label: 'Dòng sản phẩm' },
     { href: '/dashboard/tra-cuu-txng', icon: Search, label: 'Tra cứu TXNG' },
     { href: '/dashboard/chung-nhan', icon: FileText, label: 'Chứng nhận & Tài liệu' },
     { href: '/dashboard/thong-bao', icon: Bell, label: 'Thông báo', badge: 2 },

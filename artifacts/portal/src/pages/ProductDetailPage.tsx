@@ -176,6 +176,7 @@ export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
   const product = ALL_PRODUCTS[params.id] ?? PRODUCTS['sp002'];
   const [activeTab, setActiveTab] = useState<'journey' | 'info' | 'org'>('journey');
+  const [selectedLot, setSelectedLot] = useState(product.lotCode ?? '');
 
   const TABS = [
     { key: 'journey', icon: <CheckCircle2 className="w-4 h-4" />, label: 'Hành trình sản phẩm' },
@@ -280,6 +281,25 @@ export default function ProductDetailPage() {
                 </button>
               ))}
             </div>
+
+            {activeTab === 'journey' && (
+              <div className="mb-6">
+                <label htmlFor="product-lot" className="mb-1.5 block text-[11px] font-semibold text-slate-500">Lô / mẻ</label>
+                <div className="relative">
+                  <select
+                    id="product-lot"
+                    value={selectedLot}
+                    onChange={e => setSelectedLot(e.target.value)}
+                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-9 text-xs font-medium text-slate-700 outline-none focus:border-[#2740BA] focus:ring-4 focus:ring-[#2740BA]/10"
+                  >
+                    <option value={product.lotCode ?? ''}>{product.lotCode || 'Chưa có thông tin lô / mẻ'}</option>
+                  </select>
+                  <svg className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </div>
+              </div>
+            )}
 
             {/* ── Tab: Journey ── */}
             {activeTab === 'journey' && (

@@ -23,6 +23,8 @@ interface Product {
   description: string;
   img: string;
   traceCode?: string;
+  gtin?: string;
+  lotCode?: string;
   status: 'approved' | 'pending';
   updatedAt: string;
 }
@@ -33,20 +35,22 @@ interface ProductForm {
   unit: string;
   certs: string[];
   description: string;
+  gtin: string;
+  lotCode: string;
 }
 
 // ─── Seed data ────────────────────────────────────────────────────────────────
 const INITIAL_PRODUCTS: Product[] = [
-  { id: 'p1', name: 'Bưởi Tân Triều', category: 'Trái cây', unit: 'kg', certs: ['VietGAP'], description: 'Bưởi da xanh trồng tại Tân Triều, Vĩnh Cửu.', traceCode: 'TXNG-VCU-001-2024', img: 'https://picsum.photos/seed/buoi/400/300', status: 'approved', updatedAt: '15/10/2024' },
-  { id: 'p2', name: 'Rau muống hữu cơ', category: 'Nông sản & Rau củ', unit: 'bó', certs: ['VietGAP', 'Hữu cơ'], description: 'Rau muống canh tác hữu cơ, không hóa chất.', traceCode: 'TXNG-XL-002-2024', img: 'https://picsum.photos/seed/raumuong/400/300', status: 'approved', updatedAt: '10/08/2024' },
-  { id: 'p3', name: 'Mật ong rừng nguyên chất', category: 'Thực phẩm chế biến', unit: 'chai', certs: ['OCOP'], description: 'Mật ong khai thác từ rừng tự nhiên Vĩnh Cửu.', traceCode: 'TXNG-VCU-003-2024', img: 'https://picsum.photos/seed/matong/400/300', status: 'approved', updatedAt: '01/06/2024' },
+  { id: 'p1', name: 'Bưởi Tân Triều', category: 'Trái cây', unit: 'kg', certs: ['VietGAP'], description: 'Bưởi da xanh trồng tại Tân Triều, Vĩnh Cửu.', traceCode: 'TXNG-VCU-001-2024', gtin: '8934113001234', lotCode: 'L-20241015-01', img: 'https://picsum.photos/seed/buoi/400/300', status: 'approved', updatedAt: '15/10/2024' },
+  { id: 'p2', name: 'Rau muống hữu cơ', category: 'Nông sản & Rau củ', unit: 'bó', certs: ['VietGAP', 'Hữu cơ'], description: 'Rau muống canh tác hữu cơ, không hóa chất.', traceCode: 'TXNG-XL-002-2024', gtin: '8934567890123', lotCode: 'L-20240715-02', img: 'https://picsum.photos/seed/raumuong/400/300', status: 'approved', updatedAt: '10/08/2024' },
+  { id: 'p3', name: 'Mật ong rừng nguyên chất', category: 'Thực phẩm chế biến', unit: 'chai', certs: ['OCOP'], description: 'Mật ong khai thác từ rừng tự nhiên Vĩnh Cửu.', traceCode: 'TXNG-VCU-003-2024', gtin: '8934000003000', lotCode: 'L-20240810-03', img: 'https://picsum.photos/seed/matong/400/300', status: 'approved', updatedAt: '01/06/2024' },
   { id: 'p4', name: 'Xoài cát hòa lộc', category: 'Trái cây', unit: 'kg', certs: ['VietGAP'], description: 'Xoài cát Hòa Lộc chất lượng cao, xuất khẩu.', img: 'https://picsum.photos/seed/xoai/400/300', status: 'pending', updatedAt: '20/07/2024' },
   { id: 'p5', name: 'Sầu riêng Ri6', category: 'Trái cây', unit: 'kg', certs: ['VietGAP'], description: 'Sầu riêng Ri6 thu hoạch tháng 5–7 hàng năm.', img: 'https://picsum.photos/seed/saurieng/400/300', status: 'pending', updatedAt: '05/07/2024' },
 ];
 
 const emptyForm: ProductForm = {
   name: '', category: PRODUCT_CATS[0], unit: '',
-  certs: [], description: '',
+  certs: [], description: '', gtin: '', lotCode: '',
 };
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
@@ -139,8 +143,8 @@ function getTraceDetail(product: Product): TraceDetail | null {
     packaging: product.unit ? `${product.unit} theo tiêu chuẩn sản phẩm` : 'Theo tiêu chuẩn sản phẩm',
     updateDate: product.updatedAt,
     orgShort: 'HTX Nông nghiệp Xanh',
-    gtin: `89340000${product.id.replace(/\D/g, '')}`,
-    lotCode: `L-${product.updatedAt.replace(/\//g, '')}-${product.id.replace(/\D/g, '')}`,
+    gtin: product.gtin ?? '',
+    lotCode: product.lotCode ?? '',
     weight: product.unit ? `Theo đơn vị ${product.unit}` : '',
     expiry: 'Theo nhãn sản phẩm',
     ingredients: `${product.name} tự nhiên 100%`,
@@ -256,6 +260,19 @@ function ProductDetailDrawer({ product, onClose, onEdit }: { product: Product; o
                 Mã truy xuất:{' '}
                 <span className="font-mono font-bold text-[#2740BA]">{product.traceCode ?? ''}</span>
               </p>
+              <div className="mt-3">
+                <label htmlFor="product-lot" className="mb-1.5 block text-[11px] font-semibold text-slate-500">Lô / mẻ</label>
+                <div className="relative">
+                  <select
+                    id="product-lot"
+                    defaultValue={product.lotCode ?? ''}
+                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-9 text-xs font-medium text-slate-700 outline-none focus:border-[#2740BA] focus:ring-4 focus:ring-[#2740BA]/10"
+                  >
+                    <option value={product.lotCode ?? ''}>{product.lotCode || 'Chưa có thông tin lô / mẻ'}</option>
+                  </select>
+                  <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                </div>
+              </div>
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">{product.description}</p>
 
               <div className="my-5 grid grid-cols-2 gap-3 border-y border-slate-100 py-4 sm:grid-cols-4">
@@ -542,6 +559,15 @@ function ProductModal({
                   </p>
                 )}
               </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mã GTIN</label>
+                <input
+                  className={inputCls()}
+                  placeholder="VD: 8934113001234"
+                  value={form.gtin}
+                  onChange={e => set('gtin', e.target.value)}
+                />
+              </div>
               <div className="sm:col-span-2">
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Mô tả sản phẩm</label>
                 <textarea
@@ -709,7 +735,7 @@ export default function ProductsProfilePage() {
 
   const filtered = tabProducts.filter(p => {
     const q = search.trim().toLowerCase();
-    const matchQ = !q || `${p.name} ${p.category} ${p.traceCode ?? ''}`.toLowerCase().includes(q);
+     const matchQ = !q || `${p.name} ${p.category} ${p.traceCode ?? ''} ${p.gtin ?? ''} ${p.lotCode ?? ''}`.toLowerCase().includes(q);
     const matchS = statusFilter === 'all' || p.status === statusFilter;
     const matchC = catFilter === 'all' || p.category === catFilter;
     return matchQ && matchS && matchC;
@@ -748,6 +774,8 @@ export default function ProductsProfilePage() {
       unit: form.unit,
       certs: form.certs,
       description: form.description,
+      gtin: form.gtin,
+      lotCode: form.lotCode,
       img: `https://picsum.photos/seed/${Date.now()}/400/300`,
       status: 'pending',
       updatedAt: new Date().toLocaleDateString('vi-VN'),
@@ -758,7 +786,7 @@ export default function ProductsProfilePage() {
     if (!editingId) return;
     setProducts(prev => prev.map(p =>
       p.id === editingId
-        ? { ...p, name: form.name, category: form.category, unit: form.unit, certs: form.certs, description: form.description, updatedAt: new Date().toLocaleDateString('vi-VN') }
+         ? { ...p, name: form.name, category: form.category, unit: form.unit, certs: form.certs, description: form.description, gtin: form.gtin, lotCode: form.lotCode, updatedAt: new Date().toLocaleDateString('vi-VN') }
         : p
     ));
   };
@@ -776,7 +804,7 @@ export default function ProductsProfilePage() {
       <div className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl font-extrabold text-slate-800 tracking-tight">Quản lý sản phẩm</h1>
+              <h1 className="text-xl font-extrabold text-slate-800 tracking-tight">Dòng sản phẩm</h1>
             <p className="text-sm text-slate-500 mt-0.5">{products.length} sản phẩm trong danh sách</p>
           </div>
           <button
@@ -825,7 +853,7 @@ export default function ProductsProfilePage() {
               <input
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                placeholder="Tìm theo tên, danh mục, mã truy xuất..."
+                placeholder="Tìm theo tên, danh mục, mã truy xuất, GTIN..."
                 className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium text-slate-700 outline-none focus:border-[#2740BA] focus:bg-white focus:ring-4 focus:ring-[#2740BA]/10 transition"
               />
             </div>
@@ -888,7 +916,7 @@ export default function ProductsProfilePage() {
                       <th className="px-6 py-3.5">Sản phẩm</th>
                       <th className="px-4 py-3.5">Danh mục</th>
                       <th className="px-4 py-3.5">Chứng nhận</th>
-                      <th className="px-4 py-3.5">Mã Tra Cứu</th>
+                      <th className="px-4 py-3.5">Dòng sản phẩm</th>
                       <th className="px-4 py-3.5">Trạng thái</th>
                       <th className="px-4 py-3.5">Cập nhật</th>
                       <th className="px-6 py-3.5 text-right">Thao tác</th>
@@ -1086,6 +1114,8 @@ export default function ProductsProfilePage() {
               unit: editingProduct.unit,
               certs: editingProduct.certs,
               description: editingProduct.description,
+              gtin: editingProduct.gtin ?? '',
+              lotCode: editingProduct.lotCode ?? '',
             }}
             onClose={() => setEditingId(null)}
             onSave={form => { handleEdit(form); setEditingId(null); }}

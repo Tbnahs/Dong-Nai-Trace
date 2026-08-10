@@ -26,6 +26,8 @@ type Product = {
   description: string;
   image?: string;
   traceCode?: string;
+  gtin?: string;
+  lotCode?: string;
   status: Status;
   updatedAt: string;
 };
@@ -35,20 +37,22 @@ type ProductForm = {
   unit: string;
   certs: string[];
   description: string;
+  gtin: string;
+  lotCode: string;
   image?: string;
 };
 
 const CATEGORIES = ['Nông sản & Rau củ', 'Trái cây', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Khác'];
 const CERTS = ['VietGAP', 'GlobalGAP', 'OCOP', 'HACCP', 'ISO 22000', 'Hữu cơ'];
 const INITIAL_PRODUCTS: Product[] = [
-  { id: 'p1', name: 'Bưởi Tân Triều', category: 'Trái cây', unit: 'kg', certs: ['VietGAP'], description: 'Bưởi da xanh trồng tại Tân Triều, Vĩnh Cửu.', traceCode: 'TXNG-VCU-001-2024', status: 'approved', updatedAt: '15/10/2024' },
-  { id: 'p2', name: 'Rau muống hữu cơ', category: 'Nông sản & Rau củ', unit: 'bó', certs: ['VietGAP', 'Hữu cơ'], description: 'Rau muống canh tác hữu cơ, không hóa chất.', traceCode: 'TXNG-XL-002-2024', status: 'approved', updatedAt: '10/08/2024' },
-  { id: 'p3', name: 'Mật ong rừng nguyên chất', category: 'Thực phẩm chế biến', unit: 'chai', certs: ['OCOP'], description: 'Mật ong khai thác từ rừng tự nhiên Vĩnh Cửu.', traceCode: 'TXNG-VCU-003-2024', status: 'approved', updatedAt: '01/06/2024' },
+  { id: 'p1', name: 'Bưởi Tân Triều', category: 'Trái cây', unit: 'kg', certs: ['VietGAP'], description: 'Bưởi da xanh trồng tại Tân Triều, Vĩnh Cửu.', traceCode: 'TXNG-VCU-001-2024', gtin: '8934113001234', lotCode: 'L-20241015-01', status: 'approved', updatedAt: '15/10/2024' },
+  { id: 'p2', name: 'Rau muống hữu cơ', category: 'Nông sản & Rau củ', unit: 'bó', certs: ['VietGAP', 'Hữu cơ'], description: 'Rau muống canh tác hữu cơ, không hóa chất.', traceCode: 'TXNG-XL-002-2024', gtin: '8934567890123', lotCode: 'L-20240715-02', status: 'approved', updatedAt: '10/08/2024' },
+  { id: 'p3', name: 'Mật ong rừng nguyên chất', category: 'Thực phẩm chế biến', unit: 'chai', certs: ['OCOP'], description: 'Mật ong khai thác từ rừng tự nhiên Vĩnh Cửu.', traceCode: 'TXNG-VCU-003-2024', gtin: '8934000003000', lotCode: 'L-20240810-03', status: 'approved', updatedAt: '01/06/2024' },
   { id: 'p4', name: 'Xoài cát hòa lộc', category: 'Trái cây', unit: 'kg', certs: ['VietGAP'], description: 'Xoài cát Hòa Lộc chất lượng cao, xuất khẩu.', status: 'pending', updatedAt: '20/07/2024' },
   { id: 'p5', name: 'Sầu riêng Ri6', category: 'Trái cây', unit: 'kg', certs: ['VietGAP'], description: 'Sầu riêng Ri6 thu hoạch tháng 5–7 hàng năm.', status: 'pending', updatedAt: '05/07/2024' },
 ];
 
-const EMPTY_FORM: ProductForm = { name: '', category: CATEGORIES[0], unit: '', certs: [], description: '' };
+const EMPTY_FORM: ProductForm = { name: '', category: CATEGORIES[0], unit: '', certs: [], description: '', gtin: '', lotCode: '' };
 
 function StatusBadge({ status }: { status: Status }) {
   const colors = useColors();
@@ -80,7 +84,11 @@ function ProductCard({ product, onView, onEdit, onDelete }: { product: Product; 
           {product.certs.slice(0, 2).map(cert => <Text key={cert} style={[styles.certChip, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>{cert}</Text>)}
         </View>
         {product.traceCode ? (
-          <Text style={[styles.traceCode, { fontFamily: 'BeVietnamPro_700Bold' }]}>{product.traceCode}</Text>
+          <View>
+            <Text style={[styles.traceCode, { fontFamily: 'BeVietnamPro_700Bold' }]}>{product.traceCode}</Text>
+            {product.gtin ? <Text style={[styles.productMetaCode, { fontFamily: 'BeVietnamPro_400Regular' }]}>GTIN: {product.gtin}</Text> : null}
+            {product.lotCode ? <Text style={[styles.productMetaCode, { fontFamily: 'BeVietnamPro_400Regular' }]}>Lô / mẻ: {product.lotCode}</Text> : null}
+          </View>
         ) : (
           <Text style={[styles.noTrace, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Chưa cấp mã TXNG</Text>
         )}
@@ -134,6 +142,10 @@ function ProductEditor({ initial, onClose, onSave }: { initial: ProductForm; onC
       </View>
       <Text style={[styles.label, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Đơn vị tính *</Text>
       <TextInput value={form.unit} onChangeText={value => set('unit', value)} placeholder="kg, hộp, thùng..." placeholderTextColor={colors.mutedForeground} style={[styles.input, { color: colors.foreground, borderColor: colors.border, fontFamily: 'BeVietnamPro_400Regular' }]} />
+      <Text style={[styles.label, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Mã GTIN</Text>
+      <TextInput value={form.gtin} onChangeText={value => set('gtin', value)} placeholder="VD: 8934113001234" placeholderTextColor={colors.mutedForeground} keyboardType="numeric" style={[styles.input, { color: colors.foreground, borderColor: colors.border, fontFamily: 'BeVietnamPro_400Regular' }]} />
+      <Text style={[styles.label, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Lô / mẻ</Text>
+      <TextInput value={form.lotCode} onChangeText={value => set('lotCode', value)} placeholder="VD: Lô 8 — Mồng Tơi VietGAP — 10/05/2026" placeholderTextColor={colors.mutedForeground} style={[styles.input, { color: colors.foreground, borderColor: colors.border, fontFamily: 'BeVietnamPro_400Regular' }]} />
       <Text style={[styles.label, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Mô tả sản phẩm</Text>
       <TextInput value={form.description} onChangeText={value => set('description', value)} placeholder="Mô tả ngắn gọn về sản phẩm, vùng trồng, quy trình sản xuất..." placeholderTextColor={colors.mutedForeground} multiline textAlignVertical="top" style={[styles.textArea, { color: colors.foreground, borderColor: colors.border, fontFamily: 'BeVietnamPro_400Regular' }]} />
       <Text style={[styles.editorSection, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>CHỨNG NHẬN CHẤT LƯỢNG</Text>
@@ -235,7 +247,7 @@ export default function ProductsProfileScreen() {
   const filtered = useMemo(() => products.filter(product => {
     const belongs = tab === 'with' ? !!product.traceCode : !product.traceCode;
     const query = search.trim().toLowerCase();
-    return belongs && (!query || `${product.name} ${product.category} ${product.traceCode ?? ''}`.toLowerCase().includes(query)) && (status === 'all' || product.status === status) && (category === 'all' || product.category === category);
+    return belongs && (!query || `${product.name} ${product.category} ${product.traceCode ?? ''} ${product.gtin ?? ''} ${product.lotCode ?? ''}`.toLowerCase().includes(query)) && (status === 'all' || product.status === status) && (category === 'all' || product.category === category);
   }), [products, tab, search, status, category]);
 
   if (!isLoggedIn) {
@@ -243,10 +255,10 @@ export default function ProductsProfileScreen() {
   }
 
   const startAdd = () => setEditor({ form: { ...EMPTY_FORM } });
-  const startEdit = (product: Product) => setEditor({ id: product.id, form: { name: product.name, category: product.category, unit: product.unit, certs: product.certs, description: product.description, image: product.image } });
+  const startEdit = (product: Product) => setEditor({ id: product.id, form: { name: product.name, category: product.category, unit: product.unit, certs: product.certs, description: product.description, gtin: product.gtin ?? '', lotCode: product.lotCode ?? '', image: product.image } });
   const saveProduct = async (form: ProductForm) => {
     const existing = editor?.id ? products.find(product => product.id === editor.id) : undefined;
-    const nextProduct: Product = { id: editor?.id ?? `p-${Date.now()}`, ...form, status: existing?.status ?? 'pending', traceCode: existing?.traceCode, updatedAt: new Date().toLocaleDateString('vi-VN') };
+    const nextProduct: Product = { id: editor?.id ?? `p-${Date.now()}`, ...form, status: existing?.status ?? 'pending', traceCode: existing?.traceCode, gtin: form.gtin.trim() || undefined, lotCode: form.lotCode.trim() || undefined, updatedAt: new Date().toLocaleDateString('vi-VN') };
     await persist(editor?.id ? products.map(product => product.id === editor.id ? nextProduct : product) : [nextProduct, ...products]);
     setEditor(null);
   };
@@ -260,14 +272,14 @@ export default function ProductsProfileScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <>
-            <View style={styles.pageHeader}><View><Text style={[styles.pageTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Quản lý sản phẩm</Text><Text style={[styles.pageSubtitle, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{products.length} sản phẩm trong danh sách</Text></View><Pressable onPress={startAdd} style={[styles.addButton, { backgroundColor: colors.primary }]}><Ionicons name="add" size={18} color="#FFF" /><Text style={[styles.addButtonText, { fontFamily: 'BeVietnamPro_700Bold' }]}>Thêm sản phẩm</Text></Pressable></View>
+            <View style={styles.pageHeader}><View><Text style={[styles.pageTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Dòng sản phẩm</Text><Text style={[styles.pageSubtitle, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{products.length} sản phẩm trong danh sách</Text></View><Pressable onPress={startAdd} style={[styles.addButton, { backgroundColor: colors.primary }]}><Ionicons name="add" size={18} color="#FFF" /><Text style={[styles.addButtonText, { fontFamily: 'BeVietnamPro_700Bold' }]}>Thêm sản phẩm</Text></Pressable></View>
             {editor && <ProductEditor initial={editor.form} onClose={() => setEditor(null)} onSave={saveProduct} />}
             <View style={styles.tabs}>
               <Pressable onPress={() => { setTab('with'); setStatus('all'); setCategory('all'); }} style={[styles.tab, { borderColor: tab === 'with' ? '#34D399' : colors.border, backgroundColor: tab === 'with' ? '#ECFDF5' : colors.card }]}><Ionicons name="shield-checkmark-outline" size={18} color={tab === 'with' ? '#059669' : colors.mutedForeground} /><Text style={[styles.tabText, { color: tab === 'with' ? '#065F46' : colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>Đã có truy xuất nguồn gốc</Text><Text style={styles.countGreen}>{withTrace}</Text></Pressable>
               <Pressable onPress={() => { setTab('without'); setStatus('all'); setCategory('all'); }} style={[styles.tab, { borderColor: tab === 'without' ? '#FBBF24' : colors.border, backgroundColor: tab === 'without' ? '#FFFBEB' : colors.card }]}><Ionicons name="alert-circle-outline" size={18} color={tab === 'without' ? '#D97706' : colors.mutedForeground} /><Text style={[styles.tabText, { color: tab === 'without' ? '#92400E' : colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>Chưa có truy xuất nguồn gốc</Text><Text style={styles.countAmber}>{withoutTrace}</Text></Pressable>
             </View>
             <View style={[styles.toolbar, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <View style={[styles.searchBox, { backgroundColor: colors.muted, borderColor: colors.border }]}><Ionicons name="search" size={17} color={colors.mutedForeground} /><TextInput value={search} onChangeText={setSearch} placeholder="Tìm theo tên, danh mục, mã truy xuất..." placeholderTextColor={colors.mutedForeground} style={[styles.searchInput, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]} /></View>
+              <View style={[styles.searchBox, { backgroundColor: colors.muted, borderColor: colors.border }]}><Ionicons name="search" size={17} color={colors.mutedForeground} /><TextInput value={search} onChangeText={setSearch} placeholder="Tìm theo tên, danh mục, mã truy xuất, GTIN..." placeholderTextColor={colors.mutedForeground} style={[styles.searchInput, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]} /></View>
               <View style={styles.filterRow}><Pressable onPress={() => setStatus(status === 'all' ? 'approved' : status === 'approved' ? 'pending' : 'all')} style={[styles.filterButton, { borderColor: colors.border, backgroundColor: colors.muted }]}><Text style={[styles.filterText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>{status === 'all' ? 'Trạng thái' : status === 'approved' ? 'Đã duyệt' : 'Chờ duyệt'}</Text><Ionicons name="chevron-down" size={14} color={colors.mutedForeground} /></Pressable><Pressable onPress={() => { const index = categories.indexOf(category); setCategory(categories.length ? (index < 0 || index === categories.length - 1 ? 'all' : categories[index + 1]) : 'all'); }} style={[styles.filterButton, { borderColor: colors.border, backgroundColor: colors.muted }]}><Text style={[styles.filterText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_600SemiBold' }]} numberOfLines={1}>{category === 'all' ? 'Danh mục' : category}</Text><Ionicons name="chevron-down" size={14} color={colors.mutedForeground} /></Pressable></View>
             </View>
           </>
@@ -275,7 +287,7 @@ export default function ProductsProfileScreen() {
         renderItem={({ item }) => <ProductCard product={item} onView={() => setViewing(item)} onEdit={() => startEdit(item)} onDelete={() => removeProduct(item)} />}
         ListEmptyComponent={<View style={styles.empty}><Ionicons name="cube-outline" size={44} color={colors.mutedForeground} /><Text style={[styles.emptyTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Không tìm thấy sản phẩm nào</Text></View>}
       />
-      {viewing && <View style={styles.modalOverlay}><View style={[styles.detail, { backgroundColor: colors.card }]}><View style={styles.detailHeader}><Text style={[styles.detailTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>{viewing.name}</Text><Pressable onPress={() => setViewing(null)}><Ionicons name="close" size={22} color={colors.mutedForeground} /></Pressable></View><StatusBadge status={viewing.status} />{viewing.image ? <Image source={{ uri: viewing.image }} style={styles.detailImage} /> : null}<Text style={[styles.detailDescription, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}>{viewing.description}</Text><Text style={[styles.detailRow, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>Danh mục: <Text style={{ color: colors.foreground }}>{viewing.category}</Text></Text><Text style={[styles.detailRow, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>Đơn vị tính: <Text style={{ color: colors.foreground }}>{viewing.unit}</Text></Text><Text style={[styles.detailRow, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>Mã truy xuất: <Text style={{ color: viewing.traceCode ? '#047857' : colors.foreground }}>{viewing.traceCode ?? 'Chưa cấp'}</Text></Text><View style={styles.detailCerts}>{viewing.certs.map(cert => <Text key={cert} style={styles.certChip}>{cert}</Text>)}</View></View></View>}
+      {viewing && <View style={styles.modalOverlay}><View style={[styles.detail, { backgroundColor: colors.card }]}><View style={styles.detailHeader}><Text style={[styles.detailTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>{viewing.name}</Text><Pressable onPress={() => setViewing(null)}><Ionicons name="close" size={22} color={colors.mutedForeground} /></Pressable></View><StatusBadge status={viewing.status} />{viewing.image ? <Image source={{ uri: viewing.image }} style={styles.detailImage} /> : null}<Text style={[styles.detailDescription, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}>{viewing.description}</Text><Text style={[styles.detailRow, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>Danh mục: <Text style={{ color: colors.foreground }}>{viewing.category}</Text></Text><Text style={[styles.detailRow, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>Đơn vị tính: <Text style={{ color: colors.foreground }}>{viewing.unit}</Text></Text><Text style={[styles.detailRow, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>Mã truy xuất: <Text style={{ color: viewing.traceCode ? '#047857' : colors.foreground }}>{viewing.traceCode ?? 'Chưa cấp'}</Text></Text><Text style={[styles.detailRow, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>Mã GTIN: <Text style={{ color: colors.foreground }}>{viewing.gtin ?? '—'}</Text></Text><Text style={[styles.detailRow, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>Lô / mẻ: <Text style={{ color: colors.foreground }}>{viewing.lotCode ?? '—'}</Text></Text><View style={styles.detailCerts}>{viewing.certs.map(cert => <Text key={cert} style={styles.certChip}>{cert}</Text>)}</View></View></View>}
     </View>
   );
 }
@@ -314,6 +326,7 @@ const styles = StyleSheet.create({
   categoryChip: { paddingHorizontal: 6, paddingVertical: 3, borderRadius: 5, fontSize: 10 },
   certChip: { color: '#047857', backgroundColor: '#ECFDF5', borderColor: '#A7F3D0', borderWidth: 1, paddingHorizontal: 6, paddingVertical: 3, borderRadius: 5, fontSize: 10 },
   traceCode: { color: '#047857', fontSize: 10, marginTop: 6 },
+  productMetaCode: { color: '#64748B', fontSize: 9, marginTop: 2 },
   noTrace: { color: '#B45309', fontSize: 10, marginTop: 6 },
   productFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 5, borderTopWidth: 1, marginTop: 8, paddingTop: 8 },
   updated: { flex: 1, fontSize: 9 },

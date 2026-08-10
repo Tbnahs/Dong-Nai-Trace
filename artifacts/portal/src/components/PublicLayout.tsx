@@ -145,7 +145,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                     </div>
                     {[
                       { icon: User,    label: "Hồ sơ doanh nghiệp", href: "/ho-so-doanh-nghiep" },
-                      { icon: Package, label: "Hồ sơ sản phẩm",     href: "/ho-so-san-pham" },
+                      { icon: Package, label: "Dòng sản phẩm",     href: "/ho-so-san-pham" },
                       { icon: Bell,    label: "Thông báo",           href: "/thong-bao" },
                     ].map(({ icon: Icon, label, href }) => (
                       <Link key={href} href={href} onClick={() => setAvatarOpen(false)}>
@@ -259,7 +259,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                   </div>
                   {[
                     { icon: User,    label: "Hồ sơ doanh nghiệp", href: "/ho-so-doanh-nghiep" },
-                    { icon: Package, label: "Hồ sơ sản phẩm",     href: "/ho-so-san-pham" },
+                    { icon: Package, label: "Dòng sản phẩm",     href: "/ho-so-san-pham" },
                     { icon: Bell,    label: "Thông báo",           href: "/thong-bao" },
                   ].map(({ icon: Icon, label, href }) => (
                     <Link key={href} href={href} onClick={() => setMobileMenuOpen(false)}>

@@ -29,6 +29,7 @@ export default function ProductDetailScreen() {
   const product = getProduct(id);
   const business = product ? getBusiness(product.businessId) : null;
   const [activeTab, setActiveTab] = useState<Tab>('journey');
+  const [selectedLot, setSelectedLot] = useState(product?.lotNumber ?? '');
 
   if (!product) {
     return (
@@ -176,6 +177,23 @@ export default function ProductDetailScreen() {
               );
             })}
           </View>
+
+          {activeTab === 'journey' && (
+            <View style={[styles.lotPicker, { borderBottomColor: colors.border }]}>
+              <Text style={[styles.lotLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Lô / mẻ</Text>
+              <Pressable
+                onPress={() => setSelectedLot(selectedLot === product.lotNumber ? '' : product.lotNumber)}
+                style={[styles.lotSelect, { borderColor: colors.border, backgroundColor: colors.background }]}
+                accessibilityRole="button"
+                accessibilityLabel="Chọn lô hoặc mẻ"
+              >
+                <Text style={[styles.lotValue, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}>
+                  {selectedLot || 'Chưa có thông tin lô / mẻ'}
+                </Text>
+                <Ionicons name="chevron-down" size={17} color={colors.mutedForeground} />
+              </Pressable>
+            </View>
+          )}
 
           {/* ── Tab: Hành trình ── */}
           {activeTab === 'journey' && (
