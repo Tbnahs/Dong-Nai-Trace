@@ -219,7 +219,7 @@ function ProfileView() {
         <Text style={[styles.menuSectionTitle, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>QUẢN LÝ</Text>
         <View style={[styles.menuGroup, { backgroundColor: colors.card, borderColor: colors.border }]}>
           <MenuItem icon="business-outline" label="Hồ sơ doanh nghiệp" onPress={() => router.push('/org-profile')} />
-          <MenuItem icon="cube-outline" label="Dòng sản phẩm" onPress={() => router.push('/products-profile')} />
+          <MenuItem icon="cube-outline" label="Sản phẩm" onPress={() => router.push('/products-profile')} />
         </View>
       </View>
 
