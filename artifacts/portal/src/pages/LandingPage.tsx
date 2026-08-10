@@ -159,6 +159,8 @@ export default function LandingPage() {
     if (searchType === "trace" && traceCode.trim()) {
       const id = lookupByTraceCode(traceCode.trim());
       if (id) { setLocation(`/san-pham/${id}`); return; }
+      const gtinId = lookupByGtin(traceCode.trim());
+      if (gtinId) { setLocation(`/san-pham/${gtinId}`); return; }
       // No exact match → go to search results with the typed code as query
       setLocation(`/tra-cuu?q=${encodeURIComponent(traceCode.trim())}`);
       return;

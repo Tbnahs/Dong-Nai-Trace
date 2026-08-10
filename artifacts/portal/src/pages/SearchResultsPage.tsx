@@ -144,6 +144,8 @@ export default function SearchResultsPage() {
     if (searchType === 'trace' && traceCode.trim()) {
       const id = lookupByTraceCode(traceCode.trim());
       if (id) { setLocation(`/san-pham/${id}`); return; }
+      const gtinId = lookupByGtin(traceCode.trim());
+      if (gtinId) { setLocation(`/san-pham/${gtinId}`); return; }
       // No exact match — show filtered results
       setQuery(traceCode.trim());
       setInputVal(traceCode.trim());
