@@ -334,10 +334,11 @@ export default function HomeScreen() {
     await new Promise(resolve => setTimeout(resolve, 300));
     const found = useGtin
       ? lookupByGTIN(gtin.trim(), lot.trim())
-      : lookupByTraceCode(traceCode.trim());
+      : lookupByTraceCode(traceCode.trim()) ?? lookupByGTIN(traceCode.trim());
     setSearching(false);
     if (found) {
-      router.push(`/product/${found.id}${useGtin ? '?access=gtin' : ''}`);
+      const searchedByGtin = useGtin || !lookupByTraceCode(traceCode.trim());
+      router.push(`/product/${found.id}${searchedByGtin ? '?access=gtin' : ''}`);
     } else {
       setNotFound(true);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
@@ -442,7 +443,7 @@ export default function HomeScreen() {
               {scanButton}
               <TextInput
                 style={[styles.input, { color: colors.foreground }]}
-                placeholder="Nhập mã truy xuất sản phẩm"
+                 placeholder="Nhập mã truy xuất hoặc GTIN"
                 placeholderTextColor={colors.mutedForeground}
                 value={traceCode}
                 onChangeText={value => { setTraceCode(value); setNotFound(false); }}

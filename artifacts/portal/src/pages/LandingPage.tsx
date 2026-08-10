@@ -159,6 +159,8 @@ export default function LandingPage() {
     if (searchType === "trace" && traceCode.trim()) {
       const id = lookupByTraceCode(traceCode.trim());
       if (id) { setLocation(`/san-pham/${id}`); return; }
+      const gtinId = lookupByGtin(traceCode.trim());
+      if (gtinId) { setLocation(`/san-pham/${gtinId}?access=gtin`); return; }
       // No exact match → go to search results with the typed code as query
       setLocation(`/tra-cuu?q=${encodeURIComponent(traceCode.trim())}`);
       return;
@@ -221,7 +223,7 @@ export default function LandingPage() {
                         type="text"
                         value={traceCode}
                         onChange={(e) => setTraceCode(e.target.value)}
-                        placeholder="Quét hoặc nhập mã truy xuất sản phẩm"
+                         placeholder="Quét hoặc nhập mã truy xuất hoặc GTIN"
                         className="ml-3 sm:ml-4 w-full bg-transparent outline-none text-base sm:text-lg text-gray-700 placeholder:text-gray-400"
                       />
                     </div>
