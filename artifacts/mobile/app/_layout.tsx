@@ -38,7 +38,7 @@ function RootLayoutNav() {
       <Stack.Screen name="business/[id]" options={{ title: 'Doanh nghiệp' }} />
       <Stack.Screen name="news/[id]" options={{ title: 'Tin tức' }} />
       <Stack.Screen name="org-profile" options={{ title: 'Hồ sơ tổ chức' }} />
-      <Stack.Screen name="products-profile" options={{ title: 'Dòng sản phẩm' }} />
+      <Stack.Screen name="products-profile" options={{ title: 'Sản phẩm' }} />
       <Stack.Screen name="register" options={{ title: 'Đăng ký' }} />
     </Stack>
   );

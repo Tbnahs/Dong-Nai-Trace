@@ -804,7 +804,7 @@ export default function ProductsProfilePage() {
       <div className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-6">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-              <h1 className="text-xl font-extrabold text-slate-800 tracking-tight">Dòng sản phẩm</h1>
+              <h1 className="text-xl font-extrabold text-slate-800 tracking-tight">Sản phẩm</h1>
             <p className="text-sm text-slate-500 mt-0.5">{products.length} sản phẩm trong danh sách</p>
           </div>
           <button
