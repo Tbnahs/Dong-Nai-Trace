@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useParams, useSearch } from 'wouter';
 import {
   ArrowLeft, ShieldCheck, MapPin, Phone, Mail, Building2,
@@ -176,12 +176,17 @@ export default function ProductDetailPage() {
   const params = useParams<{ id: string }>();
   const search = useSearch();
   const product = ALL_PRODUCTS[params.id] ?? PRODUCTS['sp002'];
-  const hasJourneyAccess = new URLSearchParams(search).get('access') === 'gtin';
-  const [activeTab, setActiveTab] = useState<'journey' | 'info' | 'org'>(hasJourneyAccess ? 'journey' : 'info');
-  const [selectedLot, setSelectedLot] = useState(product.lotCode ?? '');
+  const isGtinLookup = new URLSearchParams(search).get('access') === 'gtin';
+  const [activeTab, setActiveTab] = useState<'journey' | 'info' | 'org'>(isGtinLookup ? 'info' : 'journey');
+
+  useEffect(() => {
+    if (isGtinLookup && activeTab === 'journey') {
+      setActiveTab('info');
+    }
+  }, [isGtinLookup, activeTab]);
 
   const TABS = [
-    ...(hasJourneyAccess ? [{ key: 'journey', icon: <CheckCircle2 className="w-4 h-4" />, label: 'Hành trình sản phẩm' }] : []),
+    ...(!isGtinLookup ? [{ key: 'journey', icon: <CheckCircle2 className="w-4 h-4" />, label: 'Hành trình sản phẩm' }] : []),
     { key: 'info',    icon: <Info          className="w-4 h-4" />, label: 'Thông tin sản phẩm' },
     { key: 'org',     icon: <Building2     className="w-4 h-4" />, label: 'Doanh nghiệp' },
   ];
@@ -263,7 +268,7 @@ export default function ProductDetailPage() {
             <div
               role="tablist"
               aria-label="Thông tin sản phẩm"
-              className={`grid ${hasJourneyAccess ? 'grid-cols-3' : 'grid-cols-2'} gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 mb-6`}
+              className={`grid ${isGtinLookup ? 'grid-cols-2' : 'grid-cols-3'} gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1 mb-6`}
             >
               {TABS.map(t => (
                 <button
@@ -283,25 +288,6 @@ export default function ProductDetailPage() {
                 </button>
               ))}
             </div>
-
-            {activeTab === 'journey' && (
-              <div className="mb-6">
-                <label htmlFor="product-lot" className="mb-1.5 block text-[11px] font-semibold text-slate-500">Lô / mẻ</label>
-                <div className="relative">
-                  <select
-                    id="product-lot"
-                    value={selectedLot}
-                    onChange={e => setSelectedLot(e.target.value)}
-                    className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2.5 pr-9 text-xs font-medium text-slate-700 outline-none focus:border-[#2740BA] focus:ring-4 focus:ring-[#2740BA]/10"
-                  >
-                    <option value={product.lotCode ?? ''}>{product.lotCode || 'Chưa có thông tin lô / mẻ'}</option>
-                  </select>
-                  <svg className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </div>
-              </div>
-            )}
 
             {/* ── Tab: Journey ── */}
             {activeTab === 'journey' && (
