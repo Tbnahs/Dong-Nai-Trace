@@ -972,6 +972,7 @@ export default function ProductsProfilePage() {
                       <th className="px-4 py-3.5">Danh mục</th>
                       <th className="px-4 py-3.5">Chứng nhận</th>
                       <th className="px-4 py-3.5">GTIN</th>
+                      <th className="px-4 py-3.5">Mã lô</th>
                       <th className="px-4 py-3.5">Trạng thái</th>
                       <th className="px-4 py-3.5">Cập nhật</th>
                       <th className="px-6 py-3.5 text-right">Thao tác</th>
@@ -1020,6 +1021,14 @@ export default function ProductsProfilePage() {
                                label="mã GTIN"
                              />
                            </td>
+                          <td className="px-4 py-4">
+                            <CopyableCode
+                              value={p.lotCode}
+                              copied={copiedCodeKey === `${p.id}:lot`}
+                              onCopy={() => p.lotCode && handleCopyCode(p.lotCode, p.id, 'lot')}
+                              label="mã lô"
+                            />
+                          </td>
                           <td className="px-4 py-4"><StatusBadge status={p.status} /></td>
                           <td className="px-4 py-4 text-xs font-semibold text-slate-500 whitespace-nowrap">{p.updatedAt}</td>
                           <td className="px-6 py-4">

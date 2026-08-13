@@ -364,7 +364,7 @@ export default function ProductDetailPage() {
               <div className="space-y-4">
                 {[
                   { label: 'Mã GTIN', value: product.gtin },
-                  { label: 'Mã lô / Batch', value: product.lotCode },
+                  
                   { label: 'Khối lượng / Quy cách', value: product.weight },
                   { label: 'Hạn sử dụng', value: product.expiry },
                   { label: 'Xuất xứ', value: product.origin },
