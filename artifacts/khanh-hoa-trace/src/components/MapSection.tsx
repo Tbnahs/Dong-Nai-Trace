@@ -128,9 +128,9 @@ export default function MapSection() {
       });
 
       const map = L.map(mapRef.current!, {
-        center:             [11.05, 107.17],
-        zoom:               9,
-        minZoom:            8,
+        center:             [12.25, 109.15],
+        zoom:               8,
+        minZoom:            7,
         maxZoom:            13,
         zoomControl:        true,
         attributionControl: false,

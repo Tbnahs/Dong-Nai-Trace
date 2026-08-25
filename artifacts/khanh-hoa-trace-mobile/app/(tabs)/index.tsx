@@ -194,7 +194,7 @@ const API_DOMAIN = (
   process.env.EXPO_PUBLIC_DOMAIN?.trim()
 );
 const GEOJSON_URL = API_DOMAIN
-  ? `https://${API_DOMAIN}/api/geojson/wards`
+  ? `https://${API_DOMAIN}/api/geojson/khanh-hoa`
   : '';
 
 function buildLeafletHTML(geojsonUrl: string) {
@@ -223,7 +223,7 @@ function wColor(c){var n=parseInt(String(c),10);var i=isNaN(n)?String(c).split('
 function fStyle(selCode){return function(f){var c=(f.properties&&f.properties.code)||f.id||'';var s=selCode&&String(c)===String(selCode);return{fillColor:s?'#2740BA':wColor(c),fillOpacity:s?0.9:0.66,color:'#fff',weight:s?2.5:1.2}}}
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({iconRetinaUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',iconUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',shadowUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'});
-var map=L.map('map',{center:[11.05,107.17],zoom:9,minZoom:8,maxZoom:13,zoomControl:true,attributionControl:false});
+var map=L.map('map',{center:[12.25,109.15],zoom:8,minZoom:7,maxZoom:13,zoomControl:true,attributionControl:false});
 function putMarker(ll,nm){if(marker)marker.remove();marker=L.marker(ll,{title:nm||''}).addTo(map);if(nm)marker.bindPopup('<div style="font-size:13px;font-weight:600;color:#2740BA">'+nm+'</div>',{closeButton:false}).openPopup();map.flyTo(ll,Math.max(map.getZoom(),11),{animate:true,duration:0.8})}
 function send(d){var s=JSON.stringify(d);if(window.ReactNativeWebView)window.ReactNativeWebView.postMessage(s);else if(window.parent)window.parent.postMessage(s,'*')}
   function renderGeoJSON(data){
