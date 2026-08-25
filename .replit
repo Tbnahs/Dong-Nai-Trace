@@ -20,6 +20,38 @@ author = "agent"
 task = "workflow.run"
 args = "artifacts/mobile: expo"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "artifacts/khanh-hoa-trace: web"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "artifacts/khanh-hoa-trace-mobile: expo"
+
+[[workflows.workflow]]
+name = "artifacts/khanh-hoa-trace: web"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=24671 BASE_PATH=/khanh-hoa-trace/ pnpm --filter @workspace/khanh-hoa-trace run dev"
+waitForPort = 24671
+
+[[workflows.workflow]]
+name = "artifacts/khanh-hoa-trace-mobile: expo"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=18839 pnpm --filter @workspace/khanh-hoa-trace-mobile run dev"
+waitForPort = 18839
+
 [agent]
 stack = "PNPM_WORKSPACE"
 expertMode = true

@@ -22,22 +22,27 @@ Dependencies are managed with **pnpm** (workspace monorepo).
 pnpm install
 ```
 
-The requested Replit setup runs only the Expo mobile app:
-
-```bash
-pnpm --filter @workspace/mobile run dev
-```
-
-Use the `artifacts/mobile: expo` workflow to start the mobile preview. The portal, API server, and mockup sandbox are intentionally not started for this setup.
-
-The Khánh Hòa Trace clones run independently:
+The requested Replit setup runs both Khánh Hòa Trace apps:
 
 ```bash
 pnpm --filter @workspace/khanh-hoa-trace run dev
 pnpm --filter @workspace/khanh-hoa-trace-mobile run dev
 ```
 
-Use the `artifacts/khanh-hoa-trace: web` and `artifacts/khanh-hoa-trace-mobile: expo` workflows. The original Đồng Nai Trace artifacts remain unchanged.
+Use the `artifacts/khanh-hoa-trace: web` workflow for the portal and the `artifacts/khanh-hoa-trace-mobile: expo` workflow for the Expo companion app. The portal workflow uses `/khanh-hoa-trace/`; the Expo workflow is available through Expo Go and its Replit preview URL.
+
+The original Đồng Nai Trace artifacts remain available independently:
+
+```bash
+pnpm --filter @workspace/portal run dev
+pnpm --filter @workspace/mobile run dev
+```
+
+The API server can be started separately when backend integration is needed:
+
+```bash
+pnpm --filter @workspace/api-server run dev
+```
 
 ## Stack
 
