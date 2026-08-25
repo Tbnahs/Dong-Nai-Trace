@@ -166,7 +166,7 @@ export default function RegisterScreen() {
         {step === 0 && (
           <>
             <Field label="Tên tổ chức / doanh nghiệp" fieldKey="name" required />
-            <Field label="Mã số thuế" fieldKey="taxCode" placeholder="VD: 3600123456" keyboard="phone-pad" />
+            <Field label="Mã số thuế" fieldKey="taxCode" placeholder="VD: 4200123456" keyboard="phone-pad" />
 
             {/* Loại hình — dropdown matching portal <select> */}
             <ModalPicker

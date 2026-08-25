@@ -161,7 +161,7 @@ function LoginView() {
               <Ionicons name="call" size={12} color="#FFF" />
             </View>
             <Text style={[styles.loginHelpText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Hotline: </Text>
-            <Text style={[styles.hotlineText, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>0251.3822297</Text>
+            <Text style={[styles.hotlineText, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>0258.3822297</Text>
           </View>
         </View>
       </View>

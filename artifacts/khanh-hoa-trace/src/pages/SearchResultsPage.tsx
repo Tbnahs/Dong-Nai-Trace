@@ -39,7 +39,7 @@ export const MOCK_BUSINESSES = [
 ];
 
 const CATEGORIES  = ['Tất cả', 'Nông sản & Rau củ', 'Phân bón & Vật tư nông nghiệp', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Công nghiệp chế biến'];
-const DISTRICTS   = ['Tất cả', 'Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú'];
+const DISTRICTS   = ['Tất cả', 'Nha Trang', 'Cam Ranh', 'Diên Khánh', 'Cam Lâm', 'Vạn Ninh', 'Ninh Hòa', 'Khánh Vĩnh', 'Khánh Sơn', 'Ninh Phước', 'Thuận Nam', 'Ninh Hải', 'Ninh Chu', 'Bác Ái', 'Thuận Bắc', 'Ninh Sơn'];
 const CERTS       = ['Tất cả', 'VietGAP', 'GlobalGAP', 'OCOP', 'HACCP', 'ISO 22000'];
 const ORG_TYPES   = ['Tất cả', 'Hợp tác xã', 'Doanh nghiệp', 'Trang trại', 'Cơ sở sản xuất', 'Làng nghề'];
 

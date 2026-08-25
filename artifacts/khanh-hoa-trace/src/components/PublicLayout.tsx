@@ -383,7 +383,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-[#E8650A] shrink-0" />
-                  <span>0251.3822297</span>
+                  <span>0258.3822297</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail className="w-5 h-5 text-[#E8650A] shrink-0" />

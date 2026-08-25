@@ -821,8 +821,8 @@ export function getBusinessProducts(businessId: string): Product[] {
 }
 
 // ─── Filter options matching Portal ──────────────────────────────────────────
-export const DISTRICTS = ['Tất cả', 'Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
-export const DISTRICT_OPTIONS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
+export const DISTRICTS = ['Tất cả', 'Nha Trang', 'Cam Ranh', 'Diên Khánh', 'Cam Lâm', 'Vạn Ninh', 'Ninh Hòa', 'Khánh Vĩnh', 'Khánh Sơn', 'Ninh Phước', 'Thuận Nam', 'Ninh Hải', 'Ninh Chu', 'Bác Ái', 'Thuận Bắc', 'Ninh Sơn'];
+export const DISTRICT_OPTIONS = ['Nha Trang', 'Cam Ranh', 'Diên Khánh', 'Cam Lâm', 'Vạn Ninh', 'Ninh Hòa', 'Khánh Vĩnh', 'Khánh Sơn', 'Ninh Phước', 'Thuận Nam', 'Ninh Hải', 'Ninh Chu', 'Bác Ái', 'Thuận Bắc', 'Ninh Sơn'];
 export const ORG_TYPE_OPTIONS = ['Doanh nghiệp', 'Hợp tác xã (HTX)', 'Trang trại', 'Cơ sở sản xuất', 'Hộ kinh doanh'];
 export const SECTOR_OPTIONS = ['Nông sản & Rau củ', 'Thủy sản', 'Thực phẩm chế biến', 'Thủ công mỹ nghệ', 'Dược liệu', 'Công nghiệp chế biến'];
 export const CATEGORIES = ['Tất cả', 'Nông sản & Rau củ', 'Phân bón & Vật tư nông nghiệp', 'Thủy sản', 'Thịt & Chăn nuôi', 'Thực phẩm chế biến', 'Dược liệu', 'Thủ công mỹ nghệ', 'Công nghiệp chế biến'];

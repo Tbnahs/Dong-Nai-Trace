@@ -115,7 +115,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="flex items-center gap-3 cursor-pointer">
               <div className="hidden sm:block text-right">
                 <div className="text-sm font-bold text-gray-800 leading-tight">HTX Nông nghiệp Xanh</div>
-                <div className="text-xs text-gray-500">MST: 3601234567</div>
+                <div className="text-xs text-gray-500">MST: 4201234567</div>
               </div>
               <div className="w-10 h-10 bg-[#2740BA] text-white rounded-full flex items-center justify-center font-bold text-sm">
                 HTX

@@ -338,16 +338,16 @@ export default function ContactScreen() {
         <ContactCard
           icon="location-outline"
           label="Địa chỉ"
-          value="1592 Nguyễn Ái Quốc, KP6, P.Trung Dũng, Biên Hoà, Khánh Hòa"
+          value="Số 1 Trần Phú, P. Xương Huân, TP. Nha Trang, Khánh Hòa"
           color={colors.accent}
-          onPress={() => Linking.openURL('https://maps.google.com/?q=1592+Nguyen+Ai+Quoc+Bien+Hoa+Dong+Nai')}
+          onPress={() => Linking.openURL('https://maps.google.com/?q=Tran+Phu+Nha+Trang+Khanh+Hoa')}
         />
         <ContactCard
           icon="call-outline"
           label="Điện thoại"
-          value="0251.3822297"
+          value="0258.3822297"
           color={colors.primary}
-          onPress={() => Linking.openURL('tel:02513822297')}
+          onPress={() => Linking.openURL('tel:02583822297')}
         />
         <ContactCard
           icon="mail-outline"

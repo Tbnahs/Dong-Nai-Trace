@@ -6,7 +6,23 @@ import {
 } from 'lucide-react';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const DISTRICTS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
+const DISTRICTS = [
+  'Nha Trang',
+  'Cam Ranh',
+  'Diên Khánh',
+  'Cam Lâm',
+  'Vạn Ninh',
+  'Ninh Hòa',
+  'Khánh Vĩnh',
+  'Khánh Sơn',
+  'Ninh Phước',
+  'Thuận Nam',
+  'Ninh Hải',
+  'Ninh Chu',
+  'Bác Ái',
+  'Thuận Bắc',
+  'Ninh Sơn',
+];
 const ORG_TYPES = ['Doanh nghiệp', 'Hợp tác xã (HTX)', 'Trang trại', 'Cơ sở sản xuất', 'Hộ kinh doanh'];
 
 const STEPS = [
@@ -239,11 +255,11 @@ export default function RegisterPage() {
                   <h2 className="text-lg font-bold text-gray-800 mb-6">Thông tin doanh nghiệp / tổ chức</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <Field label="Tên doanh nghiệp / tổ chức *" error={e.orgName} half>
-                      <input className={inputCls(e.orgName)} placeholder="VD: HTX Nông nghiệp Xuân Lộc"
+                      <input className={inputCls(e.orgName)} placeholder="VD: HTX Nông nghiệp Diên Khánh"
                         value={form.orgName} onChange={ev => set('orgName')(ev.target.value)} />
                     </Field>
                     <Field label="Mã số thuế *" error={e.taxCode} half>
-                      <input className={inputCls(e.taxCode)} placeholder="VD: 3602123456"
+                      <input className={inputCls(e.taxCode)} placeholder="VD: 4202123456"
                         value={form.taxCode} onChange={ev => set('taxCode')(ev.target.value)} />
                     </Field>
                     <Field label="Loại hình *" half>
@@ -265,7 +281,7 @@ export default function RegisterPage() {
                       </select>
                     </Field>
                     <Field label="Số điện thoại *" error={e.phone} half>
-                      <input className={inputCls(e.phone)} placeholder="02513..." type="tel"
+                      <input className={inputCls(e.phone)} placeholder="0258..." type="tel"
                         value={form.phone} onChange={ev => set('phone')(ev.target.value)} />
                     </Field>
                     <Field label="Email *" error={e.email} half>

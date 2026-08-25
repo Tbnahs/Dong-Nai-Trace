@@ -40,9 +40,9 @@ export default function OrgProfilePage() {
   const [saved, setSaved] = useState(false);
   const [form, setForm] = useState({
     name: 'HTX Nông nghiệp Xanh',
-    mst: '3601234567',
+    mst: '4201234567',
     gcp: '4466',
-    address: 'Xã Bình Lộc, Huyện Vĩnh Cửu, Tỉnh Khánh Hòa',
+    address: 'Xã Diên Phú, Huyện Diên Khánh, Tỉnh Khánh Hòa',
     representative: 'Nguyễn Văn A',
     phone: '0901234567',
     email: 'htxnongnghi@khanhhoa.gov.vn',
