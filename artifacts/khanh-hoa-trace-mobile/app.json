@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Khánh Hòa Trace — Mobile",
+    "slug": "khanh-hoa-trace-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/logo-khanh-hoa.png",
+    "scheme": "khanhhoatrace",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/logo-khanh-hoa.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2740BA"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.khanhhoatraceportalmobile.app"
+    },
+    "android": {
+      "package": "com.khanhhoatraceportalmobile.app"
+    },
+    "web": {
+      "favicon": "./assets/images/logo-khanh-hoa.png"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "https://replit.com/"
+        }
+      ],
+      "expo-font",
+      "expo-web-browser",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Cho phép Khánh Hòa Trace sử dụng camera để quét mã QR và mã vạch."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

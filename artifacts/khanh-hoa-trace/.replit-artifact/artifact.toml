@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/khanh-hoa-trace/"
+title = "Khánh Hòa Trace — Portal"
+description = "A Khánh Hòa product traceability portal cloned from the Đồng Nai Trace experience, with QR/GTIN lookup, business registration, product profiles, supply-chain history, news, and administration flows."
+version = "1.0.0"
+id = "artifacts/khanh-hoa-trace"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/khanh-hoa-trace/" ]
+localPort = 24671
+
+[services.development]
+run = "pnpm --filter @workspace/khanh-hoa-trace run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/khanh-hoa-trace", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/khanh-hoa-trace/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24671"
+BASE_PATH = "/khanh-hoa-trace/"

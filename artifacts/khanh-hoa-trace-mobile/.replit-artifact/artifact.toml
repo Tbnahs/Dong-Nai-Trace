@@ -1,0 +1,24 @@
+kind = "mobile"
+previewPath = "/khanh-hoa-trace-mobile/"
+title = "Khánh Hòa Trace — Mobile"
+description = "A Khánh Hòa Trace mobile companion cloned from the Đồng Nai Trace app, with QR/GTIN lookup, product and business profiles, news, notifications, and enterprise account flows."
+version = "1.0.0"
+id = "artifacts/khanh-hoa-trace-mobile"
+router = "expo-domain"
+
+[[services]]
+name = "expo"
+ensurePreviewReachable = "/status"
+paths = [ "/khanh-hoa-trace-mobile/" ]
+localPort = 18839
+
+[services.development]
+run = "pnpm --filter @workspace/khanh-hoa-trace-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/khanh-hoa-trace-mobile", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/khanh-hoa-trace-mobile", "run", "serve" ]
+
+[services.env]
+PORT = "18839"
+BASE_PATH = "/khanh-hoa-trace-mobile/"
