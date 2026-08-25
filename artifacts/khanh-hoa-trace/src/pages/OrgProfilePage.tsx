@@ -7,7 +7,23 @@ import {
 } from 'lucide-react';
 import { useAuth, type FileDoc, type OrgProfile } from '../context/AuthContext';
 
-const DISTRICTS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
+const DISTRICTS = [
+  'Nha Trang',
+  'Cam Ranh',
+  'Diên Khánh',
+  'Cam Lâm',
+  'Vạn Ninh',
+  'Ninh Hòa',
+  'Khánh Vĩnh',
+  'Khánh Sơn',
+  'Ninh Phước',
+  'Thuận Nam',
+  'Ninh Hải',
+  'Ninh Chu',
+  'Bác Ái',
+  'Thuận Bắc',
+  'Ninh Sơn',
+];
 const ORG_TYPES = ['Doanh nghiệp', 'Hợp tác xã (HTX)', 'Trang trại', 'Cơ sở sản xuất', 'Hộ kinh doanh'];
 
 function DocCard({ doc, label }: { doc: FileDoc; label: string }) {
@@ -212,12 +228,12 @@ export default function OrgProfilePage() {
   const [editing, setEditing] = useState(false);
   const fallbackProfile: OrgProfile = {
     name: user?.name ?? 'HTX Nông nghiệp Xanh',
-    taxCode: '3601234567',
+    taxCode: '4201234567',
     type: 'Hợp tác xã (HTX)',
     industry: 'Nông sản & Rau củ',
-    address: 'Xã Tân Triều, Vĩnh Cửu',
-    district: 'Vĩnh Cửu',
-    phone: '0251 890 123',
+    address: 'Xã Diên Phú, Diên Khánh',
+    district: 'Diên Khánh',
+    phone: '0258 890 123',
     email: user?.email ?? 'admin@htx.vn',
     representative: 'Nguyễn Văn A',
     representativePhone: '0901234567',
