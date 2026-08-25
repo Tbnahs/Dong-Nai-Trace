@@ -245,7 +245,7 @@ function buildLeafletHTML(geojsonUrl: string) {
 *{margin:0;padding:0;box-sizing:border-box}
 html,body,#map{width:100%;height:100%;overflow:hidden}
 #loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,.92);padding:10px 18px;border-radius:8px;font-family:sans-serif;font-size:13px;color:#2740BA;z-index:9999;white-space:nowrap}
-.leaflet-tooltip-custom{font-family:-apple-system,sans-serif;font-size:11px;font-weight:500}
+ .leaflet-tooltip-custom{font-family:-apple-system,sans-serif;font-size:8px;line-height:1.1;font-weight:500;padding:2px 3px;border:0;box-shadow:0 1px 3px rgba(39,64,186,.12)}
 </style>
 </head>
 <body>

@@ -9,6 +9,8 @@ A product traceability platform for Đồng Nai province, Vietnam. Allows busine
 | **Portal** (web) | `artifacts/portal/` | Public-facing web portal — homepage, product lookup, business registration |
 | **API Server** | `artifacts/api-server/` | Backend REST API (Node.js/Hono, esbuild-bundled) |
 | **Mobile** | `artifacts/mobile/` | Expo React Native companion app |
+| **Khánh Hòa Trace** (web) | `artifacts/khanh-hoa-trace/` | Independent Khánh Hòa-branded clone of the portal |
+| **Khánh Hòa Trace** (mobile) | `artifacts/khanh-hoa-trace-mobile/` | Independent Khánh Hòa-branded Expo companion app |
 | **Slides** | `artifacts/dong-nai-trace-slides/` | Project introduction slide deck |
 
 ## How to run
