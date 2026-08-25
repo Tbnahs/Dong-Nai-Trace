@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import hero3d from "../assets/hero-3d.png";
-import heroGuide from "../assets/hero-guide.png";
+import heroGuide from "@assets/ChatGPT Image 11_35_11 25 thg 8, 2026.png";
 import MapSection from "../components/MapSection";
 import { Link, useLocation } from "wouter";
 import { lookupByTraceCode, lookupByGtin, lookupByGtinAndLot } from "../lib/productLookup";
