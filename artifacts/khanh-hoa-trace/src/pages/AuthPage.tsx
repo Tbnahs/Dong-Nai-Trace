@@ -7,7 +7,23 @@ import {
 import { useAuth, type FileDoc, type OrgProfile } from '../context/AuthContext';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const DISTRICTS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
+const DISTRICTS = [
+  'Nha Trang',
+  'Cam Ranh',
+  'Diên Khánh',
+  'Cam Lâm',
+  'Vạn Ninh',
+  'Ninh Hòa',
+  'Khánh Vĩnh',
+  'Khánh Sơn',
+  'Ninh Phước',
+  'Thuận Nam',
+  'Ninh Hải',
+  'Ninh Chu',
+  'Bác Ái',
+  'Thuận Bắc',
+  'Ninh Sơn',
+];
 const ORG_TYPES = ['Doanh nghiệp', 'Hợp tác xã (HTX)', 'Trang trại', 'Cơ sở sản xuất', 'Hộ kinh doanh'];
 const REG_STEPS = [{ label: 'Thông tin doanh nghiệp' }, { label: 'Người đại diện' }, { label: 'Xác nhận' }];
 
@@ -276,7 +292,7 @@ function LoginForm({ onSwitchToRegister, guideUrl }: { onSwitchToRegister: () =>
           <div className="w-6 h-6 rounded-full bg-[#2740BA] flex items-center justify-center shrink-0">
             <Phone className="w-3 h-3 text-white" />
           </div>
-          <span>Hotline: <strong className="text-[#2740BA]">0251.3822297</strong></span>
+          <span>Hotline: <strong className="text-[#2740BA]">0258.3822297</strong></span>
         </div>
       </div>
 
@@ -349,11 +365,11 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
       {step === 1 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
           <Field label="Tên doanh nghiệp / tổ chức *" error={e.orgName} half>
-            <input className={iCls(e.orgName)} placeholder="VD: HTX Nông nghiệp Xuân Lộc"
+            <input className={iCls(e.orgName)} placeholder="VD: HTX Nông nghiệp Diên Khánh"
               value={form.orgName} onChange={ev => set('orgName')(ev.target.value)} />
           </Field>
           <Field label="Mã số thuế *" error={e.taxCode} half>
-            <input className={iCls(e.taxCode)} placeholder="VD: 3602123456"
+            <input className={iCls(e.taxCode)} placeholder="VD: 4202123456"
               value={form.taxCode} onChange={ev => set('taxCode')(ev.target.value)} />
           </Field>
           <Field label="Loại hình *" half>
@@ -375,7 +391,7 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
             </select>
           </Field>
           <Field label="Số điện thoại *" error={e.phone} half>
-            <input className={iCls(e.phone)} placeholder="02513..." type="tel"
+            <input className={iCls(e.phone)} placeholder="0258..." type="tel"
               value={form.phone} onChange={ev => set('phone')(ev.target.value)} />
           </Field>
           <Field label="Email *" error={e.email} half>
@@ -383,7 +399,7 @@ function RegisterForm({ onSwitchToLogin }: { onSwitchToLogin: () => void }) {
               value={form.email} onChange={ev => set('email')(ev.target.value)} />
           </Field>
           <Field label="GCP" error={e.gcp} half>
-            <input className={iCls(e.gcp)} placeholder="025253" type="GCP"
+            <input className={iCls(e.gcp)} placeholder="023456" type="GCP"
               value={form.gcp} onChange={ev => set('gcp')(ev.target.value)} />
           </Field>
           <div className="sm:col-span-2">
