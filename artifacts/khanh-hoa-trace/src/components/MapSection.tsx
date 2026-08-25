@@ -29,25 +29,25 @@ interface Product {
   cert: string;
 }
 
-const BUSINESSES: Business[] = [
-  { id: "b1",  name: "HTX Nông nghiệp Bình Phước",      type: "Hợp tác xã",    wardCode: "25195", wardName: "Bình Phước",   phone: "0251 123 456" },
-  { id: "b2",  name: "Cty TNHH Xuất khẩu Đồng Xoài",    type: "Doanh nghiệp",  wardCode: "25210", wardName: "Đồng Xoài",   phone: "0251 234 567" },
-  { id: "b3",  name: "Trang trại Phước Long Xanh",        type: "Trang trại",    wardCode: "25217", wardName: "Phước Long",   phone: "0251 345 678" },
-  { id: "b4",  name: "Cty CP Nông sản Bình Tân",          type: "Doanh nghiệp",  wardCode: "25246", wardName: "Bình Tân",    phone: "0251 456 789" },
-  { id: "b5",  name: "HTX Rau sạch Lộc Ninh",             type: "Hợp tác xã",    wardCode: "25270", wardName: "Lộc Ninh",    phone: "0251 567 890" },
-  { id: "b6",  name: "Cty TNHH Nông sản Lộc Tấn",        type: "Doanh nghiệp",  wardCode: "25279", wardName: "Lộc Tấn",     phone: "0251 678 901" },
-  { id: "b7",  name: "HTX Cây ăn trái Long Hà",           type: "Hợp tác xã",    wardCode: "25255", wardName: "Long Hà",     phone: "0251 789 012" },
-  { id: "b8",  name: "Trang trại Tân Triều Organic",      type: "Trang trại",    wardCode: "26188", wardName: "Tân Triều",   phone: "0251 890 123" },
-  { id: "b9",  name: "Cty CP Nông sản Hưng Thịnh",        type: "Doanh nghiệp",  wardCode: "26281", wardName: "Hưng Thịnh",  phone: "0251 901 234" },
-  { id: "b10", name: "HTX Bưởi Vĩnh Cửu",                 type: "Hợp tác xã",    wardCode: "26170", wardName: "Trị An",      phone: "0251 012 345" },
-  { id: "b11", name: "Cty TNHH Chế biến Biên Hòa",        type: "Doanh nghiệp",  wardCode: "26068", wardName: "Biên Hòa",    phone: "0251 111 222" },
-  { id: "b12", name: "HTX Xoài Đầu Giây",                  type: "Hợp tác xã",    wardCode: "26326", wardName: "Dầu Giây",    phone: "0251 222 333" },
-  { id: "b13", name: "Trang trại Nhơn Trạch Green",        type: "Trang trại",    wardCode: "26485", wardName: "Nhơn Trạch",  phone: "0251 333 444" },
-  { id: "b14", name: "Cty CP Nông nghiệp Cam Mỹ",          type: "Doanh nghiệp",  wardCode: "26341", wardName: "Cẩm Mỹ",     phone: "0251 444 555" },
-  { id: "b15", name: "HTX Thanh long Xuân Lộc",             type: "Hợp tác xã",    wardCode: "26104", wardName: "Xuân Lập",   phone: "0251 555 666" },
+const LEGACY_BUSINESSES: Business[] = [
+  { id: "b1",  name: "HTX Yến sào Nha Trang",            type: "Hợp tác xã",    wardCode: "23.3306", wardName: "Nha Trang",   phone: "0258 352 1234" },
+  { id: "b2",  name: "Công ty Hải sản Cam Ranh",         type: "Doanh nghiệp",  wardCode: "23.1259", wardName: "Cam Ranh",    phone: "0258 385 2345" },
+  { id: "b3",  name: "HTX Nông nghiệp Diên Khánh",       type: "Hợp tác xã",    wardCode: "23.1068", wardName: "Diên Khánh",  phone: "0258 376 3456" },
+  { id: "b4",  name: "Trang trại Xoài Cam Lâm",          type: "Trang trại",    wardCode: "23.1263", wardName: "Cam Lâm",     phone: "0258 398 4567" },
+  { id: "b5",  name: "HTX Tỏi sạch Vạn Ninh",             type: "Hợp tác xã",    wardCode: "23.1015", wardName: "Vạn Ninh",    phone: "0258 384 5678" },
+  { id: "b6",  name: "Công ty Chế biến Thủy sản Ninh Hòa", type: "Doanh nghiệp", wardCode: "23.1031", wardName: "Ninh Hòa", phone: "0258 363 6789" },
+  { id: "b7",  name: "HTX Nông sản Khánh Vĩnh",            type: "Hợp tác xã",    wardCode: "23.1066", wardName: "Khánh Vĩnh",  phone: "0258 379 7890" },
+  { id: "b8",  name: "Trang trại Dược liệu Khánh Sơn",     type: "Trang trại",    wardCode: "23.1075", wardName: "Khánh Sơn",   phone: "0258 386 8901" },
+  { id: "b9",  name: "HTX Nho sạch Ninh Phước",            type: "Hợp tác xã",    wardCode: "23.1090", wardName: "Ninh Phước",  phone: "0259 388 9012" },
+  { id: "b10", name: "Cơ sở Nước mắm Thuận Nam",           type: "Cơ sở sản xuất", wardCode: "23.1096", wardName: "Thuận Nam", phone: "0259 378 0123" },
+  { id: "b11", name: "HTX Muối sạch Ninh Hải",             type: "Hợp tác xã",    wardCode: "23.1088", wardName: "Ninh Hải",    phone: "0259 387 1234" },
+  { id: "b12", name: "Làng nghề Gốm Bàu Trúc",             type: "Làng nghề",     wardCode: "23.1277", wardName: "Ninh Chu",    phone: "0259 385 2345" },
+  { id: "b13", name: "HTX Dê núi Bác Ái",                  type: "Hợp tác xã",    wardCode: "23.1271", wardName: "Bác Ái",      phone: "0259 382 3456" },
+  { id: "b14", name: "Công ty Nông sản Thuận Bắc",          type: "Doanh nghiệp",  wardCode: "23.1279", wardName: "Thuận Bắc",   phone: "0259 386 4567" },
+  { id: "b15", name: "Trang trại Rau sạch Ninh Sơn",        type: "Trang trại",    wardCode: "23.1273", wardName: "Ninh Sơn",    phone: "0259 385 5678" },
 ];
 
-const PRODUCTS: Product[] = [
+const LEGACY_PRODUCTS: Product[] = [
   { id: "p1",  name: "Xoài Cát Hòa Lộc",         category: "Trái cây",   wardCode: "25195", wardName: "Bình Phước",  cert: "VietGAP" },
   { id: "p2",  name: "Bưởi Tân Triều",             category: "Trái cây",   wardCode: "26188", wardName: "Tân Triều",   cert: "VietGAP" },
   { id: "p3",  name: "Chuối tiêu hồng",            category: "Trái cây",   wardCode: "25210", wardName: "Đồng Xoài",   cert: "GlobalGAP" },
@@ -65,7 +65,43 @@ const PRODUCTS: Product[] = [
   { id: "p15", name: "Tôm thẻ chân trắng Biên Hòa", category: "Thủy sản",  wardCode: "26068", wardName: "Biên Hòa",   cert: "ASC" },
 ];
 
-// ─── Ward list extracted from mock data (unique) ──────────────────────────────
+const BUSINESSES: Business[] = [
+  { id: "b1", name: "HTX Yến sào Nha Trang", type: "Hợp tác xã", wardCode: "23.3306", wardName: "Nha Trang", phone: "0258 352 1234" },
+  { id: "b2", name: "Công ty Hải sản Cam Ranh", type: "Doanh nghiệp", wardCode: "23.1259", wardName: "Cam Ranh", phone: "0258 385 2345" },
+  { id: "b3", name: "HTX Nông nghiệp Diên Khánh", type: "Hợp tác xã", wardCode: "23.1068", wardName: "Diên Khánh", phone: "0258 376 3456" },
+  { id: "b4", name: "Trang trại Xoài Cam Lâm", type: "Trang trại", wardCode: "23.1263", wardName: "Cam Lâm", phone: "0258 398 4567" },
+  { id: "b5", name: "HTX Tỏi sạch Vạn Ninh", type: "Hợp tác xã", wardCode: "23.1015", wardName: "Vạn Ninh", phone: "0258 384 5678" },
+  { id: "b6", name: "Công ty Chế biến Thủy sản Ninh Hòa", type: "Doanh nghiệp", wardCode: "23.1031", wardName: "Ninh Hòa", phone: "0258 363 6789" },
+  { id: "b7", name: "HTX Nông sản Khánh Vĩnh", type: "Hợp tác xã", wardCode: "23.1066", wardName: "Khánh Vĩnh", phone: "0258 379 7890" },
+  { id: "b8", name: "Trang trại Dược liệu Khánh Sơn", type: "Trang trại", wardCode: "23.1075", wardName: "Khánh Sơn", phone: "0258 386 8901" },
+  { id: "b9", name: "HTX Nho sạch Ninh Phước", type: "Hợp tác xã", wardCode: "23.1090", wardName: "Ninh Phước", phone: "0259 388 9012" },
+  { id: "b10", name: "Cơ sở Nước mắm Thuận Nam", type: "Cơ sở sản xuất", wardCode: "23.1096", wardName: "Thuận Nam", phone: "0259 378 0123" },
+  { id: "b11", name: "HTX Muối sạch Ninh Hải", type: "Hợp tác xã", wardCode: "23.1088", wardName: "Ninh Hải", phone: "0259 387 1234" },
+  { id: "b12", name: "Làng nghề Gốm Bàu Trúc", type: "Làng nghề", wardCode: "23.1277", wardName: "Ninh Chu", phone: "0259 385 2345" },
+  { id: "b13", name: "HTX Dê núi Bác Ái", type: "Hợp tác xã", wardCode: "23.1271", wardName: "Bác Ái", phone: "0259 382 3456" },
+  { id: "b14", name: "Công ty Nông sản Thuận Bắc", type: "Doanh nghiệp", wardCode: "23.1279", wardName: "Thuận Bắc", phone: "0259 386 4567" },
+  { id: "b15", name: "Trang trại Rau sạch Ninh Sơn", type: "Trang trại", wardCode: "23.1273", wardName: "Ninh Sơn", phone: "0259 385 5678" },
+];
+
+const PRODUCTS: Product[] = [
+  { id: "p1", name: "Yến sào Khánh Hòa", category: "Đặc sản", wardCode: "23.3306", wardName: "Nha Trang", cert: "OCOP 5★" },
+  { id: "p2", name: "Tôm hùm xanh Cam Ranh", category: "Thủy sản", wardCode: "23.1259", wardName: "Cam Ranh", cert: "VietGAP" },
+  { id: "p3", name: "Xoài Úc Cam Lâm", category: "Trái cây", wardCode: "23.1263", wardName: "Cam Lâm", cert: "VietGAP" },
+  { id: "p4", name: "Rau an toàn Diên Khánh", category: "Rau củ", wardCode: "23.1068", wardName: "Diên Khánh", cert: "VietGAP" },
+  { id: "p5", name: "Tỏi trắng Vạn Ninh", category: "Gia vị", wardCode: "23.1015", wardName: "Vạn Ninh", cert: "OCOP 4★" },
+  { id: "p6", name: "Nước mắm truyền thống Ninh Hòa", category: "Thực phẩm chế biến", wardCode: "23.1031", wardName: "Ninh Hòa", cert: "HACCP" },
+  { id: "p7", name: "Mật ong rừng Khánh Vĩnh", category: "Đặc sản", wardCode: "23.1066", wardName: "Khánh Vĩnh", cert: "OCOP 3★" },
+  { id: "p8", name: "Dược liệu Khánh Sơn", category: "Dược liệu", wardCode: "23.1075", wardName: "Khánh Sơn", cert: "GACP" },
+  { id: "p9", name: "Nho xanh Ninh Phước", category: "Trái cây", wardCode: "23.1090", wardName: "Ninh Phước", cert: "VietGAP" },
+  { id: "p10", name: "Muối tinh khiết Ninh Hải", category: "Thực phẩm", wardCode: "23.1088", wardName: "Ninh Hải", cert: "OCOP 4★" },
+  { id: "p11", name: "Nước mắm cá cơm Thuận Nam", category: "Thực phẩm chế biến", wardCode: "23.1096", wardName: "Thuận Nam", cert: "HACCP" },
+  { id: "p12", name: "Gốm thủ công Bàu Trúc", category: "Thủ công mỹ nghệ", wardCode: "23.1277", wardName: "Ninh Chu", cert: "OCOP 4★" },
+  { id: "p13", name: "Thịt dê núi Bác Ái", category: "Thịt & Chăn nuôi", wardCode: "23.1271", wardName: "Bác Ái", cert: "VietGAP" },
+  { id: "p14", name: "Nho khô Thuận Bắc", category: "Thực phẩm chế biến", wardCode: "23.1279", wardName: "Thuận Bắc", cert: "OCOP 4★" },
+  { id: "p15", name: "Rau hữu cơ Ninh Sơn", category: "Rau củ", wardCode: "23.1273", wardName: "Ninh Sơn", cert: "VietGAP" },
+];
+
+// ─── Ward list extracted from Khánh Hòa map data ─────────────────────────────
 const ALL_WARDS = Array.from(
   new Map(
     [...BUSINESSES, ...PRODUCTS].map((item) => [
@@ -208,10 +244,12 @@ export default function MapSection() {
                   placeMarker(e.latlng, props.fullName ?? props.name);
                 },
               });
-              layerItem.bindTooltip(props.fullName ?? props.name, {
-                sticky: true,
-                className: "leaflet-tooltip-custom",
-              });
+               layerItem.bindTooltip(props.fullName ?? props.name, {
+                 permanent: true,
+                 direction: "center",
+                 sticky: true,
+                 className: "leaflet-tooltip-custom",
+               });
             },
           }).addTo(map);
           geoLayer.current = layer;
@@ -473,14 +511,27 @@ const WARD_PALETTE = [
   "#E91E63", // pink-red
   "#009688", // teal
   "#FFC107", // amber
+  "#1565C0", // dark blue
+  "#EF6C00", // dark orange
+  "#6A1B9A", // dark purple
+  "#2E7D32", // dark green
+  "#C62828", // dark red
+  "#00838F", // dark cyan
+  "#D84315", // dark deep orange
+  "#283593", // dark indigo
+  "#558B2F", // dark lime
+  "#AD1457", // dark pink
+  "#00695C", // dark teal
+  "#F9A825", // dark amber
 ];
 
 function wardFillColor(code: string | number): string {
-  const n = typeof code === "number" ? code : parseInt(String(code), 10);
-  const idx = isNaN(n)
-    ? String(code).split("").reduce((a, c) => a + c.charCodeAt(0), 0)
-    : n;
-  return WARD_PALETTE[idx % WARD_PALETTE.length];
+  const value = String(code);
+  const hash = Array.from(value).reduce(
+    (total, character) => (total * 31 + character.charCodeAt(0)) >>> 0,
+    7,
+  );
+  return WARD_PALETTE[hash % WARD_PALETTE.length];
 }
 
 function styleFeature(selectedCode: string | null) {

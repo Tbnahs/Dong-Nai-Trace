@@ -43,7 +43,7 @@ const CERT_COLORS: Record<string, string> = {
 };
 
 // ─── Map section data (matches portal MapSection) ────────────────────────────
-const MAP_BUSINESSES = [
+const LEGACY_MAP_BUSINESSES = [
   { id: 'b1',  name: 'HTX Nông nghiệp Bình Phước',      type: 'Hợp tác xã',   wardCode: '25195', wardName: 'Bình Phước',  phone: '0251 123 456' },
   { id: 'b2',  name: 'Cty TNHH Xuất khẩu Đồng Xoài',   type: 'Doanh nghiệp', wardCode: '25210', wardName: 'Đồng Xoài',  phone: '0251 234 567' },
   { id: 'b3',  name: 'Trang trại Phước Long Xanh',       type: 'Trang trại',   wardCode: '25217', wardName: 'Phước Long', phone: '0251 345 678' },
@@ -61,7 +61,7 @@ const MAP_BUSINESSES = [
   { id: 'b15', name: 'HTX Thanh long Xuân Lộc',            type: 'Hợp tác xã',   wardCode: '26104', wardName: 'Xuân Lập', phone: '0251 555 666' },
 ];
 
-const MAP_PRODUCTS = [
+const LEGACY_MAP_PRODUCTS = [
   { id: 'p1',  name: 'Xoài Cát Hòa Lộc',         category: 'Trái cây',  wardCode: '25195', wardName: 'Bình Phước', cert: 'VietGAP' },
   { id: 'p2',  name: 'Bưởi Tân Triều',             category: 'Trái cây',  wardCode: '26188', wardName: 'Tân Triều',  cert: 'VietGAP' },
   { id: 'p3',  name: 'Chuối tiêu hồng',            category: 'Trái cây',  wardCode: '25210', wardName: 'Đồng Xoài', cert: 'GlobalGAP' },
@@ -77,6 +77,42 @@ const MAP_PRODUCTS = [
   { id: 'p13', name: 'Rau thủy canh Nhơn Trạch',    category: 'Rau củ',    wardCode: '26485', wardName: 'Nhơn Trạch',cert: 'Hữu cơ' },
   { id: 'p14', name: 'Cam sành Cẩm Mỹ',             category: 'Trái cây',  wardCode: '26341', wardName: 'Cẩm Mỹ',   cert: 'OCOP 4★' },
   { id: 'p15', name: 'Tôm thẻ chân trắng Biên Hòa', category: 'Thủy sản', wardCode: '26068', wardName: 'Biên Hòa',  cert: 'ASC' },
+];
+
+const MAP_BUSINESSES = [
+  { id: 'b1', name: 'HTX Yến sào Nha Trang', type: 'Hợp tác xã', wardCode: '23.3306', wardName: 'Nha Trang', phone: '0258 352 1234' },
+  { id: 'b2', name: 'Công ty Hải sản Cam Ranh', type: 'Doanh nghiệp', wardCode: '23.1259', wardName: 'Cam Ranh', phone: '0258 385 2345' },
+  { id: 'b3', name: 'HTX Nông nghiệp Diên Khánh', type: 'Hợp tác xã', wardCode: '23.1068', wardName: 'Diên Khánh', phone: '0258 376 3456' },
+  { id: 'b4', name: 'Trang trại Xoài Cam Lâm', type: 'Trang trại', wardCode: '23.1263', wardName: 'Cam Lâm', phone: '0258 398 4567' },
+  { id: 'b5', name: 'HTX Tỏi sạch Vạn Ninh', type: 'Hợp tác xã', wardCode: '23.1015', wardName: 'Vạn Ninh', phone: '0258 384 5678' },
+  { id: 'b6', name: 'Công ty Chế biến Thủy sản Ninh Hòa', type: 'Doanh nghiệp', wardCode: '23.1031', wardName: 'Ninh Hòa', phone: '0258 363 6789' },
+  { id: 'b7', name: 'HTX Nông sản Khánh Vĩnh', type: 'Hợp tác xã', wardCode: '23.1066', wardName: 'Khánh Vĩnh', phone: '0258 379 7890' },
+  { id: 'b8', name: 'Trang trại Dược liệu Khánh Sơn', type: 'Trang trại', wardCode: '23.1075', wardName: 'Khánh Sơn', phone: '0258 386 8901' },
+  { id: 'b9', name: 'HTX Nho sạch Ninh Phước', type: 'Hợp tác xã', wardCode: '23.1090', wardName: 'Ninh Phước', phone: '0259 388 9012' },
+  { id: 'b10', name: 'Cơ sở Nước mắm Thuận Nam', type: 'Cơ sở sản xuất', wardCode: '23.1096', wardName: 'Thuận Nam', phone: '0259 378 0123' },
+  { id: 'b11', name: 'HTX Muối sạch Ninh Hải', type: 'Hợp tác xã', wardCode: '23.1088', wardName: 'Ninh Hải', phone: '0259 387 1234' },
+  { id: 'b12', name: 'Làng nghề Gốm Bàu Trúc', type: 'Làng nghề', wardCode: '23.1277', wardName: 'Ninh Chu', phone: '0259 385 2345' },
+  { id: 'b13', name: 'HTX Dê núi Bác Ái', type: 'Hợp tác xã', wardCode: '23.1271', wardName: 'Bác Ái', phone: '0259 382 3456' },
+  { id: 'b14', name: 'Công ty Nông sản Thuận Bắc', type: 'Doanh nghiệp', wardCode: '23.1279', wardName: 'Thuận Bắc', phone: '0259 386 4567' },
+  { id: 'b15', name: 'Trang trại Rau sạch Ninh Sơn', type: 'Trang trại', wardCode: '23.1273', wardName: 'Ninh Sơn', phone: '0259 385 5678' },
+];
+
+const MAP_PRODUCTS = [
+  { id: 'p1', name: 'Yến sào Khánh Hòa', category: 'Đặc sản', wardCode: '23.3306', wardName: 'Nha Trang', cert: 'OCOP 5★' },
+  { id: 'p2', name: 'Tôm hùm xanh Cam Ranh', category: 'Thủy sản', wardCode: '23.1259', wardName: 'Cam Ranh', cert: 'VietGAP' },
+  { id: 'p3', name: 'Xoài Úc Cam Lâm', category: 'Trái cây', wardCode: '23.1263', wardName: 'Cam Lâm', cert: 'VietGAP' },
+  { id: 'p4', name: 'Rau an toàn Diên Khánh', category: 'Rau củ', wardCode: '23.1068', wardName: 'Diên Khánh', cert: 'VietGAP' },
+  { id: 'p5', name: 'Tỏi trắng Vạn Ninh', category: 'Gia vị', wardCode: '23.1015', wardName: 'Vạn Ninh', cert: 'OCOP 4★' },
+  { id: 'p6', name: 'Nước mắm truyền thống Ninh Hòa', category: 'Thực phẩm chế biến', wardCode: '23.1031', wardName: 'Ninh Hòa', cert: 'HACCP' },
+  { id: 'p7', name: 'Mật ong rừng Khánh Vĩnh', category: 'Đặc sản', wardCode: '23.1066', wardName: 'Khánh Vĩnh', cert: 'OCOP 3★' },
+  { id: 'p8', name: 'Dược liệu Khánh Sơn', category: 'Dược liệu', wardCode: '23.1075', wardName: 'Khánh Sơn', cert: 'GACP' },
+  { id: 'p9', name: 'Nho xanh Ninh Phước', category: 'Trái cây', wardCode: '23.1090', wardName: 'Ninh Phước', cert: 'VietGAP' },
+  { id: 'p10', name: 'Muối tinh khiết Ninh Hải', category: 'Thực phẩm', wardCode: '23.1088', wardName: 'Ninh Hải', cert: 'OCOP 4★' },
+  { id: 'p11', name: 'Nước mắm cá cơm Thuận Nam', category: 'Thực phẩm chế biến', wardCode: '23.1096', wardName: 'Thuận Nam', cert: 'HACCP' },
+  { id: 'p12', name: 'Gốm thủ công Bàu Trúc', category: 'Thủ công mỹ nghệ', wardCode: '23.1277', wardName: 'Ninh Chu', cert: 'OCOP 4★' },
+  { id: 'p13', name: 'Thịt dê núi Bác Ái', category: 'Thịt & Chăn nuôi', wardCode: '23.1271', wardName: 'Bác Ái', cert: 'VietGAP' },
+  { id: 'p14', name: 'Nho khô Thuận Bắc', category: 'Thực phẩm chế biến', wardCode: '23.1279', wardName: 'Thuận Bắc', cert: 'OCOP 4★' },
+  { id: 'p15', name: 'Rau hữu cơ Ninh Sơn', category: 'Rau củ', wardCode: '23.1273', wardName: 'Ninh Sơn', cert: 'VietGAP' },
 ];
 
 // Map catalogue short IDs → detail screen IDs (now using b1-b12, sp001-sp012)
@@ -218,8 +254,8 @@ html,body,#map{width:100%;height:100%;overflow:hidden}
 <script>
 var GEOJSON_URL=${JSON.stringify(geojsonUrl)};
 var sel=null,geoLayer=null,marker=null,provBounds=null;
-var PAL=["#2196F3","#FF9800","#9C27B0","#4CAF50","#F44336","#00BCD4","#FF5722","#3F51B5","#8BC34A","#E91E63","#009688","#FFC107"];
-function wColor(c){var n=parseInt(String(c),10);var i=isNaN(n)?String(c).split('').reduce(function(a,x){return a+x.charCodeAt(0)},0):n;return PAL[i%PAL.length]}
+var PAL=["#2196F3","#FF9800","#9C27B0","#4CAF50","#F44336","#00BCD4","#FF5722","#3F51B5","#8BC34A","#E91E63","#009688","#FFC107","#1565C0","#EF6C00","#6A1B9A","#2E7D32","#C62828","#00838F","#D84315","#283593","#558B2F","#AD1457","#00695C","#F9A825"];
+function wColor(c){var s=String(c),i=Array.from(s).reduce(function(a,x){return (a*31+x.charCodeAt(0))>>>0},7);return PAL[i%PAL.length]}
 function fStyle(selCode){return function(f){var c=(f.properties&&f.properties.code)||f.id||'';var s=selCode&&String(c)===String(selCode);return{fillColor:s?'#2740BA':wColor(c),fillOpacity:s?0.9:0.66,color:'#fff',weight:s?2.5:1.2}}}
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({iconRetinaUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',iconUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',shadowUrl:'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'});
@@ -243,7 +279,7 @@ function send(d){var s=JSON.stringify(d);if(window.ReactNativeWebView)window.Rea
            send({type:'wardSelected',ward:sel});
          }
        });
-       ly.bindTooltip(p.fullName||p.name,{sticky:true,className:'leaflet-tooltip-custom'});
+        ly.bindTooltip(p.fullName||p.name,{permanent:true,direction:'center',sticky:true,className:'leaflet-tooltip-custom'});
      }}).addTo(map);
      provBounds=geoLayer.getBounds();map.fitBounds(provBounds,{padding:[16,16]});
   }
