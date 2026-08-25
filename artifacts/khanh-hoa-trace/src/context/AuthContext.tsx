@@ -78,11 +78,11 @@ function loadDocs(email: string): AuthUser['documents'] {
 
 const defaultProfile = (email: string): OrgProfile => ({
   name: 'HTX Nông nghiệp Xanh',
-  taxCode: '3601234567',
+  taxCode: '4201234567',
   type: 'Hợp tác xã (HTX)',
   industry: 'Nông sản & Rau củ',
-  address: 'Xã Bình Lộc, Huyện Vĩnh Cửu',
-  district: 'Vĩnh Cửu',
+  address: 'Xã Diên Phú, Huyện Diên Khánh',
+  district: 'Diên Khánh',
   phone: '0901234567',
   email,
   representative: 'Nguyễn Văn A',

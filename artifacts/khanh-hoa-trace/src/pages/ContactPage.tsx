@@ -294,9 +294,9 @@ export default function ContactPage() {
               {
                 icon: Phone,
                 label: "Điện thoại",
-                value: "0251.3822297",
+                value: "8425.83563531 ",
                 color: "text-[#2740BA]",
-                href: "tel:02513822297",
+                href: "tel:842583563531 ",
               },
               {
                 icon: Mail,
