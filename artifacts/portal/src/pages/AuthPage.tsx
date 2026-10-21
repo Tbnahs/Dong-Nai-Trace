@@ -543,12 +543,6 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
         />
         {/* Bottom-left intro + stats over the background */}
         <div data-testid="auth-intro" className="relative z-10 mt-auto px-12 pb-14">
-          <h2
-            data-testid="text-auth-intro-heading"
-            className="mb-4 text-[26px] font-extrabold text-white"
-          >
-            TRUY XUẤT NGUỒN GỐC THÀNH PHỐ ĐỒNG NAI
-          </h2>
           <div className="flex gap-8">
             {[['1.200+', 'Doanh nghiệp'], ['8.500+', 'Sản phẩm'], ['95/95', 'Phường / Xã']].map(([n, l]) => (
               <div key={l} data-testid={`auth-stat-${n}`}>
