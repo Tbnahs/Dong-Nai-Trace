@@ -116,11 +116,13 @@ function DocumentCard({
   document,
   editing,
   onPick,
+  onRemove,
 }: {
   label: string;
   document?: UploadedDocument;
   editing: boolean;
   onPick: () => void;
+  onRemove: () => void;
 }) {
   const colors = useColors();
   if (!editing && !document) return null;
@@ -128,16 +130,29 @@ function DocumentCard({
     <View style={[styles.documentCard, { backgroundColor: colors.muted, borderColor: colors.border }]}>
       <Text style={[styles.documentLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>{label}</Text>
       {editing ? (
-        <Pressable onPress={onPick} style={[styles.uploadButton, { backgroundColor: colors.card, borderColor: colors.border }]}>
-          <Ionicons name={document ? 'document-text-outline' : 'cloud-upload-outline'} size={21} color={colors.primary} />
-          <View style={{ flex: 1 }}>
-            <Text style={[styles.uploadButtonText, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]} numberOfLines={1}>
-              {document?.name ?? 'Tải file lên'}
-            </Text>
-            <Text style={[styles.uploadHint, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>PDF, JPG, PNG</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={17} color={colors.mutedForeground} />
-        </Pressable>
+        <View style={styles.documentActions}>
+          <Pressable onPress={onPick} style={[styles.uploadButton, { backgroundColor: colors.card, borderColor: colors.border }]}>
+            <Ionicons name={document ? 'document-text-outline' : 'cloud-upload-outline'} size={21} color={colors.primary} />
+            <View style={{ flex: 1 }}>
+              <Text style={[styles.uploadButtonText, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]} numberOfLines={1}>
+                {document?.name ?? 'Tải file lên'}
+              </Text>
+              <Text style={[styles.uploadHint, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>PDF, JPG, PNG</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={17} color={colors.mutedForeground} />
+          </Pressable>
+          {document ? (
+            <Pressable
+              onPress={onRemove}
+              accessibilityRole="button"
+              accessibilityLabel={`Xóa ${label.toLowerCase()}`}
+              hitSlop={8}
+              style={[styles.removeDocumentButton, { backgroundColor: colors.card, borderColor: colors.border }]}
+            >
+              <Ionicons name="trash-outline" size={18} color={colors.destructive} />
+            </Pressable>
+          ) : null}
+        </View>
       ) : (
         <View style={[styles.documentPreview, { backgroundColor: colors.card, borderColor: colors.border }]}>
           {document?.mimeType?.startsWith('image/') ? (
@@ -289,7 +304,7 @@ export default function OrgProfileScreen() {
       <Section icon="document-text-outline" title="Thông tin pháp lý" description="Dữ liệu đăng ký kinh doanh chính thức">
         <View style={styles.fieldsGrid}>
           <Field label="Tên doanh nghiệp / tổ chức" value={form.name} editing={editing} onChange={value => set('name', value)} icon="business-outline" />
-          <Field label="Mã số thuế" value={form.taxCode} editing={false} onChange={() => {}} icon="document-text-outline" />
+          <Field label="Mã số thuế" value={form.taxCode} editing={editing} onChange={value => set('taxCode', value)} icon="document-text-outline" />
           <Field
             label="Mã GCP"
             value={form.gcp ?? ''}
@@ -348,8 +363,8 @@ export default function OrgProfileScreen() {
         {(editing || form.businessLicense || form.authorizationDocument || form.certification || form.businessImage) && (
           <Section icon="images-outline" title="Tài liệu đính kèm" description="Bản sao số hóa của hồ sơ gốc">
             <View style={styles.documentsGrid}>
-              <DocumentCard label="Giấy phép kinh doanh" document={form.businessLicense} editing={editing} onPick={() => pickDocument('businessLicense')} />
-              <DocumentCard label="Giấy ủy quyền" document={form.authorizationDocument} editing={editing} onPick={() => pickDocument('authorizationDocument')} />
+              <DocumentCard label="Giấy phép kinh doanh" document={form.businessLicense} editing={editing} onPick={() => pickDocument('businessLicense')} onRemove={() => setForm(current => current ? { ...current, businessLicense: undefined } : current)} />
+              <DocumentCard label="Giấy ủy quyền" document={form.authorizationDocument} editing={editing} onPick={() => pickDocument('authorizationDocument')} onRemove={() => setForm(current => current ? { ...current, authorizationDocument: undefined } : current)} />
               {editing ? (
                 <View style={styles.documentCard}>
                   <ModalPicker
@@ -358,12 +373,12 @@ export default function OrgProfileScreen() {
                     options={['OCOP', 'VietGAP', 'GlobalGAP', 'HACCP', 'ISO 22000', 'Hữu cơ', 'Khác']}
                     onChange={value => set('certificationType', value)}
                   />
-                  <DocumentCard label="Tệp giấy chứng nhận" document={form.certification} editing onPick={() => pickDocument('certification')} />
+                  <DocumentCard label="Tệp giấy chứng nhận" document={form.certification} editing onPick={() => pickDocument('certification')} onRemove={() => setForm(current => current ? { ...current, certification: undefined } : current)} />
                 </View>
               ) : (
-                <DocumentCard label={`Giấy chứng nhận · ${form.certificationType ?? 'Đã cấp'}`} document={form.certification} editing={false} onPick={() => pickDocument('certification')} />
+                <DocumentCard label={`Giấy chứng nhận · ${form.certificationType ?? 'Đã cấp'}`} document={form.certification} editing={false} onPick={() => pickDocument('certification')} onRemove={() => setForm(current => current ? { ...current, certification: undefined } : current)} />
               )}
-              <DocumentCard label="Hình ảnh doanh nghiệp" document={form.businessImage} editing={editing} onPick={() => pickDocument('businessImage')} />
+              <DocumentCard label="Hình ảnh doanh nghiệp" document={form.businessImage} editing={editing} onPick={() => pickDocument('businessImage')} onRemove={() => setForm(current => current ? { ...current, businessImage: undefined } : current)} />
             </View>
           </Section>
         )}
@@ -463,9 +478,11 @@ const styles = StyleSheet.create({
   documentsGrid: { gap: 10 },
   documentCard: { padding: 11, borderRadius: 11, borderWidth: 1 },
   documentLabel: { fontSize: 13, marginBottom: 8 },
-  uploadButton: { flexDirection: 'row', alignItems: 'center', gap: 9, padding: 10, borderRadius: 9, borderWidth: 1 },
+  uploadButton: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 9, padding: 10, borderRadius: 9, borderWidth: 1 },
   uploadButtonText: { fontSize: 12 },
   uploadHint: { fontSize: 10, marginTop: 2 },
+  documentActions: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  removeDocumentButton: { width: 44, height: 48, borderRadius: 9, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
   documentPreview: { flexDirection: 'row', alignItems: 'center', gap: 9, padding: 10, borderRadius: 9, borderWidth: 1 },
   documentImage: { width: 42, height: 42, borderRadius: 7 },
   documentName: { flex: 1, fontSize: 12 },
