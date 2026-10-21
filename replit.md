@@ -22,15 +22,13 @@ Dependencies are managed with **pnpm** (workspace monorepo).
 pnpm install
 ```
 
-The Replit Run button starts the Đồng Nai Trace portal, mobile app, and API server:
+The Replit Run button starts only the Đồng Nai Trace web portal:
 
 ```bash
 pnpm --filter @workspace/portal run dev
-pnpm --filter @workspace/mobile run dev
-pnpm --filter @workspace/api-server run dev
 ```
 
-Use the `artifacts/portal: web` workflow for the portal at `/portal/` and the `artifacts/mobile: expo` workflow for the Expo companion app at `/mobile/`. The API workflow serves `/api`, including the ward map data used by mobile.
+Use the `artifacts/portal: web` workflow for the portal at `/portal/`. Mobile and API artifacts remain available to start separately when needed.
 
 The independent Khánh Hòa Trace artifacts remain available separately:
 
