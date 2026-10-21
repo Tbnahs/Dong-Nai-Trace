@@ -542,18 +542,6 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
           className="absolute inset-0 w-full h-full object-cover"
         />
 
-        {/* Top — Logo */}
-        <div className="relative z-10 p-12">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white/15 backdrop-blur-sm rounded-2xl flex items-center justify-center ring-1 ring-white/20">
-              <img src={logoUrl} alt="Logo" className="w-11 h-11 object-contain" />
-            </div>
-            <div>
-              <span className="text-white font-extrabold text-2xl tracking-tight block">Truy Xuất Đồng Nai</span>
-            </div>
-          </div>
-        </div>
-
         {/* Bottom — Headline + stats */}
         <div className="relative z-10 px-12 pb-14">
           <h2 className="font-extrabold text-white mb-4 text-[26px]">
@@ -581,13 +569,14 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
             Về trang chủ
           </Link>
 
-          {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-3 mb-8">
-            <img src={logoUrl} alt="Logo" className="h-12 sm:h-14 w-auto" />
-            <div>
-              <span className="text-xl font-extrabold text-[#2740BA] block">Đồng Nai Trace</span>
-              <span className="text-xs text-gray-400 uppercase tracking-widest">Sở KH&CN Đồng Nai</span>
+          {/* Brand above login/register */}
+          <div data-testid="brand-auth" className="flex items-center gap-3 mb-8">
+            <div className="w-12 h-12 shrink-0 rounded-xl bg-[#eef2ff] flex items-center justify-center">
+              <img src={logoUrl} alt="Logo Truy Xuất Đồng Nai" className="w-9 h-9 object-contain" />
             </div>
+            <span data-testid="text-brand-auth" className="text-lg sm:text-xl font-extrabold tracking-tight text-[#2740BA]">
+              Truy Xuất Đồng Nai
+            </span>
           </div>
 
           {defaultTab === 'login' ? (

@@ -205,7 +205,8 @@ export default function LandingPage() {
 
           <div className="relative z-10 mx-auto flex max-w-[850px] flex-col items-center">
             <h1 className="text-[clamp(1.55rem,4.4vw,3.25rem)] font-extrabold uppercase leading-[1.12] tracking-tight text-white">
-              <span className="block text-[36px]">TRUY XUẤT NGUỒN GỐC THÀNH PHỐ ĐỒNG NAI</span>
+              <span className="block">Truy xuất nguồn gốc</span>
+              <span className="block">Thành phố Đồng Nai</span>
             </h1>
 
             <form onSubmit={handleSearch} className="mt-7 w-full max-w-[760px] sm:mt-8">
@@ -280,6 +281,15 @@ export default function LandingPage() {
               </div>
             </form>
           </div>
+        </div>
+      </section>
+      {/* BANNER SECTION */}
+      <section
+        aria-label="Banner giới thiệu"
+        data-testid="section-promo-banner"
+        className="bg-[#f5f7fa] px-4 pb-6 md:px-6 lg:px-10"
+      >
+        <div className="mx-auto max-w-[1280px]">
         </div>
       </section>
       {/* STATS SECTION */}
