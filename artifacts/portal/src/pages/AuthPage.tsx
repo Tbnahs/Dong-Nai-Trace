@@ -541,6 +541,23 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover"
         />
+        {/* Bottom-left intro + stats over the background */}
+        <div data-testid="auth-intro" className="relative z-10 mt-auto px-12 pb-14">
+          <h2
+            data-testid="text-auth-intro-heading"
+            className="mb-4 text-[26px] font-extrabold text-white"
+          >
+            TRUY XUẤT NGUỒN GỐC THÀNH PHỐ ĐỒNG NAI
+          </h2>
+          <div className="flex gap-8">
+            {[['1.200+', 'Doanh nghiệp'], ['8.500+', 'Sản phẩm'], ['95/95', 'Phường / Xã']].map(([n, l]) => (
+              <div key={l} data-testid={`auth-stat-${n}`}>
+                <div className="text-2xl font-extrabold text-white">{n}</div>
+                <div className="mt-0.5 text-xs text-blue-200/60">{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
       {/* ── Right panel ── */}
       <div className="flex-1 flex items-center justify-center bg-white overflow-y-auto px-5 sm:px-8 py-6">
@@ -556,30 +573,15 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
 
           {/* Brand above login/register */}
           <div data-testid="brand-auth" className="flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 shrink-0 rounded-xl bg-[#eef2ff] flex items-center justify-center">
-              <img src={logoUrl} alt="Logo Truy Xuất Đồng Nai" className="w-9 h-9 object-contain" />
-            </div>
+            <img
+              src={logoUrl}
+              alt="Logo Truy Xuất Đồng Nai"
+              data-testid="img-brand-auth"
+              className="h-14 w-14 shrink-0 object-contain"
+            />
             <span data-testid="text-brand-auth" className="text-lg sm:text-xl font-extrabold tracking-tight text-[#2740BA]">
               Truy Xuất Đồng Nai
             </span>
-          </div>
-
-          {/* Intro + stats above login/register */}
-          <div data-testid="auth-intro" className="mb-8">
-            <h2
-              data-testid="text-auth-intro-heading"
-              className="mb-3 text-lg font-extrabold leading-snug text-[#2740BA] sm:text-xl"
-            >
-              TRUY XUẤT NGUỒN GỐC THÀNH PHỐ ĐỒNG NAI
-            </h2>
-            <div className="grid grid-cols-3 gap-2 sm:gap-4">
-              {[['1.200+', 'Doanh nghiệp'], ['8.500+', 'Sản phẩm'], ['95/95', 'Phường / Xã']].map(([n, l]) => (
-                <div key={l} data-testid={`auth-stat-${n}`} className="min-w-0">
-                  <div className="text-xl font-extrabold text-[#E8650A] sm:text-2xl">{n}</div>
-                  <div className="mt-0.5 text-[11px] leading-tight text-gray-500 sm:text-xs">{l}</div>
-                </div>
-              ))}
-            </div>
           </div>
 
           {defaultTab === 'login' ? (
