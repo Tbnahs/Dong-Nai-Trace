@@ -64,13 +64,9 @@ function LoginView() {
       keyboardShouldPersistTaps="handled"
     >
       {/* Portal-aligned brand header */}
-      <View style={[styles.loginBrand, { borderBottomColor: colors.border }]}>
+      <View style={styles.loginBrand}>
         <Image source={require('@/assets/images/logo-skhcn.png')} style={styles.loginLogo} />
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.loginBrandName, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>ĐỒNG NAI TRACE</Text>
-          <Text style={[styles.loginBrandTagline, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_500Medium' }]}>HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM</Text>
-        </View>
-        <Ionicons name="globe-outline" size={20} color={colors.primary} />
+        <Text style={[styles.loginBrandName, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>Truy Xuất Đồng Nai</Text>
       </View>
 
       <View style={[styles.loginCard, { backgroundColor: colors.background }]}>
@@ -258,10 +254,9 @@ export default function AccountScreen() {
 }
 
 const styles = StyleSheet.create({
-  loginBrand: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 20, paddingBottom: 14, borderBottomWidth: 1 },
-  loginLogo: { width: 42, height: 42 },
-  loginBrandName: { fontSize: 16 },
-  loginBrandTagline: { fontSize: 7, marginTop: 2 },
+  loginBrand: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 20, paddingBottom: 18 },
+  loginLogo: { width: 56, height: 56 },
+  loginBrandName: { fontSize: 18 },
   loginCard: { paddingHorizontal: 20, paddingTop: 28 },
   loginCardTitle: { fontSize: 27 },
   loginCardDesc: { fontSize: 13, lineHeight: 19, marginTop: 4 },

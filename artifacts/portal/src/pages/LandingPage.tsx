@@ -293,7 +293,7 @@ export default function LandingPage() {
       <section
         aria-label="Banner giới thiệu"
         data-testid="section-promo-banner"
-        className="bg-[#f5f7fa] pb-6 sm:pb-8"
+        className="pb-6 sm:pb-8 bg-background"
       >
         <img
           src={traceBanner}

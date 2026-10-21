@@ -141,9 +141,23 @@ export default function RegisterScreen() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
+      <View style={styles.brandHeader}>
+        <Image
+          source={require('@/assets/images/logo-skhcn.png')}
+          style={styles.brandLogo}
+          accessibilityLabel="Logo Truy Xuất Đồng Nai"
+        />
+        <Text style={[styles.brandName, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>
+          Truy Xuất Đồng Nai
+        </Text>
+      </View>
+
       {/* Step indicator */}
       <LinearGradient colors={['#1A2E9E', '#2740BA']} style={styles.stepHeader}>
-        <Text style={[styles.stepTitle, { fontFamily: 'BeVietnamPro_700Bold' }]}>Đăng ký tham gia TXNG</Text>
+        <Text style={[styles.stepTitle, { fontFamily: 'BeVietnamPro_700Bold' }]}>Đăng ký tài khoản doanh nghiệp</Text>
+        <Text style={[styles.stepDescription, { fontFamily: 'BeVietnamPro_400Regular' }]}>
+          Cung cấp thông tin để tham gia hệ thống truy xuất
+        </Text>
         <View style={styles.stepRow}>
           {STEPS.map((s, i) => (
             <React.Fragment key={s}>
@@ -280,8 +294,12 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
+  brandHeader: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 20, paddingVertical: 16 },
+  brandLogo: { width: 56, height: 56 },
+  brandName: { fontSize: 18 },
   stepHeader: { padding: 24, paddingBottom: 28 },
-  stepTitle: { fontSize: 18, color: '#FFF', marginBottom: 20, textAlign: 'center' },
+  stepTitle: { fontSize: 18, color: '#FFF', marginBottom: 5, textAlign: 'center' },
+  stepDescription: { fontSize: 12, lineHeight: 18, color: 'rgba(255,255,255,0.82)', marginBottom: 20, textAlign: 'center' },
   stepRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   stepItem: { alignItems: 'center', gap: 5 },
   stepDot: { width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center', borderWidth: 1 },

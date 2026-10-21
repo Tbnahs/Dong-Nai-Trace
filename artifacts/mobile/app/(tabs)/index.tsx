@@ -33,6 +33,7 @@ import {
 } from '@/data/mock';
 
 const HERO_GUIDE = require('@/assets/images/hero-guide.png');
+const TRACE_BANNER = require('@/assets/images/trace-banner.jpg');
 
 const CERT_COLORS: Record<string, string> = {
   VietGAP: '#16A34A',
@@ -411,7 +412,7 @@ export default function HomeScreen() {
         <Pressable onPress={() => router.push('/')} style={styles.brand} hitSlop={6}>
           <Image source={require('@/assets/images/logo-skhcn.png')} style={styles.logo} />
           <View>
-            <Text style={[styles.brandName, { color: colors.primary }]}>ĐỒNG NAI TRACE</Text>
+            <Text style={[styles.brandName, { color: colors.primary }]}>TRUY XUẤT ĐỒNG NAI</Text>
             <Text style={[styles.brandTagline, { color: colors.mutedForeground }]}>HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM</Text>
           </View>
         </Pressable>
@@ -451,10 +452,7 @@ export default function HomeScreen() {
       {/* HERO */}
       <View style={styles.hero}>
         <Text style={[styles.heroTitle, { color: colors.primary }]}>
-          TRUY XUẤT NGUỒN GỐC{'\n'}SẢN PHẨM, HÀNG HÓA{'\n'}THÀNH PHỐ ĐỒNG NAI
-        </Text>
-        <Text style={[styles.heroDesc, { color: colors.mutedForeground }]}>
-          Nhờ ứng dụng công nghệ tiên tiến, hệ thống cho phép định danh, truy vết nguồn gốc sản phẩm hàng hóa tại Thành phố Đồng Nai.
+          TRUY XUẤT NGUỒN GỐC{'\n'}THÀNH PHỐ ĐỒNG NAI
         </Text>
 
         <View style={styles.searchArea}>
@@ -506,9 +504,22 @@ export default function HomeScreen() {
               <Text style={[styles.radioText, { color: colors.foreground }]}>Mã GTIN &amp; Số lô đóng gói</Text>
             </Pressable>
           </View>
+          <Text style={[styles.heroDesc, { color: colors.mutedForeground }]}>
+            Đồng Nai khẳng định chất lượng sản phẩm, minh bạch nguồn gốc và nâng cao uy tín thương hiệu địa{"\u00A0"}phương.
+          </Text>
         </View>
 
         <Image source={HERO_GUIDE} style={styles.heroImage} resizeMode="contain" />
+      </View>
+
+      {/* Banner matching the portal */}
+      <View style={styles.traceBannerSection}>
+        <Image
+          source={TRACE_BANNER}
+          style={styles.traceBanner}
+          resizeMode="cover"
+          accessibilityLabel="Phối cảnh sân bay nhìn từ trên cao"
+        />
       </View>
 
       <Modal
@@ -956,7 +967,7 @@ const styles = StyleSheet.create({
   notificationBadgeText: { color: '#FFF', fontSize: 8, lineHeight: 10, fontFamily: 'BeVietnamPro_700Bold' },
   hero: { paddingTop: 24, paddingHorizontal: 20, alignItems: 'stretch' },
   heroTitle: { fontSize: 27, lineHeight: 33, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: -0.3 },
-  heroDesc: { fontSize: 14, lineHeight: 22, fontFamily: 'BeVietnamPro_400Regular', marginTop: 16 },
+  heroDesc: { fontSize: 14, lineHeight: 22, fontFamily: 'BeVietnamPro_400Regular', marginTop: 16, textAlign: 'center' },
   searchArea: { marginTop: 20 },
   inputRow: { flexDirection: 'row', alignItems: 'center', minHeight: 54, borderRadius: 13, borderWidth: 1, paddingHorizontal: 15, boxShadow: '0px 3px 8px rgba(0, 0, 0, 0.07)', elevation: 2 },
   scanButton: { width: 30, height: 36, alignItems: 'center', justifyContent: 'center' },
@@ -972,6 +983,8 @@ const styles = StyleSheet.create({
   radioDot: { width: 9, height: 9, borderRadius: 5 },
   radioText: { fontSize: 12, fontFamily: 'BeVietnamPro_400Regular' },
   heroImage: { width: '100%', height: 230, marginTop: 10 },
+  traceBannerSection: { marginTop: 16, marginBottom: 12 },
+  traceBanner: { width: '100%', height: 180 },
   scannerContainer: { flex: 1, backgroundColor: '#000000' },
   scannerTopBar: { position: 'absolute', top: 0, left: 0, right: 0, minHeight: 86, paddingHorizontal: 18, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', backgroundColor: 'rgba(0,0,0,0.42)' },
   scannerCloseButton: { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
