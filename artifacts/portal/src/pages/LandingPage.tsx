@@ -189,7 +189,7 @@ export default function LandingPage() {
   return (
     <>
       {/* HERO SECTION */}
-      <section className="bg-[#f5f7fa] px-4 py-6 sm:py-8 md:px-6 lg:px-10">
+      <section className="px-4 py-6 sm:py-8 md:px-6 lg:px-10 bg-background">
         <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-2xl bg-[#0b3e77] px-5 py-10 text-center shadow-[0_18px_45px_rgba(12,48,98,0.18)] sm:rounded-[24px] sm:px-10 sm:py-12 md:px-16 md:py-14 lg:px-24 lg:py-16">
           <div
             aria-hidden="true"
@@ -283,7 +283,7 @@ export default function LandingPage() {
               <p
                 data-testid="text-home-intro"
                 className="mx-auto mt-4 max-w-3xl px-2 text-center text-white/90 sm:mt-5 sm:text-sm md:text-base text-[15px]"
-              >Đồng Nai khẳng định chất lượng sản phẩm, minh bạch nguồn gốc và nâng cao uy tín thương hiệu địa phương.</p>
+              >Đồng Nai khẳng định chất lượng sản phẩm, minh bạch nguồn gốc và nâng cao uy tín thương hiệu địa&nbsp;phương.</p>
             </form>
           </div>
         </div>
