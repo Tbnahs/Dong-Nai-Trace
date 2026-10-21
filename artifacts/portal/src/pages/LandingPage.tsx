@@ -3,6 +3,7 @@ import { useState } from "react";
 import MapSection from "../components/MapSection";
 import { Link, useLocation } from "wouter";
 import heroBackground from "@assets/Nền_xanh_máy_bay_tối_giản_1792564728039.png";
+import traceBanner from "@assets/555737153_794223450001632_8929748451275333477_n_1792568596064.jpg";
 import { lookupByTraceCode, lookupByGtin, lookupByGtinAndLot } from "../lib/productLookup";
 import {
   CheckCircle2,
@@ -292,10 +293,15 @@ export default function LandingPage() {
       <section
         aria-label="Banner giới thiệu"
         data-testid="section-promo-banner"
-        className="bg-[#f5f7fa] px-4 pb-6 md:px-6 lg:px-10"
+        className="bg-[#f5f7fa] pb-6 sm:pb-8"
       >
-        <div className="mx-auto max-w-[1280px]">
-        </div>
+        <img
+          src={traceBanner}
+          alt="Phối cảnh sân bay nhìn từ trên cao"
+          data-testid="image-promo-banner"
+          loading="lazy"
+          className="block h-[180px] w-full object-cover object-[center_55%] sm:h-[240px] md:h-[300px] lg:h-[340px]"
+        />
       </section>
       {/* STATS SECTION */}
       <section className="bg-white pb-12 -mt-2">
