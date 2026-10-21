@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   Image,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useColors } from '@/hooks/useColors';
 import { Ionicons } from '@expo/vector-icons';
@@ -18,23 +17,36 @@ import * as Haptics from 'expo-haptics';
 import * as DocumentPicker from 'expo-document-picker';
 import { useAuth, OrgProfile, UploadedDocument } from '@/context/AuthContext';
 import { ModalPicker } from '@/components/ModalPicker';
-import { ORG_TYPE_OPTIONS, SECTOR_OPTIONS, DISTRICT_OPTIONS } from '@/data/mock';
+import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
+import { ORG_TYPE_OPTIONS, DISTRICT_OPTIONS } from '@/data/mock';
 
-const STEPS = ['Tổ chức', 'Đại diện', 'Xác nhận'];
+const STEPS = ['Thông tin doanh nghiệp', 'Người đại diện', 'Xác nhận'];
+type RegistrationForm = OrgProfile & { password: string; confirmPassword: string };
+type RegistrationErrors = Partial<Record<keyof RegistrationForm, string>>;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function RegisterScreen() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const { register } = useAuth();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState<OrgProfile & { password: string; confirmPassword: string }>({
-    name: '', taxCode: '', type: 'Doanh nghiệp', industry: 'Nông sản & Rau củ',
-    address: '', district: '', phone: '', email: '',
+  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [errors, setErrors] = useState<RegistrationErrors>({});
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [form, setForm] = useState<RegistrationForm>({
+    name: '', taxCode: '', type: ORG_TYPE_OPTIONS[0], industry: '',
+    address: '', district: DISTRICT_OPTIONS[0] ?? '', phone: '', email: '',
     representative: '', representativePhone: '', representativeEmail: '', cccd: '',
     gcp: '', password: '', confirmPassword: '', certificationType: 'OCOP',
   });
 
-  const set = (key: keyof typeof form) => (val: string) => setForm(f => ({ ...f, [key]: val }));
+  const set = (key: keyof RegistrationForm) => (val: string) => {
+    setForm(current => ({ ...current, [key]: val }));
+    setErrors(current => ({ ...current, [key]: undefined }));
+  };
 
   const pickDocument = async (key: 'businessLicense' | 'authorizationDocument' | 'certification' | 'businessImage') => {
     const result = await DocumentPicker.getDocumentAsync({
@@ -84,63 +96,104 @@ export default function RegisterScreen() {
   }
 
   function Field({ label, fieldKey, keyboard = 'default', secure = false, placeholder, required = false }: {
-    label: string; fieldKey: keyof typeof form;
+    label: string; fieldKey: keyof RegistrationForm;
     keyboard?: 'default' | 'email-address' | 'phone-pad'; secure?: boolean; placeholder?: string; required?: boolean;
+    error?: string; visible?: boolean; onToggleVisibility?: () => void;
   }) {
+    const error = errors[fieldKey];
+    const visible = fieldKey === 'password' ? passwordVisible : confirmPasswordVisible;
+    const onToggleVisibility = fieldKey === 'password'
+      ? () => setPasswordVisible(current => !current)
+      : () => setConfirmPasswordVisible(current => !current);
     return (
       <View style={{ marginBottom: 12 }}>
         <Text style={[styles.fieldLabel, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>
           {label}{required && <Text style={{ color: '#EF4444' }}> *</Text>}
         </Text>
-        <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.muted }]}>
+        <View style={[styles.inputWrap, { borderColor: error ? colors.destructive : colors.border, backgroundColor: colors.muted }]}>
           <TextInput
-            style={[styles.input, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
+            style={[styles.input, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular', paddingRight: secure ? 46 : 12 }]}
             value={form[fieldKey] as string}
             onChangeText={set(fieldKey)}
             keyboardType={keyboard}
             autoCapitalize="none"
-            secureTextEntry={secure}
+            secureTextEntry={secure && !visible}
             placeholder={placeholder ?? label}
             placeholderTextColor={colors.mutedForeground}
           />
+          {secure && (
+            <Pressable
+              onPress={onToggleVisibility}
+              accessibilityRole="button"
+              accessibilityLabel={visible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+              hitSlop={8}
+              style={styles.passwordToggle}
+            >
+              <Ionicons name={visible ? 'eye-off-outline' : 'eye-outline'} size={19} color={colors.mutedForeground} />
+            </Pressable>
+          )}
         </View>
+        {error ? <Text style={[styles.fieldError, { color: colors.destructive }]}>{error}</Text> : null}
       </View>
     );
   }
 
   const validateStep = () => {
+    const nextErrors: RegistrationErrors = {};
     if (step === 0) {
-      if (!form.name.trim()) { Alert.alert('Lỗi', 'Vui lòng nhập tên tổ chức'); return false; }
-      if (!form.email.trim()) { Alert.alert('Lỗi', 'Vui lòng nhập email'); return false; }
+      if (!form.name.trim()) nextErrors.name = 'Vui lòng nhập tên doanh nghiệp';
+      if (!form.taxCode.trim()) nextErrors.taxCode = 'Vui lòng nhập mã số thuế';
+      if (!form.industry.trim()) nextErrors.industry = 'Vui lòng nhập ngành nghề';
+      if (!form.address.trim()) nextErrors.address = 'Vui lòng nhập địa chỉ';
+      if (!form.phone.trim()) nextErrors.phone = 'Vui lòng nhập số điện thoại';
+      if (!form.email.trim()) nextErrors.email = 'Vui lòng nhập email';
+      else if (!EMAIL_PATTERN.test(form.email.trim())) nextErrors.email = 'Email không hợp lệ';
     }
     if (step === 1) {
-      if (!form.representative.trim()) { Alert.alert('Lỗi', 'Vui lòng nhập tên đại diện'); return false; }
+      if (!form.representative.trim()) nextErrors.representative = 'Vui lòng nhập họ và tên';
+      if (!form.representativePhone.trim()) nextErrors.representativePhone = 'Vui lòng nhập số điện thoại';
+      if (!form.representativeEmail.trim()) nextErrors.representativeEmail = 'Vui lòng nhập email';
+      else if (!EMAIL_PATTERN.test(form.representativeEmail.trim())) nextErrors.representativeEmail = 'Email không hợp lệ';
+      if (!form.password) nextErrors.password = 'Vui lòng tạo mật khẩu';
+      else if (form.password.length < 8) nextErrors.password = 'Mật khẩu phải có ít nhất 8 ký tự';
+      if (!form.confirmPassword) nextErrors.confirmPassword = 'Vui lòng xác nhận mật khẩu';
+      else if (form.password !== form.confirmPassword) nextErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
     }
-    if (step === 2) {
-      if (!form.password.trim() || form.password.length < 6) { Alert.alert('Lỗi', 'Mật khẩu ít nhất 6 ký tự'); return false; }
-      if (form.password !== form.confirmPassword) { Alert.alert('Lỗi', 'Mật khẩu không khớp'); return false; }
-    }
-    return true;
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const handleNext = async () => {
+  const handleNext = () => {
     if (!validateStep()) return;
-    if (step < 2) { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light); setStep(s => s + 1); return; }
-    setLoading(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    const {
-      password: _password,
-      confirmPassword: _confirmPassword,
-      ...profile
-    } = form;
-    await register(profile, form.password);
-    setLoading(false);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    router.replace('/(tabs)/account');
+    if (step < 1) {
+      setStep(current => current + 1);
+      return;
+    }
+    setSubmitted(true);
+  };
+
+  const confirmRegistration = async () => {
+    setLoading(true);
+    setSubmitError('');
+    const { password, confirmPassword: _confirmPassword, ...profile } = form;
+    try {
+      await register(profile, password);
+      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      router.replace('/(tabs)/account');
+    } catch {
+      setSubmitError('Chưa thể lưu hồ sơ. Vui lòng thử lại.');
+      setLoading(false);
+    }
   };
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={{ paddingBottom: 80 }} keyboardShouldPersistTaps="handled">
+    <KeyboardAwareScrollViewCompat
+      style={{ flex: 1, backgroundColor: colors.background }}
+      contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
+      keyboardShouldPersistTaps="handled"
+      bottomOffset={24}
+    >
       <View style={styles.brandHeader}>
         <Image
           source={require('@/assets/images/logo-skhcn.png')}
@@ -153,7 +206,7 @@ export default function RegisterScreen() {
       </View>
 
       {/* Step indicator */}
-      <LinearGradient colors={['#1A2E9E', '#2740BA']} style={styles.stepHeader}>
+      {!submitted && <LinearGradient colors={['#1A2E9E', '#2740BA']} style={styles.stepHeader}>
         <Text style={[styles.stepTitle, { fontFamily: 'BeVietnamPro_700Bold' }]}>Đăng ký tài khoản doanh nghiệp</Text>
         <Text style={[styles.stepDescription, { fontFamily: 'BeVietnamPro_400Regular' }]}>
           Cung cấp thông tin để tham gia hệ thống truy xuất
@@ -174,47 +227,84 @@ export default function RegisterScreen() {
             </React.Fragment>
           ))}
         </View>
-      </LinearGradient>
+      </LinearGradient>}
 
       <View style={{ padding: 16 }}>
+        {submitted ? (
+          <View style={styles.successWrap}>
+            <View style={[styles.successIcon, { backgroundColor: colors.success + '18' }]}>
+              <Ionicons name="checkmark-circle" size={42} color={colors.success} />
+            </View>
+            <Text style={[styles.successTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Hồ sơ đã được gửi!</Text>
+            <Text style={[styles.successDescription, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>
+              Sở KH&CN sẽ xét duyệt trong 3–5 ngày làm việc.
+            </Text>
+            <View style={[styles.reviewCard, { backgroundColor: colors.card, borderColor: colors.border, width: '100%' }]}>
+              <Text style={[styles.reviewTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Thông tin tài khoản đăng nhập</Text>
+              <View style={[styles.reviewRow, { borderBottomColor: colors.border }]}>
+                <Text style={[styles.reviewLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Tài khoản (Email)</Text>
+                <Text style={[styles.reviewValue, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{form.representativeEmail}</Text>
+              </View>
+              <View style={[styles.reviewRow, { borderBottomColor: colors.border }]}>
+                <Text style={[styles.reviewLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Mật khẩu</Text>
+                <Text style={[styles.reviewValue, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{passwordVisible ? form.password : '•'.repeat(form.password.length)}</Text>
+                <Pressable onPress={() => setPasswordVisible(value => !value)} accessibilityRole="button" accessibilityLabel={passwordVisible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}>
+                  <Ionicons name={passwordVisible ? 'eye-off-outline' : 'eye-outline'} size={19} color={colors.primary} />
+                </Pressable>
+              </View>
+            </View>
+            <View style={[styles.notice, { backgroundColor: colors.orangeLight, borderColor: colors.accent + '55' }]}>
+              <Ionicons name="information-circle-outline" size={17} color={colors.accent} />
+              <Text style={[styles.noticeText, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}>
+                Lưu lại thông tin tài khoản ngay bây giờ. Mật khẩu không được lưu trong hồ sơ.
+              </Text>
+            </View>
+            {submitError ? <Text style={[styles.fieldError, { color: colors.destructive }]}>{submitError}</Text> : null}
+            <Pressable
+              onPress={confirmRegistration}
+              disabled={loading}
+              style={({ pressed }) => [styles.confirmButton, { backgroundColor: colors.primary, opacity: pressed || loading ? 0.8 : 1 }]}
+            >
+              {loading ? <ActivityIndicator color="#FFF" size="small" /> : <>
+                <Ionicons name="log-in-outline" size={18} color="#FFF" />
+                <Text style={[styles.nextBtnText, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>Xác nhận &amp; Đăng nhập</Text>
+              </>}
+            </Pressable>
+          </View>
+        ) : (<>
         {step === 0 && (
           <>
-            <Field label="Tên tổ chức / doanh nghiệp" fieldKey="name" required />
-            <Field label="Mã số thuế" fieldKey="taxCode" placeholder="VD: 3600123456" keyboard="phone-pad" />
+            <Field label="Tên doanh nghiệp / tổ chức" fieldKey="name" required />
+            <Field label="Mã số thuế" fieldKey="taxCode" placeholder="VD: 3602123456" required />
 
             {/* Loại hình — dropdown matching portal <select> */}
             <ModalPicker
-              label="Loại hình tổ chức"
+              label="Loại hình *"
               value={form.type}
               options={ORG_TYPE_OPTIONS}
               onChange={set('type')}
             />
 
-            {/* Ngành nghề — dropdown matching portal sector <select> */}
-            <ModalPicker
-              label="Ngành nghề"
-              value={form.industry}
-              options={SECTOR_OPTIONS}
-              onChange={set('industry')}
-            />
+            <Field label="Ngành nghề" fieldKey="industry" placeholder="VD: Rau củ quả" required />
 
-            <Field label="Địa chỉ" fieldKey="address" />
+            <Field label="Địa chỉ" fieldKey="address" required />
 
             {/* Huyện/Thành phố — dropdown matching portal district <select> */}
             <ModalPicker
-              label="Huyện / Thành phố"
+              label="Huyện / Thị xã *"
               value={form.district}
               options={DISTRICT_OPTIONS}
-              placeholder="Chọn huyện / thành phố..."
+              placeholder="Chọn huyện / thị xã..."
               onChange={set('district')}
             />
 
-            <Field label="Số điện thoại" fieldKey="phone" keyboard="phone-pad" />
-            <Field label="Email đăng nhập" fieldKey="email" keyboard="email-address" placeholder="email@doanhnghiep.vn" required />
+            <Field label="Số điện thoại" fieldKey="phone" keyboard="phone-pad" required />
+            <Field label="Email" fieldKey="email" keyboard="email-address" placeholder="email@gmail.com" required />
+            <Field label="Mã GCP" fieldKey="gcp" placeholder="VD: 8934673" keyboard="phone-pad" />
             <View style={[styles.uploadCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
               <Text style={[styles.uploadTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Hồ sơ pháp lý</Text>
               <Text style={[styles.uploadDescription, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Tải lên ảnh hoặc PDF để hồ sơ được xác minh nhanh hơn.</Text>
-              <UploadZone fieldKey="businessLicense" label="Giấy phép kinh doanh / Hợp tác xã" hint="PDF, JPG hoặc PNG" />
+              <UploadZone fieldKey="businessLicense" label="Giấy phép kinh doanh (bản scan)" hint="PDF, JPG hoặc PNG" />
               <UploadZone fieldKey="authorizationDocument" label="Giấy ủy quyền (nếu có)" hint="PDF, JPG hoặc PNG" />
               <View style={[styles.optionalBox, { borderColor: colors.border, backgroundColor: colors.muted }]}>
                 <Text style={[styles.uploadTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Giấy chứng nhận (nếu có)</Text>
@@ -233,63 +323,41 @@ export default function RegisterScreen() {
         )}
         {step === 1 && (
           <>
-            <Field label="Họ và tên đại diện" fieldKey="representative" required />
-            <Field label="Điện thoại đại diện" fieldKey="representativePhone" keyboard="phone-pad" />
-            <Field label="Email đại diện" fieldKey="representativeEmail" keyboard="email-address" />
+            <Field label="Họ và tên người đại diện" fieldKey="representative" required />
+            <Field label="Số điện thoại liên hệ" fieldKey="representativePhone" keyboard="phone-pad" required />
+            <Field label="Email đăng nhập" fieldKey="representativeEmail" keyboard="email-address" required />
             <Field label="CMND / CCCD" fieldKey="cccd" keyboard="phone-pad" />
-            <Field label="Mã GCP (tùy chọn)" fieldKey="gcp" placeholder="VD: 8934673" keyboard="phone-pad" />
-          </>
-        )}
-        {step === 2 && (
-          <>
-            <View style={[styles.reviewCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.reviewTitle, { color: colors.foreground, fontFamily: 'BeVietnamPro_700Bold' }]}>Xác nhận thông tin</Text>
-              {[
-                { label: 'Tổ chức', value: form.name },
-                { label: 'Loại hình', value: form.type },
-                { label: 'Ngành nghề', value: form.industry },
-                { label: 'Huyện / TP', value: form.district },
-                { label: 'Email', value: form.email },
-                { label: 'Đại diện', value: form.representative },
-              ].map(row => (
-                <View key={row.label} style={[styles.reviewRow, { borderBottomColor: colors.border }]}>
-                  <Text style={[styles.reviewLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>{row.label}</Text>
-                  <Text style={[styles.reviewValue, { color: colors.foreground, fontFamily: 'BeVietnamPro_500Medium' }]}>{row.value}</Text>
-                </View>
-              ))}
-            </View>
             <View style={{ gap: 12, marginTop: 8 }}>
-              <Field label="Mật khẩu" fieldKey="password" secure placeholder="Ít nhất 6 ký tự" required />
+              <Field label="Mật khẩu" fieldKey="password" secure placeholder="Ít nhất 8 ký tự" required />
               <Field label="Xác nhận mật khẩu" fieldKey="confirmPassword" secure placeholder="Nhập lại mật khẩu" required />
+              <Text style={[styles.passwordHint, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>
+                Email và mật khẩu này sẽ dùng để đăng nhập sau khi hồ sơ được phê duyệt.
+              </Text>
+            </View>
+            <View style={[styles.uploadCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+              <UploadZone fieldKey="authorizationDocument" label="Giấy ủy quyền (nếu có)" hint="PDF, JPG hoặc PNG" />
             </View>
           </>
         )}
 
-        <View style={styles.navRow}>
-          {step > 0 && (
-            <Pressable onPress={() => setStep(s => s - 1)} style={[styles.prevBtn, { borderColor: colors.border }]}>
-              <Ionicons name="chevron-back" size={18} color={colors.primary} />
-              <Text style={[styles.prevBtnText, { color: colors.primary, fontFamily: 'BeVietnamPro_500Medium' }]}>Quay lại</Text>
-            </Pressable>
-          )}
+        {!submitted && <View style={styles.navRow}>
+          <Pressable onPress={() => step > 0 ? setStep(current => current - 1) : router.back()} style={[styles.prevBtn, { borderColor: colors.border }]}>
+            <Ionicons name="chevron-back" size={18} color={colors.primary} />
+            <Text style={[styles.prevBtnText, { color: colors.primary, fontFamily: 'BeVietnamPro_500Medium' }]}>{step > 0 ? 'Quay lại' : 'Đăng nhập'}</Text>
+          </Pressable>
           <Pressable
             onPress={handleNext}
-            disabled={loading}
-            style={({ pressed }) => [styles.nextBtn, { backgroundColor: colors.primary, opacity: pressed || loading ? 0.8 : 1 }]}
+            style={({ pressed }) => [styles.nextBtn, { backgroundColor: colors.primary, opacity: pressed ? 0.8 : 1 }]}
           >
-            {loading
-              ? <ActivityIndicator color="#FFF" size="small" />
-              : <>
-                  <Text style={[styles.nextBtnText, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>
-                    {step < 2 ? 'Tiếp theo' : 'Hoàn tất đăng ký'}
-                  </Text>
-                  {step < 2 && <Ionicons name="chevron-forward" size={18} color="#FFF" />}
-                </>
-            }
+            <Text style={[styles.nextBtnText, { fontFamily: 'BeVietnamPro_600SemiBold' }]}>
+              {step === 1 ? 'Hoàn tất đăng ký' : 'Tiếp tục'}
+            </Text>
+            <Ionicons name="chevron-forward" size={18} color="#FFF" />
           </Pressable>
-        </View>
+        </View>}
+        </>)}
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollViewCompat>
   );
 }
 
@@ -308,7 +376,10 @@ const styles = StyleSheet.create({
   stepLine: { flex: 1, height: 1, marginHorizontal: 6, marginBottom: 14 },
   fieldLabel: { fontSize: 13, marginBottom: 6 },
   inputWrap: { borderRadius: 10, borderWidth: 1 },
-  input: { height: 44, paddingHorizontal: 12, fontSize: 14 },
+  input: { flex: 1, height: 44, paddingHorizontal: 12, fontSize: 14 },
+  passwordToggle: { width: 42, height: 42, alignItems: 'center', justifyContent: 'center' },
+  fieldError: { fontSize: 12, marginTop: 5 },
+  passwordHint: { fontSize: 11, lineHeight: 17, marginTop: -6 },
   uploadCard: { borderRadius: 14, borderWidth: 1, padding: 14, marginTop: 4 },
   optionalBox: { borderRadius: 12, borderWidth: 1, padding: 12, marginBottom: 12 },
   uploadTitle: { fontSize: 15 },
@@ -322,6 +393,13 @@ const styles = StyleSheet.create({
   reviewRow: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10, borderBottomWidth: 1 },
   reviewLabel: { fontSize: 13 },
   reviewValue: { fontSize: 13, flex: 1, textAlign: 'right' },
+  successWrap: { alignItems: 'center', paddingTop: 16, paddingBottom: 12 },
+  successIcon: { width: 72, height: 72, borderRadius: 36, alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
+  successTitle: { fontSize: 21, textAlign: 'center' },
+  successDescription: { fontSize: 13, textAlign: 'center', lineHeight: 19, marginTop: 6, marginBottom: 20 },
+  notice: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, padding: 12, borderWidth: 1, borderRadius: 10, marginTop: 2, marginBottom: 18 },
+  noticeText: { flex: 1, fontSize: 11, lineHeight: 17 },
+  confirmButton: { width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 7, paddingVertical: 14, borderRadius: 10 },
   navRow: { flexDirection: 'row', gap: 10, marginTop: 24 },
   prevBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 16, paddingVertical: 13, borderRadius: 10, borderWidth: 1 },
   prevBtnText: { fontSize: 14 },

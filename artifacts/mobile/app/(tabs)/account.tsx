@@ -101,11 +101,12 @@ function LoginView() {
               <Ionicons name="lock-closed-outline" size={18} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
               <TextInput
                 style={[styles.inputField, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
-                placeholder="••••••••"
+                placeholder="Nhập mật khẩu"
                 placeholderTextColor={colors.mutedForeground}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPwd}
+                autoComplete="current-password"
               />
               <Pressable onPress={() => setShowPwd(v => !v)} style={{ padding: 12 }}>
                 <Ionicons name={showPwd ? 'eye-off-outline' : 'eye-outline'} size={18} color={colors.mutedForeground} />
