@@ -279,6 +279,13 @@ export default function LandingPage() {
                   Mã GTIN &amp; Số lô đóng gói
                 </label>
               </div>
+
+              <p
+                data-testid="text-home-intro"
+                className="mx-auto mt-4 max-w-3xl px-2 text-center text-white/90 sm:mt-5 sm:text-sm md:text-base text-[15px]"
+              >
+                Đồng Nai khẳng định chất lượng sản phẩm, minh bạch nguồn gốc và nâng cao uy tín thương hiệu địa phương.Góp phần lan tỏa giá trị sản phẩm, kết nối niềm tin người tiêu dùng và thúc đẩy phát triển kinh tế bền vững.
+              </p>
             </form>
           </div>
         </div>
