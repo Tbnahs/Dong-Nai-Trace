@@ -199,7 +199,7 @@ export default function LandingPage() {
 
           <div className="relative z-10 mx-auto flex max-w-[850px] flex-col items-center">
             <h1 className="text-[clamp(1.55rem,4.4vw,3.25rem)] font-extrabold uppercase leading-[1.12] tracking-tight text-white">
-              <span className="block">TRUY XUẤT NGUỒN GỐC</span>
+              <span className="block text-[36px]">TRUY XUẤT NGUỒN GỐC THÀNH PHỐ ĐỒNG NAI</span>
               <span className="mt-1 block">SẢN PHẨM, HÀNG HÓA</span>
               <span className="mt-3 block text-base font-bold tracking-[0.18em] text-[#f4a261] sm:text-lg md:mt-4 md:text-xl">
                 THÀNH PHỐ ĐỒNG NAI

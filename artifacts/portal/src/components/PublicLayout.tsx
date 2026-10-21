@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "../context/AuthContext";
 import { MapPin, Phone, Mail, ChevronRight, User, Package, Bell, LogOut, ChevronDown, Menu, X, Globe, Check } from "lucide-react";
+import headerArtwork from "@assets/banner_san_bay_long_thanh_no_text_1792564692783.png";
 const NAV_LINKS = [
   { label: "TRANG CHỦ",              href: "/" },
   { label: "DANH MỤC",               href: "/tra-cuu" },
@@ -56,22 +57,25 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     <div className="min-h-screen bg-white text-slate-800 font-sans flex flex-col overflow-x-hidden">
       {/* HEADER */}
       <header className="w-full flex flex-col sticky top-0 bg-white shadow-sm" style={{ zIndex: 1001 }}>
-        {/* Brand band. Keep the image slot empty until the header artwork arrives. */}
-        <div className="relative overflow-hidden bg-gradient-to-r from-[#1b5295] via-[#12427f] to-[#092f61]">
+        {/* Brand band */}
+        <div className="relative isolate overflow-hidden bg-[#0b3e77]">
+          <img
+            src={headerArtwork}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
+          />
           <div
             aria-hidden="true"
-            data-asset-slot="header-artwork"
-            className="pointer-events-none absolute inset-0"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#082f5a]/55 via-[#0a3e70]/35 to-[#062c52]/30"
           />
-          <div className="relative z-10 mx-auto flex min-h-[84px] max-w-[1280px] items-center justify-between gap-4 px-4 py-3 md:min-h-[94px] md:px-6 lg:px-10">
+          <div className="relative z-10 mx-auto flex min-h-[108px] max-w-[1280px] items-center justify-between gap-4 px-4 py-3 md:min-h-[122px] md:px-6 lg:px-10">
             <Link href="/" className="flex min-w-0 items-center gap-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-0.5 shadow-sm md:h-12 md:w-12">
                 <img src={logoUrl} alt="Biểu trưng Đồng Nai" className="h-full w-full rounded-full object-cover" />
               </span>
               <span className="flex min-w-0 flex-col">
-                <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">
-                  ĐỒNG NAI TRACE
-                </span>
+                <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">TRUY XUẤT ĐỒNG NAI</span>
                 <span className="mt-1 block max-w-[220px] truncate text-[8px] font-medium leading-tight text-white/75 sm:max-w-none sm:text-[10px] md:text-xs">
                   HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM
                 </span>
