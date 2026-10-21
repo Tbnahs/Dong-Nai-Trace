@@ -1,3 +1,4 @@
 - [Hồ sơ sản phẩm](product-profile-management.md) — luôn là màn hình quản lý danh sách; chỉ cải thiện giao diện, không chuyển thành hồ sơ tĩnh.
 - [Mobile–portal parity](mobile-portal-parity.md) — các luồng doanh nghiệp trên mobile phải giữ cùng nội dung, trạng thái và hành vi cốt lõi với portal.
 - [Expo preview routing](expo-preview-routing.md) — khi đổi giữa nhiều mobile Expo, xác minh bằng workflow port/HTML vì preview iframe có thể giữ nhầm phiên.
+- [Cài đặt phụ thuộc](dependency-installation.md) — khi firewall chặn gói bắc cầu đã khóa, dùng phiên bản tương thích mới hơn; không tắt hoặc né firewall.

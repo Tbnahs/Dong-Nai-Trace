@@ -75,6 +75,11 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 overrides:
+  # shell-quote@1.10.0 is blocked by Replit's package firewall; keep the
+  # compatible API on the latest available safe release.
+  shell-quote: 1.12.0
+  # Keep Express's proxy dependency on its latest compatible release.
+  proxy-addr: 2.0.8
   # replit uses linux-x64 only, we can exclude all other platforms
   "esbuild>@esbuild/darwin-arm64": "-"
   "esbuild>@esbuild/darwin-x64": "-"

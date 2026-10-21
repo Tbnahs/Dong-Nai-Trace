@@ -22,20 +22,21 @@ Dependencies are managed with **pnpm** (workspace monorepo).
 pnpm install
 ```
 
-The requested Replit setup runs both Khánh Hòa Trace apps:
-
-```bash
-pnpm --filter @workspace/khanh-hoa-trace run dev
-pnpm --filter @workspace/khanh-hoa-trace-mobile run dev
-```
-
-Use the `artifacts/khanh-hoa-trace: web` workflow for the portal and the `artifacts/khanh-hoa-trace-mobile: expo` workflow for the Expo companion app. The portal workflow uses `/khanh-hoa-trace/`; the Expo workflow is available through Expo Go and its Replit preview URL.
-
-The original Đồng Nai Trace artifacts remain available independently:
+The Replit Run button starts the Đồng Nai Trace portal, mobile app, and API server:
 
 ```bash
 pnpm --filter @workspace/portal run dev
 pnpm --filter @workspace/mobile run dev
+pnpm --filter @workspace/api-server run dev
+```
+
+Use the `artifacts/portal: web` workflow for the portal at `/portal/` and the `artifacts/mobile: expo` workflow for the Expo companion app at `/mobile/`. The API workflow serves `/api`, including the ward map data used by mobile.
+
+The independent Khánh Hòa Trace artifacts remain available separately:
+
+```bash
+pnpm --filter @workspace/khanh-hoa-trace run dev
+pnpm --filter @workspace/khanh-hoa-trace-mobile run dev
 ```
 
 The API server can be started separately when backend integration is needed:
@@ -47,7 +48,7 @@ pnpm --filter @workspace/api-server run dev
 ## Stack
 
 - **Frontend:** React + Vite + Tailwind CSS v4
-- **Backend:** Node.js + Hono, bundled with esbuild
+- **Backend:** Node.js + Express, bundled with esbuild
 - **Mobile:** Expo (React Native)
 - **Shared types/libs:** `lib/` packages in the pnpm workspace
 
