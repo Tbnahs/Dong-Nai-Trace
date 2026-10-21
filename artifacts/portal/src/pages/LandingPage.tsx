@@ -1,7 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import hero3d from "../assets/hero-3d.png";
-import heroGuide from "../assets/hero-guide.png";
 import MapSection from "../components/MapSection";
 import { Link, useLocation } from "wouter";
 import { lookupByTraceCode, lookupByGtin, lookupByGtinAndLot } from "../lib/productLookup";
@@ -190,129 +188,100 @@ export default function LandingPage() {
   return (
     <>
       {/* HERO SECTION */}
-      <section className="py-8 md:py-12 lg:py-16">
-        <div className="max-w-[1280px] mx-auto w-full px-4 md:px-6 lg:px-10 flex flex-col lg:flex-row items-center gap-8 md:gap-10">
-          {/* Cột trái */}
-          <div className="lg:w-[48%] flex flex-col items-start space-y-7">
-            <h1 className="w-full text-[clamp(1.15rem,5.5vw,2.75rem)] font-extrabold uppercase leading-[1.15]">
-              <span className="block whitespace-nowrap text-[#2740BA]">
-                TRUY XUẤT NGUỒN GỐC
-              </span>
-              <span className="mt-1 block whitespace-nowrap text-[#2740BA]">
-                SẢN PHẨM, HÀNG HÓA
-              </span>
-              <span className="mt-1 block whitespace-nowrap text-[#2740BA]">
+      <section className="bg-[#f5f7fa] px-4 py-6 sm:py-8 md:px-6 lg:px-10">
+        <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-2xl bg-gradient-to-br from-[#174f91] via-[#103e78] to-[#082d5d] px-5 py-10 text-center shadow-[0_18px_45px_rgba(12,48,98,0.18)] sm:rounded-[24px] sm:px-10 sm:py-12 md:px-16 md:py-14 lg:px-24 lg:py-16">
+          {/* Reserved for the trace emblem SVG the user will provide. */}
+          <div
+            aria-hidden="true"
+            data-asset-slot="trace-emblem"
+            className="pointer-events-none absolute inset-0"
+          />
+
+          <div className="relative z-10 mx-auto flex max-w-[850px] flex-col items-center">
+            <h1 className="text-[clamp(1.55rem,4.4vw,3.25rem)] font-extrabold uppercase leading-[1.12] tracking-tight text-white">
+              <span className="block">TRUY XUẤT NGUỒN GỐC</span>
+              <span className="mt-1 block">SẢN PHẨM, HÀNG HÓA</span>
+              <span className="mt-3 block text-base font-bold tracking-[0.18em] text-[#f4a261] sm:text-lg md:mt-4 md:text-xl">
                 THÀNH PHỐ ĐỒNG NAI
               </span>
             </h1>
 
-            <p className="text-base sm:text-xl text-gray-600 leading-relaxed max-w-2xl">
+            <p className="mt-4 max-w-[720px] text-sm leading-6 text-white/85 sm:mt-5 sm:text-base sm:leading-7 md:text-lg">
               Nhờ ứng dụng công nghệ tiên tiến, hệ thống cho phép định danh,
               truy vết nguồn gốc sản phẩm hàng hóa tại Thành phố Đồng Nai.
             </p>
 
-            <form onSubmit={handleSearch} className="w-full">
-              <div
-                className={
-                  searchType === "trace"
-                    ? "flex flex-row items-stretch gap-3 sm:gap-4"
-                    : "flex flex-col lg:flex-row gap-3 sm:gap-4"
-                }
-              >
+            <form onSubmit={handleSearch} className="mt-7 w-full max-w-[760px] sm:mt-8">
+              <div className="flex flex-col gap-2 rounded-xl bg-white p-1.5 shadow-lg sm:flex-row sm:items-stretch sm:rounded-2xl sm:p-2">
                 {searchType === "trace" ? (
-                  <>
-                    <div className="flex-1 min-h-[56px] sm:h-[62px] bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-md flex items-center px-4 sm:px-6">
-                      <Barcode className="w-5 h-5 sm:w-6 sm:h-6 text-[#2740BA] shrink-0" />
-
-                      <input
-                        type="text"
-                        value={traceCode}
-                        onChange={(e) => setTraceCode(e.target.value)}
-                         placeholder="Quét hoặc nhập mã truy xuất hoặc GTIN"
-                        className="ml-3 sm:ml-4 w-full bg-transparent outline-none text-base sm:text-lg text-gray-700 placeholder:text-gray-400"
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="h-[56px] sm:h-[62px] shrink-0 px-4 sm:px-10 rounded-xl sm:rounded-2xl bg-[#e8650a] text-base sm:text-lg font-semibold text-white transition"
-                    >
-                      Tra cứu
-                    </button>
-                  </>
+                  <div className="flex min-h-12 min-w-0 flex-1 items-center rounded-lg px-3 sm:px-4">
+                    <Barcode className="h-5 w-5 shrink-0 text-[#2740BA]" />
+                    <input
+                      type="text"
+                      value={traceCode}
+                      onChange={(e) => setTraceCode(e.target.value)}
+                      placeholder="Quét hoặc nhập mã truy xuất hoặc GTIN"
+                      aria-label="Mã truy xuất sản phẩm"
+                      className="ml-3 min-w-0 flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400 sm:text-base"
+                    />
+                  </div>
                 ) : (
                   <>
-                    <div className="flex-1 min-h-[56px] sm:h-[62px] bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-md flex items-center px-4 sm:px-6">
-                      <Barcode className="w-5 h-5 sm:w-6 sm:h-6 text-[#2740BA] shrink-0" />
-
+                    <div className="flex min-h-12 min-w-0 flex-1 items-center rounded-lg px-3 sm:px-4">
+                      <Barcode className="h-5 w-5 shrink-0 text-[#2740BA]" />
                       <input
                         type="text"
                         value={gtin}
                         onChange={(e) => setGtin(e.target.value)}
                         placeholder="Nhập mã GTIN"
-                        className="ml-3 sm:ml-4 w-full bg-transparent outline-none text-base sm:text-lg text-gray-700 placeholder:text-gray-400"
+                        aria-label="Mã GTIN"
+                        className="ml-3 min-w-0 flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400 sm:text-base"
                       />
                     </div>
-
-                    <div className="flex-1 min-h-[56px] sm:h-[62px] bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-md flex items-center px-4 sm:px-6">
-                      <Package className="w-5 h-5 sm:w-6 sm:h-6 text-[#2740BA] shrink-0" />
-
+                    <div className="flex min-h-12 min-w-0 flex-1 items-center rounded-lg border-t border-slate-100 px-3 sm:border-l sm:border-t-0 sm:px-4">
+                      <Package className="h-5 w-5 shrink-0 text-[#2740BA]" />
                       <input
                         type="text"
                         value={lot}
                         onChange={(e) => setLot(e.target.value)}
                         placeholder="Nhập số lô / mẻ"
-                        className="ml-3 sm:ml-4 w-full bg-transparent outline-none text-base sm:text-lg text-gray-700 placeholder:text-gray-400"
+                        aria-label="Số lô hoặc mẻ"
+                        className="ml-3 min-w-0 flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400 sm:text-base"
                       />
                     </div>
-
-                    <button
-                      type="submit"
-                      className="min-h-[48px] sm:h-[62px] w-fit lg:w-auto px-5 sm:px-10 rounded-xl sm:rounded-2xl hover:bg-[#1d3396] text-white text-base sm:text-lg font-semibold transition bg-[#e8650a]"
-                    >
-                      Tra cứu
-                    </button>
                   </>
                 )}
+                <button
+                  type="submit"
+                  className="min-h-12 shrink-0 rounded-lg bg-[#E8650A] px-7 text-sm font-bold text-white transition-colors hover:bg-[#d85b08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8650A] focus-visible:ring-offset-2 sm:px-8 sm:text-base"
+                >
+                  Tra cứu
+                </button>
               </div>
 
-              <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-8 gap-y-3 mt-4 sm:mt-6 pl-0 sm:pl-2">
-                <label className="flex items-center gap-2 cursor-pointer text-gray-700">
+              <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-3 sm:mt-5 sm:gap-x-8">
+                <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-white/90 sm:text-sm">
                   <input
                     type="radio"
                     name="searchType"
                     checked={searchType === "trace"}
                     onChange={() => setSearchType("trace")}
-                    className="w-5 h-5 accent-[#2740BA] shrink-0"
+                    className="h-4 w-4 shrink-0 accent-[#E8650A]"
                   />
                   Mã truy xuất sản phẩm
                 </label>
-
-                <label className="flex items-center gap-2 cursor-pointer text-gray-700">
+                <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-white/90 sm:text-sm">
                   <input
                     type="radio"
                     name="searchType"
                     checked={searchType === "gtin"}
                     onChange={() => setSearchType("gtin")}
-                    className="w-5 h-5 accent-[#2740BA] shrink-0"
+                    className="h-4 w-4 shrink-0 accent-[#E8650A]"
                   />
                   Mã GTIN &amp; Số lô đóng gói
                 </label>
               </div>
             </form>
-          </div>
-
-          {/* Cột phải */}
-          <div className="lg:w-[52%] flex justify-center">
-            <img
-              src={heroGuide}
-              alt="Đồng Nai Trace"
-              loading="lazy"
-              className="w-full max-h-[420px] object-contain
-                         hover:scale-[1.03]
-                         transition-transform duration-700
-                         animate-[float_6s_ease-in-out_infinite]"
-            />
           </div>
         </div>
       </section>

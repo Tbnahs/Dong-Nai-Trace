@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "../context/AuthContext";
-import { MapPin, Phone, Mail, ChevronRight, User, Package, Bell, LogOut, ChevronDown, Menu, X, Globe, Check,} from "lucide-react";
+import { MapPin, Phone, Mail, ChevronRight, User, Package, Bell, LogOut, ChevronDown, Menu, X, Globe, Check } from "lucide-react";
 const NAV_LINKS = [
   { label: "TRANG CHỦ",              href: "/" },
   { label: "DANH MỤC",               href: "/tra-cuu" },
@@ -56,38 +56,49 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
     <div className="min-h-screen bg-white text-slate-800 font-sans flex flex-col overflow-x-hidden">
       {/* HEADER */}
       <header className="w-full flex flex-col sticky top-0 bg-white shadow-sm" style={{ zIndex: 1001 }}>
-        {/* Tầng 1 */}
-        <div className="flex justify-between items-center py-3 px-4 md:px-6 lg:px-10 border-b border-gray-100">
-          <Link href="/" className="flex items-center gap-3 cursor-pointer">
-            <img src={logoUrl} alt="Logo" className="h-12 w-auto object-contain" />
-            <div className="flex flex-col">
-              <span className="font-bold text-[#2740BA] text-lg leading-tight">
-                ĐỒNG NAI TRACE
+        {/* Brand band. Keep the image slot empty until the header artwork arrives. */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-[#1b5295] via-[#12427f] to-[#092f61]">
+          <div
+            aria-hidden="true"
+            data-asset-slot="header-artwork"
+            className="pointer-events-none absolute inset-0"
+          />
+          <div className="relative z-10 mx-auto flex min-h-[84px] max-w-[1280px] items-center justify-between gap-4 px-4 py-3 md:min-h-[94px] md:px-6 lg:px-10">
+            <Link href="/" className="flex min-w-0 items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-0.5 shadow-sm md:h-12 md:w-12">
+                <img src={logoUrl} alt="Biểu trưng Đồng Nai" className="h-full w-full rounded-full object-cover" />
               </span>
-              <span className="text-[10px] sm:text-xs text-gray-500 font-medium">
-                HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM
+              <span className="flex min-w-0 flex-col">
+                <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">
+                  ĐỒNG NAI TRACE
+                </span>
+                <span className="mt-1 block max-w-[220px] truncate text-[8px] font-medium leading-tight text-white/75 sm:max-w-none sm:text-[10px] md:text-xs">
+                  HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM
+                </span>
               </span>
-            </div>
-          </Link>
+            </Link>
 
-          {/* Hamburger — mobile only */}
-          <button
-            className="lg:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
-            onClick={() => setMobileMenuOpen((o) => !o)}
-            aria-label="Menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6 text-[#2740BA]" /> : <Menu className="w-6 h-6 text-[#2740BA]" />}
-          </button>
+            {/* Mobile menu button */}
+            <button
+              className="rounded-lg p-2 text-white transition-colors hover:bg-white/10 lg:hidden"
+              onClick={() => setMobileMenuOpen((o) => !o)}
+              aria-label={mobileMenuOpen ? "Đóng menu" : "Mở menu"}
+              aria-expanded={mobileMenuOpen}
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
 
-          <div className="hidden lg:flex items-center gap-6">
+            <div className="hidden items-center gap-5 lg:flex">
             <div className="relative" ref={languageRef}>
               <button
                 onClick={() => setLanguageOpen(!languageOpen)}
-                className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-slate-100 transition"
+                className="flex items-center gap-2 rounded-xl px-3 py-2 text-white transition hover:bg-white/10"
+                aria-label="Chọn ngôn ngữ"
+                aria-expanded={languageOpen}
               >
-                <Globe className="w-5 h-5 text-[#2740BA]" />
+                <Globe className="h-5 w-5" />
                 <ChevronDown
-                  className={`w-4 h-4 transition ${
+                  className={`h-4 w-4 transition ${
                     languageOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -106,7 +117,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                         // Nếu dùng react-i18next
                         // i18n.changeLanguage(lang.code);
                       }}
-                      className={`w-full flex items-center justify-between px-4 py-3 hover:bg-blue-50 ${
+                      className={`flex w-full items-center justify-between px-4 py-3 hover:bg-blue-50 ${
                         language === lang.code
                           ? "bg-blue-50 text-[#2740BA] font-semibold"
                           : ""
@@ -121,14 +132,15 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                   ))}
                 </div>
               )}
-            </div>{isLoggedIn && user ? (
+            </div>
+            {isLoggedIn && user ? (
               /* ── Avatar dropdown (logged in) ── */
               (<>
                 <Link
                   href="/thong-bao"
                   aria-label="Thông báo"
                   title="Thông báo"
-                  className="relative flex items-center justify-center p-2.5 rounded-xl text-[#2740BA] hover:bg-blue-50 transition-colors"
+                  className="relative flex items-center justify-center rounded-xl p-2.5 text-white transition-colors hover:bg-white/10"
                 >
                   <Bell className="w-5 h-5" />
                   <span className="absolute right-1.5 top-1.5 min-w-4 h-4 px-1 rounded-full bg-[#E8650A] text-white text-[9px] font-bold leading-4 text-center border-2 border-white">
@@ -138,16 +150,16 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setAvatarOpen((o) => !o)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-50 transition-colors"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 transition-colors hover:bg-white/10"
                   >
                     <div className="w-9 h-9 rounded-full bg-[#2740BA] text-white flex items-center justify-center font-bold text-sm shrink-0">
                       {user.initials}
                     </div>
                     <div className="text-left hidden xl:block">
-                      <p className="text-sm font-bold text-slate-800 leading-tight">{user.name}</p>
-                      <p className="text-xs text-gray-400">{user.type}</p>
+                      <p className="text-sm font-bold leading-tight text-white">{user.name}</p>
+                      <p className="text-xs text-white/70">{user.type}</p>
                     </div>
-                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${avatarOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown className={`h-4 w-4 text-white/70 transition-transform ${avatarOpen ? "rotate-180" : ""}`} />
                   </button>
                   {avatarOpen && (
                     <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-gray-100 rounded-2xl shadow-xl py-2 overflow-hidden" style={{ zIndex: 1002 }}>
@@ -186,48 +198,51 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <div className="text-right">
                   <Link
                     href="/dang-ky"
-                    className="font-bold text-[#2740BA] text-sm hover:underline block"
+                    className="block text-sm font-bold text-white hover:underline"
                   >
                     Đăng ký tài khoản doanh nghiệp
                   </Link>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-white/70">
                     Quản lý thông tin sản phẩm của doanh nghiệp
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Link
-                    href="/dang-ky"
-                    className="px-5 py-2 border border-[#2740BA] text-[#2740BA] font-semibold text-sm rounded-md hover:bg-slate-50 transition-colors"
-                  >
-                    Đăng ký
-                  </Link>
-                  <Link
                     href="/dang-nhap"
-                    className="px-5 py-2 bg-[#2740BA] text-white font-semibold text-sm rounded-md hover:bg-[#1f339e] transition-colors"
+                    className="rounded-md border border-white/70 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
                   >
                     Đăng nhập
+                  </Link>
+                  <Link
+                    href="/dang-ky"
+                    className="rounded-md bg-white px-5 py-2 text-sm font-semibold text-[#2740BA] transition-colors hover:bg-blue-50"
+                  >
+                    Đăng ký
                   </Link>
                 </div>
               </>)
             )}
           </div>
+          </div>
         </div>
 
-        {/* Tầng 2 – nav (desktop only) */}
-        <nav className="hidden lg:block bg-[#2740BA] text-white px-4 md:px-6 lg:px-10">
-          <ul className="flex items-center gap-8 text-sm font-medium uppercase">
+        {/* Desktop navigation */}
+        <nav className="hidden border-b border-slate-200 bg-white lg:block">
+          <ul className="mx-auto flex max-w-[1280px] items-center gap-1 px-4 text-[13px] font-semibold md:px-6 lg:px-10">
             {NAV_LINKS.map(({ label, href }) => {
               const isActive = location === href || (href !== "/" && location.startsWith(href));
               return (
-                <li
-                  key={label}
-                  className={`py-3 border-b-2 cursor-pointer transition-colors ${
-                    isActive
-                      ? "border-white text-white"
-                      : "border-transparent text-white/80 hover:text-white"
-                  }`}
-                >
-                  <Link href={href}>{label}</Link>
+                <li key={label} className="py-1">
+                  <Link
+                    href={href}
+                    className={`block rounded-md px-4 py-3 transition-colors ${
+                      isActive
+                        ? "bg-[#eef2ff] text-[#2740BA]"
+                        : "text-slate-700 hover:bg-slate-50 hover:text-[#2740BA]"
+                    }`}
+                  >
+                    {label}
+                  </Link>
                 </li>
               );
             })}
