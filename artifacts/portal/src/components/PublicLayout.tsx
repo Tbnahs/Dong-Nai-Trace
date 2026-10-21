@@ -58,7 +58,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       {/* HEADER */}
       <header className="w-full flex flex-col sticky top-0 bg-white shadow-sm" style={{ zIndex: 1001 }}>
         {/* Brand band */}
-        <div className="relative isolate overflow-hidden bg-[#0b3e77]">
+        <div className="relative isolate overflow-visible bg-[#0b3e77]">
           <img
             src={headerArtwork}
             alt=""

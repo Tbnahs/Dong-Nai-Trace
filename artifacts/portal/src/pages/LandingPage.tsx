@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import MapSection from "../components/MapSection";
 import { Link, useLocation } from "wouter";
+import heroBackground from "@assets/Nền_xanh_máy_bay_tối_giản_1792564728039.png";
 import { lookupByTraceCode, lookupByGtin, lookupByGtinAndLot } from "../lib/productLookup";
 import {
   CheckCircle2,
@@ -189,27 +190,23 @@ export default function LandingPage() {
     <>
       {/* HERO SECTION */}
       <section className="bg-[#f5f7fa] px-4 py-6 sm:py-8 md:px-6 lg:px-10">
-        <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-2xl bg-gradient-to-br from-[#174f91] via-[#103e78] to-[#082d5d] px-5 py-10 text-center shadow-[0_18px_45px_rgba(12,48,98,0.18)] sm:rounded-[24px] sm:px-10 sm:py-12 md:px-16 md:py-14 lg:px-24 lg:py-16">
-          {/* Reserved for the trace emblem SVG the user will provide. */}
+        <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-2xl bg-[#0b3e77] px-5 py-10 text-center shadow-[0_18px_45px_rgba(12,48,98,0.18)] sm:rounded-[24px] sm:px-10 sm:py-12 md:px-16 md:py-14 lg:px-24 lg:py-16">
           <div
             aria-hidden="true"
-            data-asset-slot="trace-emblem"
             className="pointer-events-none absolute inset-0"
-          />
+          >
+            <img
+              src={heroBackground}
+              alt=""
+              className="h-full w-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-[#062d5a]/20" />
+          </div>
 
           <div className="relative z-10 mx-auto flex max-w-[850px] flex-col items-center">
             <h1 className="text-[clamp(1.55rem,4.4vw,3.25rem)] font-extrabold uppercase leading-[1.12] tracking-tight text-white">
               <span className="block text-[36px]">TRUY XUẤT NGUỒN GỐC THÀNH PHỐ ĐỒNG NAI</span>
-              <span className="mt-1 block">SẢN PHẨM, HÀNG HÓA</span>
-              <span className="mt-3 block text-base font-bold tracking-[0.18em] text-[#f4a261] sm:text-lg md:mt-4 md:text-xl">
-                THÀNH PHỐ ĐỒNG NAI
-              </span>
             </h1>
-
-            <p className="mt-4 max-w-[720px] text-sm leading-6 text-white/85 sm:mt-5 sm:text-base sm:leading-7 md:text-lg">
-              Nhờ ứng dụng công nghệ tiên tiến, hệ thống cho phép định danh,
-              truy vết nguồn gốc sản phẩm hàng hóa tại Thành phố Đồng Nai.
-            </p>
 
             <form onSubmit={handleSearch} className="mt-7 w-full max-w-[760px] sm:mt-8">
               <div className="flex flex-col gap-2 rounded-xl bg-white p-1.5 shadow-lg sm:flex-row sm:items-stretch sm:rounded-2xl sm:p-2">

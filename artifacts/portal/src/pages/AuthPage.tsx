@@ -5,6 +5,7 @@ import {
   ChevronLeft, ChevronRight, CheckCircle2, UploadCloud, Copy, LogIn,
 } from 'lucide-react';
 import { useAuth, type FileDoc, type OrgProfile } from '../context/AuthContext';
+import authBackground from '@assets/555737153_794223450001632_8929748451275333477_n_1792565225281.jpg';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const DISTRICTS = ['Biên Hòa', 'Long Khánh', 'Vĩnh Cửu', 'Long Thành', 'Nhơn Trạch', 'Định Quán', 'Xuân Lộc', 'Tân Phú', 'Trảng Bom', 'Thống Nhất', 'Cẩm Mỹ'];
@@ -535,11 +536,11 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
       {/* ── Left panel — ảnh nông nghiệp + overlay ── */}
       <div className="hidden lg:flex lg:w-[52%] relative flex-col justify-between overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&fit=crop"
-          alt="Nông nghiệp Đồng Nai"
+          src={authBackground}
+          alt=""
+          aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0f1f6b]/92 via-[#1B2A6B]/85 to-[#2740BA]/75" />
 
         {/* Top — Logo */}
         <div className="relative z-10 p-12">
@@ -548,20 +549,16 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
               <img src={logoUrl} alt="Logo" className="w-11 h-11 object-contain" />
             </div>
             <div>
-              <span className="text-white font-extrabold text-2xl tracking-tight block">Đồng Nai Trace</span>
-              <span className="text-blue-200/70 text-sm uppercase tracking-widest">Sở KH&CN Đồng Nai</span>
+              <span className="text-white font-extrabold text-2xl tracking-tight block">Truy Xuất Đồng Nai</span>
             </div>
           </div>
         </div>
 
         {/* Bottom — Headline + stats */}
         <div className="relative z-10 px-12 pb-14">
-          <h2 className="text-4xl font-extrabold text-white leading-tight mb-4">
-            Truy xuất nguồn gốc hàng hóa
+          <h2 className="font-extrabold text-white mb-4 text-[26px]">
+            TRUY XUẤT NGUỒN GỐC THÀNH PHỐ ĐỒNG NAI
           </h2>
-          <p className="text-blue-200/75 text-sm leading-relaxed mb-10 max-w-xs">
-            Hệ thống truy xuất nguồn gốc tỉnh Đồng Nai — minh bạch, tin cậy, chuẩn quốc tế.
-          </p>
           <div className="flex gap-8">
             {[['1.200+', 'Doanh nghiệp'], ['8.500+', 'Sản phẩm'], ['95/95', 'Phường / Xã']].map(([n, l]) => (
               <div key={l}>
@@ -572,7 +569,6 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
           </div>
         </div>
       </div>
-
       {/* ── Right panel ── */}
       <div className="flex-1 flex items-center justify-center bg-white overflow-y-auto px-5 sm:px-8 py-6">
         <div className={`w-full ${defaultTab === 'register' ? 'max-w-xl' : 'max-w-sm'}`}>
