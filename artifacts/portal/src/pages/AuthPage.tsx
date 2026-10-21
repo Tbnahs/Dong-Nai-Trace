@@ -573,7 +573,7 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
               data-testid="img-brand-auth"
               className="h-14 w-14 shrink-0 object-contain"
             />
-            <span data-testid="text-brand-auth" className="text-lg sm:text-xl font-extrabold tracking-tight text-[#2740BA]">
+            <span data-testid="text-brand-auth" className="sm:text-xl font-extrabold tracking-tight text-[#2740BA] text-[15px]">
               Truy Xuất Đồng Nai
             </span>
           </div>
