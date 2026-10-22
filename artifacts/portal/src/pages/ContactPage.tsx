@@ -270,7 +270,7 @@ export default function ContactPage() {
         <p className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-2">
           Liên hệ
         </p>
-        <h1 className="text-3xl lg:text-4xl font-extrabold uppercase text-[ffff]">
+        <h1 className="text-3xl lg:text-4xl font-extrabold uppercase text-[ffff] border-t-[color:var(--color-slate-200)] border-r-[color:var(--color-slate-200)] border-b-[color:var(--color-slate-200)] border-l-[color:var(--color-slate-200)]">
           Kênh Hỗ Trợ &amp; Liên Hệ
         </h1>
         <p className="mt-3 text-blue-100/80 max-w-xl">
