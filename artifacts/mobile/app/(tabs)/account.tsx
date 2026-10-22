@@ -18,6 +18,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { useAuth } from '@/context/AuthContext';
+import { KeyboardAwareScrollViewCompat } from '@/components/KeyboardAwareScrollViewCompat';
 
 function MenuItem({ icon, label, onPress, danger = false }: { icon: string; label: string; onPress: () => void; danger?: boolean }) {
   const colors = useColors();
@@ -34,9 +35,11 @@ function MenuItem({ icon, label, onPress, danger = false }: { icon: string; labe
 
 function LoginView() {
   const colors = useColors();
+  const insets = useSafeAreaInsets();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
   const [error, setError] = useState('');
@@ -58,12 +61,21 @@ function LoginView() {
   };
 
   return (
-    <ScrollView
+    <KeyboardAwareScrollViewCompat
       style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{ paddingBottom: 100 }}
+      contentContainerStyle={{ paddingTop: 24, paddingBottom: Math.max(insets.bottom, 24) + 100 }}
       keyboardShouldPersistTaps="handled"
     >
-      {/* Portal-aligned brand header */}
+      <Pressable
+        onPress={() => router.replace('/')}
+        style={styles.loginBack}
+        accessibilityRole="button"
+        accessibilityLabel="Về trang chủ"
+      >
+        <Ionicons name="arrow-back" size={15} color={colors.authMuted} />
+        <Text style={[styles.loginBackText, { color: colors.authMuted, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Về trang chủ</Text>
+      </Pressable>
+
       <View style={styles.loginBrand}>
         <Image source={require('@/assets/images/logo-skhcn.png')} style={styles.loginLogo} />
         <Text style={[styles.loginBrandName, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>Truy Xuất Đồng Nai</Text>
@@ -75,13 +87,13 @@ function LoginView() {
 
         <View style={{ gap: 12, marginTop: 20 }}>
           <View>
-            <Text style={[styles.fieldLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>TÊN ĐĂNG NHẬP</Text>
-            <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
-              <Ionicons name="person-outline" size={18} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
+            <Text style={[styles.fieldLabel, { color: colors.authMuted, fontFamily: 'BeVietnamPro_700Bold' }]}>TÊN ĐĂNG NHẬP</Text>
+            <View style={[styles.inputWrap, { borderColor: colors.authBorder, backgroundColor: colors.background }]}>
+              <Ionicons name="person-outline" size={18} color={colors.authMuted} style={{ marginLeft: 12 }} />
               <TextInput
                 style={[styles.inputField, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
                 placeholder="Mã số doanh nghiệp / CCCD / tài khoản"
-                placeholderTextColor={colors.mutedForeground}
+                placeholderTextColor={colors.authPlaceholder}
                 value={email}
                 onChangeText={setEmail}
                 keyboardType="email-address"
@@ -92,24 +104,24 @@ function LoginView() {
           </View>
           <View>
             <View style={styles.passwordLabelRow}>
-              <Text style={[styles.fieldLabel, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_700Bold' }]}>MẬT KHẨU</Text>
+              <Text style={[styles.fieldLabel, { color: colors.authMuted, fontFamily: 'BeVietnamPro_700Bold' }]}>MẬT KHẨU</Text>
               <Pressable onPress={() => Alert.alert('Quên mật khẩu?', 'Vui lòng liên hệ Sở KH&CN Đồng Nai: skhcn@dongnai.gov.vn')}>
                 <Text style={[styles.forgotPassword, { color: colors.primary, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Quên mật khẩu?</Text>
               </Pressable>
             </View>
-            <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
-              <Ionicons name="lock-closed-outline" size={18} color={colors.mutedForeground} style={{ marginLeft: 12 }} />
+            <View style={[styles.inputWrap, { borderColor: colors.authBorder, backgroundColor: colors.background }]}>
+              <Ionicons name="lock-closed-outline" size={18} color={colors.authMuted} style={{ marginLeft: 12 }} />
               <TextInput
                 style={[styles.inputField, { color: colors.foreground, fontFamily: 'BeVietnamPro_400Regular' }]}
                 placeholder="Nhập mật khẩu"
-                placeholderTextColor={colors.mutedForeground}
+                placeholderTextColor={colors.authPlaceholder}
                 value={password}
                 onChangeText={setPassword}
                 secureTextEntry={!showPwd}
                 autoComplete="current-password"
               />
               <Pressable onPress={() => setShowPwd(v => !v)} style={{ padding: 12 }}>
-                <Ionicons name={showPwd ? 'eye-off-outline' : 'eye-outline'} size={18} color={colors.mutedForeground} />
+                <Ionicons name={showPwd ? 'eye-off-outline' : 'eye-outline'} size={18} color={colors.authMuted} />
               </Pressable>
             </View>
           </View>
@@ -121,8 +133,15 @@ function LoginView() {
           ) : null}
         </View>
 
-        <Pressable style={styles.rememberRow}>
-          <View style={[styles.rememberBox, { borderColor: colors.border }]} />
+        <Pressable
+          onPress={() => setRemember(value => !value)}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: remember }}
+          style={styles.rememberRow}
+        >
+          <View style={[styles.rememberBox, { borderColor: remember ? colors.primary : colors.authBorder, backgroundColor: remember ? colors.primary : colors.background }]}>
+            {remember && <Ionicons name="checkmark" size={13} color={colors.primaryForeground} />}
+          </View>
           <Text style={[styles.rememberText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Ghi nhớ mật khẩu</Text>
         </Pressable>
 
@@ -140,7 +159,7 @@ function LoginView() {
           }
         </Pressable>
 
-        <View style={[styles.registerCallout, { backgroundColor: colors.muted, borderColor: colors.border }]}>
+        <View style={[styles.registerCallout, { backgroundColor: colors.authSurface, borderColor: colors.authBorder }]}>
           <Text style={[styles.registerCalloutText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Chưa có tài khoản?</Text>
           <Pressable
           onPress={() => router.push('/register')}
@@ -150,19 +169,19 @@ function LoginView() {
           </Pressable>
         </View>
 
-        <View style={[styles.loginHelp, { borderTopColor: colors.border }]}>
-          <Text style={[styles.loginHelpText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Hướng dẫn đăng ký, cập nhật thông tin tài khoản.</Text>
+        <View style={[styles.loginHelp, { borderTopColor: colors.authBorder }]}>
+          <Text style={[styles.loginHelpText, { color: colors.authMuted, fontFamily: 'BeVietnamPro_400Regular' }]}>Hướng dẫn đăng ký, cập nhật thông tin tài khoản.</Text>
           <Text style={[styles.loginHelpLink, { color: colors.primary, fontFamily: 'BeVietnamPro_600SemiBold' }]}>Tại đây</Text>
           <View style={styles.hotlineRow}>
             <View style={[styles.hotlineIcon, { backgroundColor: colors.primary }]}>
               <Ionicons name="call" size={12} color="#FFF" />
             </View>
-            <Text style={[styles.loginHelpText, { color: colors.mutedForeground, fontFamily: 'BeVietnamPro_400Regular' }]}>Hotline: </Text>
+            <Text style={[styles.loginHelpText, { color: colors.authMuted, fontFamily: 'BeVietnamPro_400Regular' }]}>Hotline: </Text>
             <Text style={[styles.hotlineText, { color: colors.primary, fontFamily: 'BeVietnamPro_700Bold' }]}>0251.3822297</Text>
           </View>
         </View>
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollViewCompat>
   );
 }
 
@@ -245,7 +264,7 @@ export default function AccountScreen() {
 
   if (!isLoggedIn) {
     return (
-      <View style={{ flex: 1, paddingTop: topPad }}>
+      <View style={{ flex: 1, paddingTop: topPad, backgroundColor: colors.background }}>
         <LoginView />
       </View>
     );
@@ -255,11 +274,13 @@ export default function AccountScreen() {
 }
 
 const styles = StyleSheet.create({
+  loginBack: { flexDirection: 'row', alignItems: 'center', gap: 6, marginHorizontal: 20, marginBottom: 24, minHeight: 20 },
+  loginBackText: { fontSize: 12 },
   loginBrand: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 20, paddingBottom: 18 },
   loginLogo: { width: 56, height: 56 },
-  loginBrandName: { fontSize: 18 },
+  loginBrandName: { fontSize: 15 },
   loginCard: { paddingHorizontal: 20, paddingTop: 28 },
-  loginCardTitle: { fontSize: 27 },
+  loginCardTitle: { fontSize: 28 },
   loginCardDesc: { fontSize: 13, lineHeight: 19, marginTop: 4 },
   fieldLabel: { fontSize: 11, letterSpacing: 0.7, marginBottom: 6 },
   inputWrap: { flexDirection: 'row', alignItems: 'center', borderRadius: 10, borderWidth: 1 },

@@ -24,6 +24,15 @@ const colors = {
     orangeLight: '#FFF3EC',
     softBackground: '#F5F7FA',
     blueSoft: '#EEF2FF',
+    heroBackground: '#0B3E77',
+    heroOverlay: 'rgba(6, 45, 90, 0.20)',
+    headerOverlay: 'rgba(6, 47, 85, 0.42)',
+    brandForeground: '#FFFFFF',
+    brandSubtle: 'rgba(255, 255, 255, 0.76)',
+    authMuted: '#9CA3AF',
+    authPlaceholder: '#D1D5DB',
+    authBorder: '#E5E7EB',
+    authSurface: '#F9FAFB',
   },
   dark: {
     text: '#F8FAFC',
@@ -49,7 +58,7 @@ const colors = {
     navyLight: '#1E2A4A',
     orangeLight: '#1C110A',
   },
-  radius: 12,
+  radius: 8,
 };
 
 export default colors;

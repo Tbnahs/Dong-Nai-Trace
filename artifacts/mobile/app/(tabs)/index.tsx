@@ -4,6 +4,7 @@ import {
   Alert,
   FlatList,
   Image,
+  ImageBackground,
   Linking,
   Modal,
   Platform,
@@ -32,8 +33,17 @@ import {
   lookupByTraceCode,
 } from '@/data/mock';
 
-const HERO_GUIDE = require('@/assets/images/hero-guide.png');
+const HERO_BACKGROUND = require('@/assets/images/hero-background.png');
+const HEADER_ARTWORK = require('@/assets/images/header-artwork.png');
 const TRACE_BANNER = require('@/assets/images/trace-banner.jpg');
+
+const HOME_MENU_ITEMS = [
+  { label: 'TRANG CHỦ', href: '/', icon: 'home-outline' },
+  { label: 'DANH MỤC', href: '/search', icon: 'grid-outline' },
+  { label: 'HƯỚNG DẪN DOANH NGHIỆP', href: '/register', icon: 'document-text-outline' },
+  { label: 'TIN TỨC', href: '/news', icon: 'newspaper-outline' },
+  { label: 'LIÊN HỆ', href: '/contact', icon: 'call-outline' },
+] as const;
 
 const CERT_COLORS: Record<string, string> = {
   VietGAP: '#16A34A',
@@ -278,6 +288,7 @@ export default function HomeScreen() {
   const [selectedMapWard, setSelectedMapWard] = useState<{ code: string; name: string } | null>(null);
   const [wardModalVisible, setWardModalVisible] = useState(false);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
   const [scannerVisible, setScannerVisible] = useState(false);
   const [scannerLocked, setScannerLocked] = useState(false);
   const [language, setLanguage] = useState('vi');
@@ -408,12 +419,18 @@ export default function HomeScreen() {
       showsVerticalScrollIndicator={false}
     >
       {/* TOP HEADER */}
-      <View style={[styles.topHeader, { paddingTop: topPad + 10, borderBottomColor: colors.border }]}>
+      <ImageBackground
+        source={HEADER_ARTWORK}
+        resizeMode="cover"
+        style={[styles.topHeader, { paddingTop: topPad + 4 }]}
+        imageStyle={styles.topHeaderArtwork}
+      >
+        <View pointerEvents="none" style={[StyleSheet.absoluteFillObject, { backgroundColor: colors.headerOverlay }]} />
         <Pressable onPress={() => router.push('/')} style={styles.brand} hitSlop={6}>
           <Image source={require('@/assets/images/logo-skhcn.png')} style={styles.logo} />
           <View>
-            <Text style={[styles.brandName, { color: colors.primary }]}>TRUY XUẤT ĐỒNG NAI</Text>
-            <Text style={[styles.brandTagline, { color: colors.mutedForeground }]}>HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM</Text>
+            <Text style={[styles.brandName, { color: colors.brandForeground }]}>TRUY XUẤT ĐỒNG NAI</Text>
+            <Text style={[styles.brandTagline, { color: colors.brandSubtle }]}>HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM</Text>
           </View>
         </Pressable>
         <View style={styles.headerActions}>
@@ -428,7 +445,7 @@ export default function HomeScreen() {
               accessibilityRole="button"
               accessibilityLabel="Thông báo"
             >
-              <Ionicons name="notifications-outline" size={20} color={colors.primary} />
+              <Ionicons name="notifications-outline" size={20} color={colors.brandForeground} />
               <View style={[styles.notificationBadge, { backgroundColor: colors.accent, borderColor: colors.background }]}>
                 <Text style={styles.notificationBadgeText}>2</Text>
               </View>
@@ -436,6 +453,7 @@ export default function HomeScreen() {
           )}
           <Pressable
             onPress={() => {
+              setMenuVisible(false);
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               setLanguageModalVisible(true);
             }}
@@ -444,73 +462,126 @@ export default function HomeScreen() {
             accessibilityRole="button"
             accessibilityLabel="Ngôn ngữ"
           >
-            <Feather name="globe" size={19} color={colors.primary} />
+            <Feather name="globe" size={19} color={colors.brandForeground} />
+          </Pressable>
+          <Pressable
+            onPress={() => setMenuVisible(value => !value)}
+            style={styles.headerIcon}
+            hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel={menuVisible ? 'Đóng menu' : 'Mở menu'}
+            accessibilityState={{ expanded: menuVisible }}
+          >
+            <Ionicons name={menuVisible ? 'close-outline' : 'menu-outline'} size={23} color={colors.brandForeground} />
           </Pressable>
         </View>
-      </View>
+      </ImageBackground>
+
+      {menuVisible && (
+        <View style={[styles.mobileMenu, { backgroundColor: colors.background, borderColor: colors.border }]}>
+          {HOME_MENU_ITEMS.map(item => (
+            <Pressable
+              key={item.label}
+              onPress={() => {
+                setMenuVisible(false);
+                router.push(item.href as any);
+              }}
+              style={({ pressed }) => [styles.mobileMenuItem, { borderBottomColor: colors.border, opacity: pressed ? 0.7 : 1 }]}
+            >
+              <Ionicons name={item.icon as any} size={18} color={colors.primary} />
+              <Text style={[styles.mobileMenuLabel, { color: colors.foreground }]}>{item.label}</Text>
+              <Ionicons name="chevron-forward" size={16} color={colors.mutedForeground} />
+            </Pressable>
+          ))}
+          {!isLoggedIn && (
+            <View style={styles.mobileMenuActions}>
+              <Pressable
+                onPress={() => { setMenuVisible(false); router.push('/account'); }}
+                style={[styles.mobileMenuButton, { borderColor: colors.primary }]}
+              >
+                <Text style={[styles.mobileMenuButtonText, { color: colors.primary }]}>Đăng nhập</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => { setMenuVisible(false); router.push('/register'); }}
+                style={[styles.mobileMenuButton, { backgroundColor: colors.primary, borderColor: colors.primary }]}
+              >
+                <Text style={[styles.mobileMenuButtonText, { color: colors.primaryForeground }]}>Đăng ký</Text>
+              </Pressable>
+            </View>
+          )}
+        </View>
+      )}
 
       {/* HERO */}
-      <View style={styles.hero}>
-        <Text style={[styles.heroTitle, { color: colors.primary }]}>
-          TRUY XUẤT NGUỒN GỐC{'\n'}THÀNH PHỐ ĐỒNG NAI
-        </Text>
-
-        <View style={styles.searchArea}>
-          {!useGtin ? (
-            <View style={[styles.inputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
-              {scanButton}
-              <TextInput
-                style={[styles.input, { color: colors.foreground }]}
-                 placeholder="Nhập mã truy xuất hoặc GTIN"
-                placeholderTextColor={colors.mutedForeground}
-                value={traceCode}
-                onChangeText={value => { setTraceCode(value); setNotFound(false); }}
-                autoCapitalize="characters"
-                returnKeyType="search"
-                onSubmitEditing={handleSearch}
-              />
-            </View>
-          ) : (
-            <View style={styles.gtinFields}>
-              <View style={[styles.inputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                {scanButton}
-                <TextInput style={[styles.input, { color: colors.foreground }]} placeholder="Nhập mã GTIN" placeholderTextColor={colors.mutedForeground} value={gtin} onChangeText={setGtin} keyboardType="numeric" />
-              </View>
-              <View style={[styles.inputRow, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                <Ionicons name="cube-outline" size={20} color={colors.primary} />
-                <TextInput style={[styles.input, { color: colors.foreground }]} placeholder="Nhập số lô / mẻ" placeholderTextColor={colors.mutedForeground} value={lot} onChangeText={setLot} />
-              </View>
-            </View>
-          )}
-
-          {notFound && (
-            <View style={[styles.notFoundBox, { backgroundColor: '#FEF2F2', borderColor: '#FCA5A5' }]}>
-              <Ionicons name="alert-circle-outline" size={16} color="#DC2626" />
-              <Text style={[styles.notFoundText, { color: '#DC2626' }]}>Không tìm thấy sản phẩm. Vui lòng kiểm tra lại mã.</Text>
-            </View>
-          )}
-
-          <Pressable onPress={handleSearch} disabled={searching} style={({ pressed }) => [styles.searchButton, { backgroundColor: colors.accent, opacity: pressed || searching ? 0.82 : 1 }]}>
-            {searching ? <ActivityIndicator color={colors.primaryForeground} size="small" /> : <><Text style={styles.searchButtonText}>Tra cứu</Text><Ionicons name="arrow-forward" size={18} color={colors.accentForeground} /></>}
-          </Pressable>
-
-          <View style={styles.radioRow}>
-            <Pressable onPress={() => { setUseGtin(false); setNotFound(false); }} style={styles.radioOption}>
-              <View style={[styles.radio, { borderColor: colors.primary }]}>{!useGtin && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}</View>
-              <Text style={[styles.radioText, { color: colors.foreground }]}>Mã truy xuất sản phẩm</Text>
-            </Pressable>
-            <Pressable onPress={() => { setUseGtin(true); setNotFound(false); }} style={styles.radioOption}>
-              <View style={[styles.radio, { borderColor: colors.primary }]}>{useGtin && <View style={[styles.radioDot, { backgroundColor: colors.primary }]} />}</View>
-              <Text style={[styles.radioText, { color: colors.foreground }]}>Mã GTIN &amp; Số lô đóng gói</Text>
-            </Pressable>
-          </View>
-          <Text style={[styles.heroDesc, { color: colors.mutedForeground }]}>
-            Đồng Nai khẳng định chất lượng sản phẩm, minh bạch nguồn gốc và nâng cao uy tín thương hiệu địa{"\u00A0"}phương.
+      <ImageBackground
+        source={HERO_BACKGROUND}
+        resizeMode="cover"
+        style={styles.hero}
+        imageStyle={styles.heroImageBackground}
+      >
+        <View pointerEvents="none" style={[StyleSheet.absoluteFillObject, { backgroundColor: colors.heroOverlay }]} />
+        <View style={styles.heroContent}>
+          <Text style={[styles.heroTitle, { color: colors.brandForeground }]}>
+            TRUY XUẤT NGUỒN GỐC{'\n'}THÀNH PHỐ ĐỒNG NAI
           </Text>
-        </View>
 
-        <Image source={HERO_GUIDE} style={styles.heroImage} resizeMode="contain" />
-      </View>
+          <View style={styles.searchArea}>
+            <View style={[styles.searchShell, { backgroundColor: colors.background }]}>
+              {!useGtin ? (
+                <View style={styles.inputRow}>
+                  {scanButton}
+                  <TextInput
+                    style={[styles.input, { color: colors.foreground }]}
+                    placeholder="Quét hoặc nhập mã truy xuất hoặc GTIN"
+                    placeholderTextColor={colors.mutedForeground}
+                    value={traceCode}
+                    onChangeText={value => { setTraceCode(value); setNotFound(false); }}
+                    autoCapitalize="characters"
+                    returnKeyType="search"
+                    onSubmitEditing={handleSearch}
+                  />
+                </View>
+              ) : (
+                <View style={styles.gtinFields}>
+                  <View style={styles.inputRow}>
+                    {scanButton}
+                    <TextInput style={[styles.input, { color: colors.foreground }]} placeholder="Nhập mã GTIN" placeholderTextColor={colors.mutedForeground} value={gtin} onChangeText={setGtin} keyboardType="numeric" />
+                  </View>
+                  <View style={[styles.inputRow, styles.gtinSecondRow, { borderTopColor: colors.border }]}>
+                    <Ionicons name="cube-outline" size={20} color={colors.primary} />
+                    <TextInput style={[styles.input, { color: colors.foreground }]} placeholder="Nhập số lô / mẻ" placeholderTextColor={colors.mutedForeground} value={lot} onChangeText={setLot} />
+                  </View>
+                </View>
+              )}
+
+              <Pressable onPress={handleSearch} disabled={searching} style={({ pressed }) => [styles.searchButton, { backgroundColor: colors.accent, opacity: pressed || searching ? 0.82 : 1 }]}>
+                {searching ? <ActivityIndicator color={colors.accentForeground} size="small" /> : <><Text style={[styles.searchButtonText, { color: colors.accentForeground }]}>Tra cứu</Text><Ionicons name="arrow-forward" size={18} color={colors.accentForeground} /></>}
+              </Pressable>
+            </View>
+
+            {notFound && (
+              <View style={[styles.notFoundBox, { backgroundColor: '#FEF2F2', borderColor: '#FCA5A5' }]}>
+                <Ionicons name="alert-circle-outline" size={16} color="#DC2626" />
+                <Text style={[styles.notFoundText, { color: '#DC2626' }]}>Không tìm thấy sản phẩm. Vui lòng kiểm tra lại mã.</Text>
+              </View>
+            )}
+
+            <View style={styles.radioRow}>
+              <Pressable onPress={() => { setUseGtin(false); setNotFound(false); }} style={styles.radioOption}>
+                <View style={[styles.radio, { borderColor: colors.brandForeground }]}>{!useGtin && <View style={[styles.radioDot, { backgroundColor: colors.accent }]} />}</View>
+                <Text style={[styles.radioText, { color: colors.brandForeground }]}>Mã truy xuất sản phẩm</Text>
+              </Pressable>
+              <Pressable onPress={() => { setUseGtin(true); setNotFound(false); }} style={styles.radioOption}>
+                <View style={[styles.radio, { borderColor: colors.brandForeground }]}>{useGtin && <View style={[styles.radioDot, { backgroundColor: colors.accent }]} />}</View>
+                <Text style={[styles.radioText, { color: colors.brandForeground }]}>Mã GTIN &amp; Số lô đóng gói</Text>
+              </Pressable>
+            </View>
+            <Text style={[styles.heroDesc, { color: colors.brandSubtle }]}>
+              Đồng Nai khẳng định chất lượng sản phẩm, minh bạch nguồn gốc và nâng cao uy tín thương hiệu địa phương.
+            </Text>
+          </View>
+        </View>
+      </ImageBackground>
 
       {/* Banner matching the portal */}
       <View style={styles.traceBannerSection}>
@@ -955,34 +1026,44 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  topHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingBottom: 12, borderBottomWidth: 1 },
+  topHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 20, paddingBottom: 8, overflow: 'hidden' },
+  topHeaderArtwork: { opacity: 1 },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 9, flex: 1 },
   logo: { width: 39, height: 39 },
   brandName: { fontSize: 15, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: 0.1 },
   brandTagline: { fontSize: 7, fontFamily: 'BeVietnamPro_500Medium', marginTop: 2 },
-  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+  headerActions: { flexDirection: 'row', alignItems: 'center', gap: 2, marginLeft: 6 },
   headerIcon: { padding: 7, position: 'relative' },
   notificationDot: { position: 'absolute', right: 4, top: 4, width: 6, height: 6, borderRadius: 3, borderWidth: 1, borderColor: '#FFF' },
   notificationBadge: { position: 'absolute', right: 0, top: 0, minWidth: 16, height: 16, paddingHorizontal: 3, borderRadius: 8, borderWidth: 2, alignItems: 'center', justifyContent: 'center' },
   notificationBadgeText: { color: '#FFF', fontSize: 8, lineHeight: 10, fontFamily: 'BeVietnamPro_700Bold' },
-  hero: { paddingTop: 24, paddingHorizontal: 20, alignItems: 'stretch' },
-  heroTitle: { fontSize: 27, lineHeight: 33, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: -0.3 },
-  heroDesc: { fontSize: 14, lineHeight: 22, fontFamily: 'BeVietnamPro_400Regular', marginTop: 16, textAlign: 'center' },
-  searchArea: { marginTop: 20 },
-  inputRow: { flexDirection: 'row', alignItems: 'center', minHeight: 54, borderRadius: 13, borderWidth: 1, paddingHorizontal: 15, boxShadow: '0px 3px 8px rgba(0, 0, 0, 0.07)', elevation: 2 },
+  mobileMenu: { marginHorizontal: 16, paddingHorizontal: 14, borderWidth: 1, borderRadius: 14, marginTop: 8, overflow: 'hidden' },
+  mobileMenuItem: { flexDirection: 'row', alignItems: 'center', gap: 12, minHeight: 48, borderBottomWidth: 1 },
+  mobileMenuLabel: { flex: 1, fontSize: 12, fontFamily: 'BeVietnamPro_600SemiBold' },
+  mobileMenuActions: { flexDirection: 'row', gap: 10, paddingVertical: 12 },
+  mobileMenuButton: { flex: 1, minHeight: 42, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderRadius: 8 },
+  mobileMenuButtonText: { fontSize: 13, fontFamily: 'BeVietnamPro_600SemiBold' },
+  hero: { marginHorizontal: 16, marginTop: 20, marginBottom: 8, paddingHorizontal: 18, paddingVertical: 34, borderRadius: 18, overflow: 'hidden' },
+  heroImageBackground: { borderRadius: 18 },
+  heroContent: { alignItems: 'center' },
+  heroTitle: { fontSize: 25, lineHeight: 30, fontFamily: 'BeVietnamPro_700Bold', letterSpacing: -0.3, textAlign: 'center' },
+  heroDesc: { fontSize: 14, lineHeight: 21, fontFamily: 'BeVietnamPro_400Regular', marginTop: 16, textAlign: 'center' },
+  searchArea: { marginTop: 24, width: '100%' },
+  searchShell: { padding: 6, borderRadius: 13, gap: 4, boxShadow: '0px 8px 18px rgba(0, 0, 0, 0.14)', elevation: 4 },
+  inputRow: { flexDirection: 'row', alignItems: 'center', minHeight: 48, borderRadius: 8, paddingHorizontal: 10 },
+  gtinSecondRow: { borderTopWidth: 1, borderRadius: 0 },
   scanButton: { width: 30, height: 36, alignItems: 'center', justifyContent: 'center' },
-  input: { flex: 1, height: 52, paddingHorizontal: 11, fontSize: 14, fontFamily: 'BeVietnamPro_400Regular' },
-  gtinFields: { gap: 9 },
+  input: { flex: 1, height: 48, paddingHorizontal: 11, fontSize: 14, fontFamily: 'BeVietnamPro_400Regular' },
+  gtinFields: { gap: 0 },
   notFoundBox: { flexDirection: 'row', alignItems: 'center', gap: 6, padding: 10, marginTop: 10, borderRadius: 9, borderWidth: 1 },
   notFoundText: { flex: 1, fontSize: 12, fontFamily: 'BeVietnamPro_400Regular' },
-  searchButton: { minHeight: 54, borderRadius: 13, marginTop: 11, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
-  searchButtonText: { color: '#FFFFFF', fontSize: 16, fontFamily: 'BeVietnamPro_700Bold' },
-  radioRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 16, marginTop: 16 },
+  searchButton: { minHeight: 48, borderRadius: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+  searchButtonText: { fontSize: 15, fontFamily: 'BeVietnamPro_700Bold' },
+  radioRow: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 12, marginTop: 16 },
   radioOption: { flexDirection: 'row', alignItems: 'center', gap: 7 },
   radio: { width: 19, height: 19, borderRadius: 10, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
   radioDot: { width: 9, height: 9, borderRadius: 5 },
   radioText: { fontSize: 12, fontFamily: 'BeVietnamPro_400Regular' },
-  heroImage: { width: '100%', height: 230, marginTop: 10 },
   traceBannerSection: { marginTop: 16, marginBottom: 12 },
   traceBanner: { width: '100%', height: 180 },
   scannerContainer: { flex: 1, backgroundColor: '#000000' },
