@@ -190,7 +190,7 @@ export default function LandingPage() {
   return (
     <>
       {/* HERO SECTION */}
-      <section className="px-4 py-6 sm:py-8 md:px-6 lg:px-10 bg-background">
+      <section className="px-4 py-6 sm:py-8 md:px-6 lg:px-10 bg-[#ffffff]">
         <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-2xl bg-[#0b3e77] px-5 py-10 text-center shadow-[0_18px_45px_rgba(12,48,98,0.18)] sm:rounded-[24px] sm:px-10 sm:py-12 md:px-16 md:py-14 lg:px-24 lg:py-16">
           <div
             aria-hidden="true"
@@ -208,7 +208,7 @@ export default function LandingPage() {
             <h1 className="text-[clamp(1.55rem,4.4vw,3.25rem)] font-extrabold uppercase leading-[1.12] tracking-tight text-white">
               <span className="block">Truy xuất nguồn gốc</span>
               <span className="block text-[45px]">Sản phẩm, hàng hóa</span>
-              <span className="block text-border">Thành phố Đồng Nai</span>
+              <span className="block text-[#ffffff]">Thành phố Đồng Nai</span>
             </h1>
 
             <form onSubmit={handleSearch} className="mt-7 w-full max-w-[760px] sm:mt-8">
