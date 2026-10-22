@@ -174,7 +174,7 @@ export default function PublicLayout({
               </div>
               {isLoggedIn && user ? (
                 /* ── Avatar dropdown (logged in) ── */
-                <>
+                (<>
                   <Link
                     href="/thong-bao"
                     aria-label="Thông báo"
@@ -264,10 +264,10 @@ export default function PublicLayout({
                       </div>
                     )}
                   </div>
-                </>
+                </>)
               ) : (
                 /* ── Guest: register / login buttons ── */
-                <>
+                (<>
                   <div className="text-right">
                     <Link
                       href="/dang-ky"
@@ -289,7 +289,7 @@ export default function PublicLayout({
                       Đăng ký
                     </Link>
                   </div>
-                </>
+                </>)
               )}
             </div>
           </div>
@@ -441,8 +441,7 @@ export default function PublicLayout({
                   className="h-6 md:h-10 w-auto object-contain"
                 />
                 <span className="font-bold text-[#2740BA] text-[10px] md:text-lg pr-1 md:pr-3 leading-tight">
-                  ĐỒNG NAI
-                  <br className="md:hidden" /> TRACE
+                  HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI
                 </span>
               </div>
               <p className="text-blue-100/80 text-[11px] md:text-sm leading-relaxed max-w-xl hidden md:block">
@@ -510,9 +509,7 @@ export default function PublicLayout({
           </div>
 
           <div className="pt-3 md:pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-start md:items-center gap-1 md:gap-4 text-[10px] md:text-xs leading-relaxed text-blue-200/60">
-            <p>
-              © 2024 Sở KH&CN Thành phố Đồng Nai. Tất cả quyền được bảo lưu.
-            </p>
+            <p>© 2026 Sở KH&CN Thành phố Đồng Nai. Tất cả quyền được bảo lưu.</p>
             <p className="md:text-right hidden md:block">
               Nền tảng vận hành bởi đơn vị được ủy quyền
             </p>
