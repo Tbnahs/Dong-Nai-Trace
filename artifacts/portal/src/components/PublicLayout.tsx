@@ -440,9 +440,7 @@ export default function PublicLayout({
                   alt="Logo"
                   className="h-6 md:h-10 w-auto object-contain"
                 />
-                <span className="font-bold text-[#2740BA] text-[10px] md:text-lg pr-1 md:pr-3 leading-tight">
-                  HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI
-                </span>
+                <span className="font-bold text-[#2740BA] text-[10px] md:text-lg pr-1 md:pr-3 leading-tight text-left">HỆ THỐNG TRUY XUẤT  NGUỒN GỐC SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI</span>
               </div>
               <p className="text-blue-100/80 text-[11px] md:text-sm leading-relaxed max-w-xl hidden md:block">
                 Hệ thống Truy xuất nguồn gốc sản phẩm hàng hóa Thành phố Đồng
