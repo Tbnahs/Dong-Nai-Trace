@@ -207,7 +207,8 @@ export default function LandingPage() {
           <div className="relative z-10 mx-auto flex max-w-[850px] flex-col items-center">
             <h1 className="text-[clamp(1.55rem,4.4vw,3.25rem)] font-extrabold uppercase leading-[1.12] tracking-tight text-white">
               <span className="block">Truy xuất nguồn gốc</span>
-              <span className="block">Thành phố Đồng Nai</span>
+              <span className="block text-[45px]">Sản phẩm, hàng hóa</span>
+              <span className="block text-[#d85b08]">Thành phố Đồng Nai</span>
             </h1>
 
             <form onSubmit={handleSearch} className="mt-7 w-full max-w-[760px] sm:mt-8">
