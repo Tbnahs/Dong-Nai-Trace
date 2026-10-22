@@ -4,7 +4,11 @@ import MapSection from "../components/MapSection";
 import { Link, useLocation } from "wouter";
 import heroBackground from "@assets/Nền_xanh_máy_bay_tối_giản_1792564728039.png";
 import traceBanner from "@assets/555737153_794223450001632_8929748451275333477_n_1792568596064.jpg";
-import { lookupByTraceCode, lookupByGtin, lookupByGtinAndLot } from "../lib/productLookup";
+import {
+  lookupByTraceCode,
+  lookupByGtin,
+  lookupByGtinAndLot,
+} from "../lib/productLookup";
 import {
   CheckCircle2,
   Search,
@@ -158,9 +162,15 @@ export default function LandingPage() {
 
     if (searchType === "trace" && traceCode.trim()) {
       const id = lookupByTraceCode(traceCode.trim());
-      if (id) { setLocation(`/san-pham/${id}`); return; }
+      if (id) {
+        setLocation(`/san-pham/${id}`);
+        return;
+      }
       const gtinId = lookupByGtin(traceCode.trim());
-      if (gtinId) { setLocation(`/san-pham/${gtinId}`); return; }
+      if (gtinId) {
+        setLocation(`/san-pham/${gtinId}`);
+        return;
+      }
       // No exact match → go to search results with the typed code as query
       setLocation(`/tra-cuu?q=${encodeURIComponent(traceCode.trim())}`);
       return;
@@ -171,7 +181,9 @@ export default function LandingPage() {
         ? lookupByGtinAndLot(gtin.trim(), lot.trim())
         : lookupByGtin(gtin.trim());
       if (id) {
-        setLocation(lot.trim() ? `/san-pham/${id}?access=gtin` : `/san-pham/${id}`);
+        setLocation(
+          lot.trim() ? `/san-pham/${id}?access=gtin` : `/san-pham/${id}`,
+        );
         return;
       }
       setLocation(`/tra-cuu?q=${encodeURIComponent(gtin.trim())}`);
@@ -211,7 +223,10 @@ export default function LandingPage() {
               <span className="block text-[#ffffff]">Thành phố Đồng Nai</span>
             </h1>
 
-            <form onSubmit={handleSearch} className="mt-7 w-full max-w-[760px] sm:mt-8">
+            <form
+              onSubmit={handleSearch}
+              className="mt-7 w-full max-w-[760px] sm:mt-8"
+            >
               <div className="flex flex-col gap-2 rounded-xl bg-white p-1.5 shadow-lg sm:flex-row sm:items-stretch sm:rounded-2xl sm:p-2">
                 {searchType === "trace" ? (
                   <div className="flex min-h-12 min-w-0 flex-1 items-center rounded-lg px-3 sm:px-4">
@@ -285,7 +300,10 @@ export default function LandingPage() {
               <p
                 data-testid="text-home-intro"
                 className="mx-auto mt-4 max-w-3xl px-2 text-center text-white/90 sm:mt-5 sm:text-sm md:text-base text-[15px]"
-              >Đồng Nai khẳng định chất lượng sản phẩm, minh bạch nguồn gốc và nâng cao uy tín thương hiệu địa&nbsp;phương.</p>
+              >
+                Đồng Nai khẳng định chất lượng sản phẩm, minh bạch nguồn gốc và
+                nâng cao uy tín thương hiệu địa&nbsp;phương.
+              </p>
             </form>
           </div>
         </div>
@@ -423,13 +441,111 @@ export default function LandingPage() {
                   <span className="text-[10px] md:text-sm font-semibold text-slate-800 group-hover:text-[#2740BA] transition-colors leading-tight line-clamp-2">
                     {cat.name}
                   </span>
-                  <span className="text-[#E8650A] font-bold text-sm md:text-lg leading-none shrink-0">→</span>
+                  <span className="text-[#E8650A] font-bold text-sm md:text-lg leading-none shrink-0">
+                    →
+                  </span>
                 </div>
               </Link>
             ))}
           </div>
         </div>
       </section>
+      {/* TIN TỨC SECTION */}
+      <section className="bg-[#F5F7FA] py-14 md:py-16 px-4 md:px-6 lg:px-10">
+        <div className="mx-auto max-w-[1280px]">
+          <div className="mb-6 md:mb-8 flex items-end justify-between gap-4">
+            <div>
+              <p className="mb-1 text-xs font-bold uppercase tracking-widest text-gray-400">
+                Cập nhật mới nhất
+              </p>
+              <h2 className="text-lg font-extrabold uppercase text-[#2740BA] md:text-2xl lg:text-3xl">
+                Tin tức & sự kiện
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm text-slate-600 md:text-base">
+                Thông tin hoạt động, hướng dẫn và cập nhật về truy xuất nguồn
+                gốc sản phẩm tại Đồng Nai.
+              </p>
+            </div>
+            <Link
+              href="/tin-tuc"
+              className="shrink-0 whitespace-nowrap rounded border border-[#E8650A] px-3 py-2 text-xs font-semibold text-[#E8650A] transition-colors hover:bg-[#E8650A] hover:text-white md:px-5 md:text-sm"
+            >
+              Xem tất cả
+            </Link>
+          </div>
+
+          {/* Dữ liệu minh họa: thay bằng dữ liệu bài viết thực tế khi kết nối API */}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                category: "Sự kiện",
+                title:
+                  "Đẩy mạnh minh bạch thông tin và truy xuất nguồn gốc sản phẩm",
+                excerpt:
+                  "Cập nhật hoạt động thúc đẩy ứng dụng truy xuất nguồn gốc, nâng cao niềm tin của người tiêu dùng.",
+                date: "Tin mới",
+                img: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=480&fit=crop",
+                tagClass: "bg-orange-100 text-orange-700",
+              },
+              {
+                category: "Hướng dẫn",
+                title: "Hướng dẫn doanh nghiệp khai báo thông tin sản phẩm",
+                excerpt:
+                  "Tìm hiểu các bước cập nhật thông tin sản phẩm và hồ sơ liên quan trên hệ thống.",
+                date: "Hướng dẫn sử dụng",
+                img: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=480&fit=crop",
+                tagClass: "bg-emerald-100 text-emerald-700",
+              },
+              {
+                category: "Truy xuất nguồn gốc",
+                title:
+                  "Truy xuất nguồn gốc góp phần nâng cao giá trị sản phẩm địa phương",
+                excerpt:
+                  "Minh bạch thông tin giúp kết nối doanh nghiệp, đối tác và người tiêu dùng hiệu quả hơn.",
+                date: "Thông tin chuyên đề",
+                img: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=480&fit=crop",
+                tagClass: "bg-violet-100 text-violet-700",
+              },
+            ].map((news, idx) => (
+              <Link
+                key={idx}
+                href="/tin-tuc"
+                className="group flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+              >
+                <div className="h-44 overflow-hidden sm:h-48">
+                  <img
+                    src={news.img}
+                    alt=""
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-4 md:p-5">
+                  <div className="mb-3 flex items-center justify-between gap-2">
+                    <span
+                      className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${news.tagClass}`}
+                    >
+                      {news.category}
+                    </span>
+                    <span className="text-xs text-slate-400">{news.date}</span>
+                  </div>
+                  <h3 className="line-clamp-2 text-base font-bold leading-snug text-slate-800 transition-colors group-hover:text-[#2740BA] md:text-lg">
+                    {news.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-slate-500">
+                    {news.excerpt}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#2740BA]">
+                    Đọc tiếp{" "}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* HƯỚNG DẪN DOANH NGHIỆP */}
       <section className="py-16 md:py-20 px-4 md:px-6 lg:px-10 bg-white overflow-hidden">
         <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
