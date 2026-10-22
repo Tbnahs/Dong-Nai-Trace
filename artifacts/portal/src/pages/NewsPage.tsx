@@ -30,19 +30,18 @@ export default function NewsPage() {
   return (
     <div className="bg-[#F5F7FA] min-h-screen">
       {/* Hero banner */}
-      <div className="bg-[#2740BA] text-white py-10 md:py-12 px-4 md:px-6 lg:px-10">
+      <div className="bg-gradient-to-br from-[#0B3E77] via-[#1D4EAA] to-[#2740BA] px-4 py-4 md:px-6 md:py-6 lg:px-10">
         <div className="max-w-[1280px] mx-auto">
-          <p className="text-xs font-bold uppercase tracking-widest text-blue-300 mb-2">
+          <p className="text-xs font-bold uppercase tracking-widest mb-2 text-[ffff] border-t-[ffff] border-r-[ffff] border-b-[ffff] border-l-[ffff]">
             Cập nhật mới nhất
           </p>
-          <h1 className="text-xl md:text-3xl lg:text-4xl font-extrabold uppercase mb-3">Tin Tức</h1>
-          <p className="text-blue-100/80 text-sm max-w-xl">
+          <h1 className="text-xl md:text-3xl lg:text-4xl font-extrabold uppercase mb-3 text-[#ffffff]">Tin Tức</h1>
+          <p className="text-sm max-w-xl text-[#ffffff]">
             Thông tin chính sách, sự kiện và hướng dẫn mới nhất về hệ thống truy xuất nguồn gốc
             nông sản tỉnh Đồng Nai.
           </p>
         </div>
       </div>
-
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-10 py-8 md:py-10">
         {/* Search + filter bar */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">

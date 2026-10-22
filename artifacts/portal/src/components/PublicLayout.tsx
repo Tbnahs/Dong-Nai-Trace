@@ -42,6 +42,24 @@ const LANGUAGES = [
   { code: "ko", label: "한국어" },
 ];
 
+const ACCOUNT_LINKS = [
+  {
+    icon: User,
+    label: "Hồ sơ doanh nghiệp",
+    href: "/ho-so-doanh-nghiep",
+  },
+  {
+    icon: Package,
+    label: "Dòng sản phẩm",
+    href: "/ho-so-san-pham",
+  },
+  {
+    icon: Bell,
+    label: "Thông báo",
+    href: "/thong-bao",
+  },
+];
+
 export default function PublicLayout({
   children,
 }: {
@@ -53,34 +71,38 @@ export default function PublicLayout({
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
-  const [language, setLanguage] = useState(
-    () =>
-      typeof window !== "undefined"
-        ? localStorage.getItem("language") || "vi"
-        : "vi",
+  const [mobileLanguageOpen, setMobileLanguageOpen] = useState(false);
+  const [language, setLanguage] = useState(() =>
+    typeof window !== "undefined"
+      ? localStorage.getItem("language") || "vi"
+      : "vi",
   );
 
   const languageRef = useRef<HTMLDivElement>(null);
+  const mobileLanguageRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const logoUrl = import.meta.env.BASE_URL + "images/logo-skhcn.png";
 
+  const logoUrl = import.meta.env.BASE_URL + "images/logo-skhcn.png";
   const currentLanguage =
     LANGUAGES.find((lang) => lang.code === language) || LANGUAGES[0];
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      const target = e.target as Node;
+
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setAvatarOpen(false);
       }
 
-      if (
-        languageRef.current &&
-        !languageRef.current.contains(e.target as Node)
-      ) {
+      if (languageRef.current && !languageRef.current.contains(target)) {
         setLanguageOpen(false);
+      }
+
+      if (
+        mobileLanguageRef.current &&
+        !mobileLanguageRef.current.contains(target)
+      ) {
+        setMobileLanguageOpen(false);
       }
     }
 
@@ -92,14 +114,18 @@ export default function PublicLayout({
     setLanguage(code);
     localStorage.setItem("language", code);
     setLanguageOpen(false);
+    setMobileLanguageOpen(false);
   };
 
+  const isActiveLink = (href: string) =>
+    location === href || (href !== "/" && location.startsWith(href));
+
   return (
-    <div className="min-h-screen bg-white text-slate-800 font-sans flex flex-col overflow-x-hidden">
+    <div className="flex min-h-screen flex-col overflow-x-hidden bg-white font-sans text-slate-800">
       {/* HEADER */}
-      <header className="sticky top-0 z-[1001] w-full flex flex-col bg-white shadow-sm">
-        {/* Brand band */}
-        <div className="relative isolate overflow-visible bg-[#0b3e77]">
+      <header className="sticky top-0 z-[1001] flex w-full flex-col bg-white shadow-sm">
+        {/* TOP BRAND BANNER: only logo and system information */}
+        <div className="relative isolate overflow-hidden bg-[#0b3e77]">
           <img
             src={headerArtwork}
             alt=""
@@ -109,13 +135,12 @@ export default function PublicLayout({
 
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#082f5a]/55 via-[#0a3e70]/35 to-[#062c52]/30"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#082f5a]/60 via-[#0a3e70]/35 to-[#062c52]/30"
           />
 
-          <div className="relative z-10 mx-auto flex min-h-[108px] max-w-[1280px] items-center justify-between gap-4 px-4 py-3 md:min-h-[122px] md:px-6 lg:px-10">
-            {/* Logo and system title */}
+          <div className="relative z-10 mx-auto flex min-h-[108px] w-full max-w-[1280px] items-center gap-3 px-4 py-3 md:min-h-[122px] md:px-6 lg:px-10">
             <Link href="/" className="flex min-w-0 items-center gap-3">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white p-0.5 shadow-sm md:h-12 md:w-12">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full md:h-12 md:w-12">
                 <img
                   src={logoUrl}
                   alt="Biểu trưng Đồng Nai"
@@ -124,13 +149,13 @@ export default function PublicLayout({
               </span>
 
               <span className="flex min-w-0 flex-col">
-                <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">
+                <span className="text-xs font-extrabold leading-tight text-white sm:text-sm md:text-lg">
                   HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM, HÀNG HÓA
                 </span>
-                <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">
+                <span className="text-xs font-extrabold leading-tight text-white sm:text-sm md:text-lg">
                   THÀNH PHỐ ĐỒNG NAI
                 </span>
-                <span className="truncate text-[15px] font-normal text-white sm:text-base md:text-lg">
+                <span className="text-xs font-normal text-white sm:text-sm md:text-base">
                   txng.dongnai.gov.vn
                 </span>
               </span>
@@ -138,8 +163,9 @@ export default function PublicLayout({
 
             {/* Mobile menu button */}
             <button
-              className="rounded-lg p-2 text-white transition-colors hover:bg-white/10 lg:hidden"
-              onClick={() => setMobileMenuOpen((o) => !o)}
+              type="button"
+              className="ml-auto shrink-0 rounded-lg p-2 text-white transition-colors hover:bg-white/10 lg:hidden"
+              onClick={() => setMobileMenuOpen((open) => !open)}
               aria-label={mobileMenuOpen ? "Đóng menu" : "Mở menu"}
               aria-expanded={mobileMenuOpen}
             >
@@ -149,76 +175,84 @@ export default function PublicLayout({
                 <Menu className="h-6 w-6" />
               )}
             </button>
+          </div>
+        </div>
 
-            {/* Desktop actions */}
-            <div className="hidden items-center gap-4 lg:flex">
-              {/* Account actions */}
+        {/* DESKTOP NAVIGATION + ALL ACTIONS ON THE SAME ROW */}
+        <nav className="hidden border-b border-slate-200 bg-white lg:block">
+          <div className="mx-auto flex min-h-[56px] w-full max-w-[1280px] items-center justify-between gap-3 px-4 md:px-6 lg:px-6 xl:px-10">
+            {/* Navigation links */}
+            <ul className="flex min-w-0 items-center gap-0.5 text-[12px] font-semibold xl:gap-1 xl:text-[13px]">
+              {NAV_LINKS.map(({ label, href }) => (
+                <li key={label} className="shrink-0 py-1">
+                  <Link
+                    href={href}
+                    className={`block whitespace-nowrap rounded-md px-2.5 py-3 transition-colors xl:px-3 ${
+                      isActiveLink(href)
+                        ? "bg-[#eef2ff] text-[#2740BA]"
+                        : "text-slate-700 hover:bg-slate-50 hover:text-[#2740BA]"
+                    }`}
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            {/* Right-side actions */}
+            <div className="flex shrink-0 items-center gap-2 xl:gap-3">
               {isLoggedIn && user ? (
                 <>
+                  {/* Notifications */}
                   <Link
                     href="/thong-bao"
                     aria-label="Thông báo"
                     title="Thông báo"
-                    className="relative flex items-center justify-center rounded-xl p-2.5 text-white transition-colors hover:bg-white/10"
+                    className="relative flex shrink-0 items-center justify-center rounded-lg p-2 text-slate-700 transition-colors hover:bg-blue-50 hover:text-[#2740BA]"
                   >
                     <Bell className="h-5 w-5" />
-                    <span className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-white bg-[#E8650A] px-1 text-center text-[9px] font-bold leading-4 text-white">
+                    <span className="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#E8650A] px-1 text-[9px] font-bold leading-none text-white">
                       2
                     </span>
                   </Link>
 
+                  {/* Account avatar and dropdown */}
                   <div className="relative" ref={dropdownRef}>
                     <button
-                      onClick={() => setAvatarOpen((o) => !o)}
-                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 transition-colors hover:bg-white/10"
+                      type="button"
+                      onClick={() => setAvatarOpen((open) => !open)}
+                      className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-blue-50"
+                      aria-label="Tài khoản"
                       aria-expanded={avatarOpen}
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2740BA] text-sm font-bold text-white">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#2740BA] text-sm font-bold text-white">
                         {user.initials}
-                      </div>
-
-                      <div className="hidden text-left xl:block">
-                        <p className="text-sm font-bold leading-tight text-white">
-                          {user.name}
-                        </p>
-                        <p className="text-xs text-white/70">{user.type}</p>
-                      </div>
-
+                      </span>
+                      <span className="hidden max-w-[110px] truncate text-sm font-semibold text-slate-700 xl:block">
+                        {user.name}
+                      </span>
                       <ChevronDown
-                        className={`h-4 w-4 text-white/70 transition-transform ${
+                        className={`h-4 w-4 text-slate-500 transition-transform ${
                           avatarOpen ? "rotate-180" : ""
                         }`}
                       />
                     </button>
 
                     {avatarOpen && (
-                      <div className="absolute right-0 top-full z-[1002] mt-2 w-52 overflow-hidden rounded-2xl border border-gray-100 bg-white py-2 shadow-xl">
-                        <div className="border-b border-gray-100 px-4 py-2.5">
-                          <p className="text-sm font-bold leading-tight text-slate-800">
+                      <div className="absolute right-0 top-full z-[1002] mt-2 w-60 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl">
+                        <div className="border-b border-gray-100 px-4 py-3">
+                          <p className="text-sm font-bold text-slate-800">
                             {user.name}
                           </p>
-                          <p className="mt-0.5 text-xs text-gray-400">
+                          <p className="mt-0.5 break-all text-xs text-gray-400">
                             {user.email}
+                          </p>
+                          <p className="mt-1 text-xs text-gray-500">
+                            {user.type}
                           </p>
                         </div>
 
-                        {[
-                          {
-                            icon: User,
-                            label: "Hồ sơ doanh nghiệp",
-                            href: "/ho-so-doanh-nghiep",
-                          },
-                          {
-                            icon: Package,
-                            label: "Dòng sản phẩm",
-                            href: "/ho-so-san-pham",
-                          },
-                          {
-                            icon: Bell,
-                            label: "Thông báo",
-                            href: "/thong-bao",
-                          },
-                        ].map(({ icon: Icon, label, href }) => (
+                        {ACCOUNT_LINKS.map(({ icon: Icon, label, href }) => (
                           <Link
                             key={href}
                             href={href}
@@ -235,13 +269,14 @@ export default function PublicLayout({
 
                         <div className="mt-1 border-t border-gray-100 pt-1">
                           <button
+                            type="button"
                             onClick={() => {
                               logout();
                               setAvatarOpen(false);
                             }}
-                            className="flex w-full items-center gap-3 px-4 py-2.5 hover:bg-red-50"
+                            className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-red-50"
                           >
-                            <LogOut className="h-4 w-4 text-red-400" />
+                            <LogOut className="h-4 w-4 text-red-500" />
                             <span className="text-sm font-medium text-red-500">
                               Đăng xuất
                             </span>
@@ -252,39 +287,37 @@ export default function PublicLayout({
                   </div>
                 </>
               ) : (
-                <div className="flex items-center gap-3">
+                <>
                   <Link
                     href="/dang-nhap"
-                    className="rounded-md border border-white/70 bg-white px-5 py-2 text-sm font-semibold text-[#2740BA] transition-colors hover:bg-blue-50"
+                    className="whitespace-nowrap rounded-md bg-[#2740BA] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#1f339e] xl:px-4 xl:text-sm"
                   >
                     Đăng nhập
                   </Link>
-
                   <Link
                     href="/dang-ky"
-                    className="rounded-md bg-white px-5 py-2 text-sm font-semibold text-[#2740BA] transition-colors hover:bg-blue-50"
+                    className="whitespace-nowrap rounded-md border border-[#2740BA] bg-white px-3 py-2 text-xs font-semibold text-[#2740BA] transition-colors hover:bg-blue-50 xl:px-4 xl:text-sm"
                   >
                     Đăng ký
                   </Link>
-                </div>
+                </>
               )}
 
-              {/* Language selector — far right */}
-              <div className="relative ml-2" ref={languageRef}>
+              {/* Language selector: far right, no white border */}
+              <div className="relative ml-1 shrink-0" ref={languageRef}>
                 <button
-                  onClick={() => setLanguageOpen((o) => !o)}
-                  className="flex items-center gap-2 rounded-lg px-2 py-2 text-white transition-colors hover:bg-white/10 border-t-[ffff] border-r-[ffff] border-b-[ffff] border-l-[ffff] border-t-[2px] border-r-[2px] border-b-[2px] border-l-[2px]"
+                  type="button"
+                  onClick={() => setLanguageOpen((open) => !open)}
+                  className="flex items-center gap-1.5 whitespace-nowrap rounded-lg px-2 py-2 text-slate-700 transition-colors hover:bg-blue-50 hover:text-[#2740BA] xl:gap-2 xl:px-2.5"
                   aria-label="Chọn ngôn ngữ"
                   aria-expanded={languageOpen}
                 >
-                  <Globe className="h-5 w-5 shrink-0" />
-
-                  <span className="whitespace-nowrap text-sm font-medium">
+                  <Globe className="h-[18px] w-[18px] shrink-0 text-[#2740BA]" />
+                  <span className="text-xs font-medium xl:text-sm">
                     {currentLanguage.label}
                   </span>
-
                   <ChevronDown
-                    className={`h-4 w-4 shrink-0 transition-transform ${
+                    className={`h-3.5 w-3.5 shrink-0 text-slate-500 transition-transform ${
                       languageOpen ? "rotate-180" : ""
                     }`}
                   />
@@ -294,6 +327,7 @@ export default function PublicLayout({
                   <div className="absolute right-0 top-full z-[1002] mt-2 w-44 overflow-hidden rounded-xl border border-gray-100 bg-white py-1 shadow-xl">
                     {LANGUAGES.map((lang) => (
                       <button
+                        type="button"
                         key={lang.code}
                         onClick={() => selectLanguage(lang.code)}
                         className={`flex w-full items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-blue-50 ${
@@ -313,70 +347,40 @@ export default function PublicLayout({
               </div>
             </div>
           </div>
-        </div>
+        </nav>
 
-        {/* Desktop navigation */}
-        <nav className="hidden border-b border-slate-200 bg-white lg:block">
-          <ul className="mx-auto flex max-w-[1280px] items-center gap-1 px-4 text-[13px] font-semibold md:px-6 lg:px-10">
-            {NAV_LINKS.map(({ label, href }) => {
-              const isActive =
-                location === href ||
-                (href !== "/" && location.startsWith(href));
-
-              return (
-                <li key={label} className="py-1">
+        {/* MOBILE NAVIGATION DRAWER */}
+        {mobileMenuOpen && (
+          <div className="drawer-enter border-t border-gray-100 bg-white shadow-lg lg:hidden">
+            <ul className="flex flex-col">
+              {NAV_LINKS.map(({ label, href }) => (
+                <li key={label}>
                   <Link
                     href={href}
-                    className={`block rounded-md px-4 py-3 transition-colors ${
-                      isActive
-                        ? "bg-[#eef2ff] text-[#2740BA]"
-                        : "text-slate-700 hover:bg-slate-50 hover:text-[#2740BA]"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block border-l-4 px-6 py-3.5 text-sm font-semibold transition-colors ${
+                      isActiveLink(href)
+                        ? "border-[#2740BA] bg-blue-50 text-[#2740BA]"
+                        : "border-transparent text-slate-700 hover:bg-slate-50 hover:text-[#2740BA]"
                     }`}
                   >
                     {label}
                   </Link>
                 </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        {/* Mobile navigation drawer */}
-        {mobileMenuOpen && (
-          <div className="drawer-enter border-t border-gray-100 bg-white shadow-lg lg:hidden">
-            <ul className="flex flex-col">
-              {NAV_LINKS.map(({ label, href }) => {
-                const isActive =
-                  location === href ||
-                  (href !== "/" && location.startsWith(href));
-
-                return (
-                  <li key={label}>
-                    <Link
-                      href={href}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`block border-l-4 px-6 py-4 text-sm font-semibold transition-colors ${
-                        isActive
-                          ? "border-[#2740BA] bg-blue-50 text-[#2740BA]"
-                          : "border-transparent text-slate-700 hover:bg-slate-50 hover:text-[#2740BA]"
-                      }`}
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                );
-              })}
+              ))}
             </ul>
 
-            {/* Mobile auth and user actions */}
-            <div className="flex flex-col gap-3 border-t border-gray-100 px-6 py-4">
+            <div className="flex flex-col gap-3 border-t border-gray-100 px-5 py-4">
               {/* Mobile language selector */}
-              <div className="relative" ref={languageRef}>
+              <div className="relative" ref={mobileLanguageRef}>
                 <button
-                  onClick={() => setLanguageOpen((o) => !o)}
-                  className="flex w-full items-center gap-3 rounded-lg border border-gray-200 px-3 py-3 text-slate-700 transition-colors hover:bg-blue-50"
+                  type="button"
+                  onClick={() =>
+                    setMobileLanguageOpen((open) => !open)
+                  }
+                  className="flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-slate-700 transition-colors hover:bg-blue-50"
                   aria-label="Chọn ngôn ngữ"
-                  aria-expanded={languageOpen}
+                  aria-expanded={mobileLanguageOpen}
                 >
                   <Globe className="h-5 w-5 text-[#2740BA]" />
                   <span className="flex-1 text-left text-sm font-medium">
@@ -384,18 +388,19 @@ export default function PublicLayout({
                   </span>
                   <ChevronDown
                     className={`h-4 w-4 transition-transform ${
-                      languageOpen ? "rotate-180" : ""
+                      mobileLanguageOpen ? "rotate-180" : ""
                     }`}
                   />
                 </button>
 
-                {languageOpen && (
+                {mobileLanguageOpen && (
                   <div className="mt-1 overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg">
                     {LANGUAGES.map((lang) => (
                       <button
+                        type="button"
                         key={lang.code}
                         onClick={() => selectLanguage(lang.code)}
-                        className={`flex w-full items-center justify-between px-4 py-3 text-sm hover:bg-blue-50 ${
+                        className={`flex w-full items-center justify-between px-4 py-3 text-sm transition-colors hover:bg-blue-50 ${
                           language === lang.code
                             ? "bg-blue-50 font-semibold text-[#2740BA]"
                             : "text-slate-700"
@@ -413,35 +418,19 @@ export default function PublicLayout({
 
               {isLoggedIn && user ? (
                 <>
-                  <div className="mb-1 flex items-center gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2740BA] text-sm font-bold text-white">
+                  <div className="flex items-center gap-3 border-b border-gray-100 pb-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#2740BA] text-sm font-bold text-white">
                       {user.initials}
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold leading-tight text-slate-800">
+                    </span>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-bold text-slate-800">
                         {user.name}
                       </p>
                       <p className="text-xs text-gray-400">{user.type}</p>
                     </div>
                   </div>
 
-                  {[
-                    {
-                      icon: User,
-                      label: "Hồ sơ doanh nghiệp",
-                      href: "/ho-so-doanh-nghiep",
-                    },
-                    {
-                      icon: Package,
-                      label: "Sản phẩm",
-                      href: "/ho-so-san-pham",
-                    },
-                    {
-                      icon: Bell,
-                      label: "Thông báo",
-                      href: "/thong-bao",
-                    },
-                  ].map(({ icon: Icon, label, href }) => (
+                  {ACCOUNT_LINKS.map(({ icon: Icon, label, href }) => (
                     <Link
                       key={href}
                       href={href}
@@ -455,6 +444,7 @@ export default function PublicLayout({
                   ))}
 
                   <button
+                    type="button"
                     onClick={() => {
                       logout();
                       setMobileMenuOpen(false);
@@ -468,18 +458,18 @@ export default function PublicLayout({
               ) : (
                 <div className="flex gap-3">
                   <Link
-                    href="/dang-ky"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex-1 rounded-lg border border-[#2740BA] py-2.5 text-center text-sm font-semibold text-[#2740BA] transition-colors hover:bg-blue-50"
-                  >
-                    Đăng ký
-                  </Link>
-                  <Link
                     href="/dang-nhap"
                     onClick={() => setMobileMenuOpen(false)}
                     className="flex-1 rounded-lg bg-[#2740BA] py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-[#1f339e]"
                   >
                     Đăng nhập
+                  </Link>
+                  <Link
+                    href="/dang-ky"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex-1 rounded-lg border border-[#2740BA] py-2.5 text-center text-sm font-semibold text-[#2740BA] transition-colors hover:bg-blue-50"
+                  >
+                    Đăng ký
                   </Link>
                 </div>
               )}
@@ -487,21 +477,25 @@ export default function PublicLayout({
           </div>
         )}
       </header>
-      {/* Backdrop */}
+
+      {/* Backdrop for mobile drawer */}
       {mobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-[1000] bg-transparent lg:hidden"
+        <button
+          type="button"
+          className="fixed inset-0 z-[1000] bg-black/10 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
-          aria-hidden="true"
+          aria-label="Đóng menu"
         />
       )}
+
       {/* PAGE CONTENT */}
       <main className="flex-1">{children}</main>
-      {/* FOOTER — smooth blue gradient, no SVG or waves */}
+
+      {/* FOOTER: smooth blue gradient, no SVG or waves */}
       <footer className="relative mt-auto bg-gradient-to-br from-[#0B3E77] via-[#1D4EAA] to-[#2740BA] text-white">
         <div className="mx-auto max-w-[1280px] px-4 pb-5 pt-8 md:px-6 md:pb-8 md:pt-14 lg:px-10">
           <div className="mb-7 grid grid-cols-2 gap-5 md:mb-12 md:gap-10 lg:grid-cols-[1.2fr_0.8fr_1.1fr] lg:gap-12">
-            {/* Column 1 — system information */}
+            {/* Column 1: system information */}
             <div className="min-w-0">
               <div className="mb-3 inline-flex max-w-full items-center gap-2 rounded-xl bg-white p-2 shadow-sm md:mb-5 md:gap-3 md:p-3">
                 <img
@@ -528,7 +522,7 @@ export default function PublicLayout({
               </p>
             </div>
 
-            {/* Column 2 — quick links */}
+            {/* Column 2: quick links */}
             <div className="min-w-0 lg:pl-8">
               <h4 className="text-[11px] font-bold uppercase tracking-wide text-white md:text-base">
                 Liên kết nhanh
@@ -550,7 +544,7 @@ export default function PublicLayout({
               </ul>
             </div>
 
-            {/* Column 3 — contact information */}
+            {/* Column 3: contact information */}
             <div className="col-span-2 min-w-0 md:col-span-1">
               <h4 className="text-xs font-bold uppercase tracking-wide text-white md:text-base">
                 Liên hệ

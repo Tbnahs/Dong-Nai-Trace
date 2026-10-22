@@ -258,7 +258,7 @@ export default function SearchResultsPage() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
       {/* Header search bar */}
-      <div className="bg-[#2740BA] py-4 md:py-6 px-4 md:px-6 lg:px-10">
+      <div className="bg-gradient-to-br from-[#0B3E77] via-[#1D4EAA] to-[#2740BA] px-4 py-4 md:px-6 md:py-6 lg:px-10">
         <div className="max-w-[1280px] mx-auto">
           <form onSubmit={handleSearch}>
             {/* Input row */}
