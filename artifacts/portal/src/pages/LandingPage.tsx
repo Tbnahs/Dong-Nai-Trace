@@ -220,7 +220,7 @@ export default function LandingPage() {
             <h1 className="text-[clamp(1.55rem,4.4vw,3.25rem)] font-extrabold uppercase leading-[1.12] tracking-tight text-white">
               <span className="block">Truy xuất nguồn gốc</span>
               <span className="block text-[40px]">Sản phẩm, hàng hóa </span>
-              <span className="block text-[#ffffff]">Thành phố Đồng Nai</span>
+              <span className="block text-[#ffffff] mt-[1px]">Thành phố Đồng Nai</span>
             </h1>
 
             <form
@@ -545,7 +545,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
       {/* HƯỚNG DẪN DOANH NGHIỆP */}
       <section className="py-16 md:py-20 px-4 md:px-6 lg:px-10 bg-white overflow-hidden">
         <div className="max-w-[1280px] mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
