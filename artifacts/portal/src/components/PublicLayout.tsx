@@ -214,7 +214,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <div className="flex items-center gap-3">
                   <Link
                     href="/dang-nhap"
-                    className="rounded-md border border-white/70 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                    className="rounded-md border border-white/70 px-5 py-2 text-sm font-semibold transition-colors hover:bg-white/10 bg-[ffff] text-[#2740ba]"
                   >
                     Đăng nhập
                   </Link>
