@@ -78,7 +78,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">TRUY XUẤT NGUỒN GỐC SẢN PHẨM, HÀNG HÓA </span>
                 <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">THÀNH PHỐ ĐỒNG NAI</span>
                 <span className="mt-1 block max-w-[220px] truncate font-medium text-white/75 sm:max-w-none sm:text-[10px] md:text-xs text-[20px]">
-                  txng.dongnai.gov.vn
+                 
                 </span>
               </span>
             </Link>
@@ -205,16 +205,16 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                     href="/dang-ky"
                     className="block text-sm font-bold text-white hover:underline"
                   >
-                    Đăng ký tài khoản doanh nghiệp
+                   
                   </Link>
                   <span className="text-xs text-white/70">
-                    Quản lý thông tin sản phẩm của doanh nghiệp
+                    
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
                   <Link
                     href="/dang-nhap"
-                    className="rounded-md border border-white/70 px-5 py-2 text-sm font-semibold transition-colors hover:bg-white/10 bg-[ffff] text-[#2740ba]"
+                    className="rounded-md border border-white/70 px-5 py-2 text-sm font-semibold transition-colors hover:bg-white/10 text-[#2740ba] bg-[#ffffff]"
                   >
                     Đăng nhập
                   </Link>
