@@ -32,7 +32,7 @@ export default function NewsPage() {
       {/* Hero banner */}
       <div className="bg-gradient-to-br from-[#0B3E77] via-[#1D4EAA] to-[#2740BA] px-4 py-4 md:px-6 md:py-6 lg:px-10">
         <div className="max-w-[1280px] mx-auto">
-          <p className="text-xs font-bold uppercase tracking-widest mb-2 border-t-[ffff] border-r-[ffff] border-b-[ffff] border-l-[ffff] text-[ffffff]">
+          <p className="text-xs font-bold uppercase tracking-widest mb-2 border-t-[ffff] border-r-[ffff] border-b-[ffff] border-l-[ffff] text-border">
             Cập nhật mới nhất
           </p>
           <h1 className="text-xl md:text-3xl lg:text-4xl font-extrabold uppercase mb-3 text-[#ffffff]">Tin Tức</h1>
