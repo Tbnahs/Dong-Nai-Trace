@@ -75,8 +75,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <img src={logoUrl} alt="Biểu trưng Đồng Nai" className="h-full w-full rounded-full object-cover" />
               </span>
               <span className="flex min-w-0 flex-col">
-                <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">TRUY XUẤT NGUỒN GỐC SẢN PHẨM, HÀNG HÓA 
-                THÀNH PHỐ ĐỒNG NAI</span>
+                <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">TRUY XUẤT NGUỒN GỐC SẢN PHẨM, HÀNG HÓA </span>
+                <span className="truncate text-sm font-extrabold leading-tight text-white sm:text-base md:text-lg">THÀNH PHỐ ĐỒNG NAI</span>
                 <span className="mt-1 block max-w-[220px] truncate text-[8px] font-medium leading-tight text-white/75 sm:max-w-none sm:text-[10px] md:text-xs">
                   HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM
                 </span>
