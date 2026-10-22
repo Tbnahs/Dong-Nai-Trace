@@ -265,20 +265,20 @@ export default function ContactPage() {
   return (
     <div className="min-h-[70vh] bg-[#F5F7FA]">
       {/* Hero */}
-      <div className="bg-[#2740BA] text-white py-12 px-6 lg:px-12">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-2">
-            Liên hệ
-          </p>
-          <h1 className="text-3xl lg:text-4xl font-extrabold uppercase">
-            Kênh Hỗ Trợ &amp; Liên Hệ
-          </h1>
-          <p className="mt-3 text-blue-100/80 max-w-xl">
-            Liên hệ với Sở Khoa học và Công nghệ Thành phố Đồng Nai để được hỗ
-            trợ về hệ thống truy xuất nguồn gốc sản phẩm.
-          </p>
-        </div>
+      <div className="bg-gradient-to-br from-[#0B3E77] via-[#1D4EAA] to-[#2740BA] px-4 py-4 md:px-6 md:py-6 lg:px-10">
+      <div className="max-w-7xl mx-auto">
+        <p className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-2">
+          Liên hệ
+        </p>
+        <h1 className="text-3xl lg:text-4xl font-extrabold uppercase text-[ffff]">
+          Kênh Hỗ Trợ &amp; Liên Hệ
+        </h1>
+        <p className="mt-3 text-blue-100/80 max-w-xl">
+          Liên hệ với Sở Khoa học và Công nghệ Thành phố Đồng Nai để được hỗ
+          trợ về hệ thống truy xuất nguồn gốc sản phẩm.
+        </p>
       </div>
+    </div>
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 py-10 sm:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact cards */}
