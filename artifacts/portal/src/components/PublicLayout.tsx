@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "../context/AuthContext";
@@ -124,7 +123,7 @@ export default function PublicLayout({
     <div className="flex min-h-screen flex-col overflow-x-hidden bg-white font-sans text-slate-800">
       {/* HEADER */}
       <header className="sticky top-0 z-[1001] flex w-full flex-col bg-white shadow-sm">
-        {/* TOP BRAND BANNER: only logo and system information */}
+        {/* TOP BRAND BANNER */}
         <div className="relative isolate overflow-hidden bg-[#0b3e77]">
           <img
             src={headerArtwork}
@@ -148,14 +147,15 @@ export default function PublicLayout({
                 />
               </span>
 
-              <span className="flex min-w-0 flex-col">
-                <span className="text-xs font-extrabold leading-tight text-white sm:text-sm md:text-lg">
+              {/* Header title: increase line spacing to prevent overlap */}
+              <span className="flex min-w-0 flex-col gap-1">
+                <span className="text-xs font-extrabold leading-relaxed text-white sm:text-sm md:text-lg">
                   HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM, HÀNG HÓA
                 </span>
-                <span className="text-xs font-extrabold leading-tight text-white sm:text-sm md:text-lg">
+                <span className="text-xs font-extrabold leading-relaxed text-white sm:text-sm md:text-lg">
                   THÀNH PHỐ ĐỒNG NAI
                 </span>
-                <span className="text-xs font-normal text-white sm:text-sm md:text-base">
+                <span className="text-xs font-normal leading-relaxed text-white sm:text-sm md:text-base">
                   txng.dongnai.gov.vn
                 </span>
               </span>
@@ -178,10 +178,9 @@ export default function PublicLayout({
           </div>
         </div>
 
-        {/* DESKTOP NAVIGATION + ALL ACTIONS ON THE SAME ROW */}
+        {/* DESKTOP NAVIGATION */}
         <nav className="hidden border-b border-slate-200 bg-white lg:block">
           <div className="mx-auto flex min-h-[56px] w-full max-w-[1280px] items-center justify-between gap-3 px-4 md:px-6 lg:px-6 xl:px-10">
-            {/* Navigation links */}
             <ul className="flex min-w-0 items-center gap-0.5 text-[12px] font-semibold xl:gap-1 xl:text-[13px]">
               {NAV_LINKS.map(({ label, href }) => (
                 <li key={label} className="shrink-0 py-1">
@@ -203,7 +202,6 @@ export default function PublicLayout({
             <div className="flex shrink-0 items-center gap-2 xl:gap-3">
               {isLoggedIn && user ? (
                 <>
-                  {/* Notifications */}
                   <Link
                     href="/thong-bao"
                     aria-label="Thông báo"
@@ -216,7 +214,6 @@ export default function PublicLayout({
                     </span>
                   </Link>
 
-                  {/* Account avatar and dropdown */}
                   <div className="relative" ref={dropdownRef}>
                     <button
                       type="button"
@@ -303,7 +300,7 @@ export default function PublicLayout({
                 </>
               )}
 
-              {/* Language selector: far right, no white border */}
+              {/* Language selector */}
               <div className="relative ml-1 shrink-0" ref={languageRef}>
                 <button
                   type="button"
@@ -375,9 +372,7 @@ export default function PublicLayout({
               <div className="relative" ref={mobileLanguageRef}>
                 <button
                   type="button"
-                  onClick={() =>
-                    setMobileLanguageOpen((open) => !open)
-                  }
+                  onClick={() => setMobileLanguageOpen((open) => !open)}
                   className="flex w-full items-center gap-3 rounded-lg px-2 py-2.5 text-slate-700 transition-colors hover:bg-blue-50"
                   aria-label="Chọn ngôn ngữ"
                   aria-expanded={mobileLanguageOpen}
@@ -477,6 +472,7 @@ export default function PublicLayout({
           </div>
         )}
       </header>
+
       {/* Backdrop for mobile drawer */}
       {mobileMenuOpen && (
         <button
@@ -486,9 +482,11 @@ export default function PublicLayout({
           aria-label="Đóng menu"
         />
       )}
+
       {/* PAGE CONTENT */}
       <main className="flex-1">{children}</main>
-      {/* FOOTER: smooth blue gradient, no SVG or waves */}
+
+      {/* FOOTER */}
       <footer className="relative mt-auto bg-gradient-to-br from-[#0B3E77] via-[#1D4EAA] to-[#2740BA] text-white">
         <div className="mx-auto max-w-[1280px] px-4 pb-5 pt-8 md:px-6 md:pb-8 md:pt-14 lg:px-10">
           <div className="mb-7 grid grid-cols-2 gap-5 md:mb-12 md:gap-10 lg:grid-cols-[1.2fr_0.8fr_1.1fr] lg:gap-12">
@@ -500,10 +498,16 @@ export default function PublicLayout({
                   alt="Logo hệ thống"
                   className="h-8 w-8 shrink-0 object-contain md:h-11 md:w-11"
                 />
-                <span className="pr-1 text-left font-extrabold text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base text-[13px]">HỆ THỐNG TRUY XUẤT NGUỒN GỐC
-                  SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI</span>
-                <span className="pr-1 text-left font-extrabold text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base text-[13px]">HỆ THỐNG TRUY XUẤT NGUỒN GỐC
-                  SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI</span>
+
+                {/* Footer title: split into exactly two lines */}
+                <span className="pr-1 text-left text-[12px] font-extrabold leading-snug text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base">
+                  <span className="block">
+                  HỆ THỐNG TRUY XUẤT NGUỒN GỐC
+                  </span>
+                  <span className="block">
+                    SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI
+                  </span>
+                </span>
               </div>
 
               <div className="mb-3 h-1 w-10 rounded-full bg-[#E8650A] md:mb-4 md:w-12" />
