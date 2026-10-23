@@ -497,11 +497,11 @@ export default function PublicLayout({
                 />
 
                 {/* Footer title: split into exactly two lines */}
-                <span className="pr-1 text-left text-[12px] font-extrabold leading-snug text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base">
-                  <span className="block text-[15px]">
+                <span className="pr-1 text-left text-[11px] font-extrabold leading-snug text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base">
+                  <span className="block text-[11px]">
                   HỆ THỐNG TRUY XUẤT NGUỒN GỐC
                   </span>
-                  <span className="block">
+                  <span className="block text-[11px]">
                     SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI
                   </span>
                 </span>
