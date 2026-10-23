@@ -1,5 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import { MapPin, Phone, Mail, Clock, ExternalLink, Send, X } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  ExternalLink,
+  Send,
+  X,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -104,12 +112,8 @@ function ChatView({
     }, 1800);
   };
 
-  const initials = form.name
-    .trim()
-    .split(" ")
-    .slice(-1)[0]
-    ?.slice(0, 2)
-    .toUpperCase() || "DN";
+  const initials =
+    form.name.trim().split(" ").slice(-1)[0]?.slice(0, 2).toUpperCase() || "DN";
 
   return (
     <div className="flex flex-col h-full">
@@ -134,7 +138,10 @@ function ChatView({
             {closed ? "Đã đóng" : "Đang xử lý"}
           </span>
           <button
-            onClick={() => { setClosed(true); onClose(); }}
+            onClick={() => {
+              setClosed(true);
+              onClose();
+            }}
             title="Đóng"
             className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors"
           >
@@ -147,7 +154,7 @@ function ChatView({
         {messages.map((msg) =>
           msg.from === "user" ? (
             // Người dùng → bên PHẢI, bong bóng xanh
-            (<div key={msg.id} className="flex items-end gap-2 flex-row-reverse">
+            <div key={msg.id} className="flex items-end gap-2 flex-row-reverse">
               <div className="w-7 h-7 rounded-full bg-[#2740BA] text-white flex items-center justify-center text-[10px] font-bold shrink-0">
                 {initials}
               </div>
@@ -155,12 +162,14 @@ function ChatView({
                 <div className="bg-[#2740BA] text-white text-sm px-4 py-2.5 rounded-2xl rounded-br-sm shadow-sm">
                   {msg.text}
                 </div>
-                <p className="text-[10px] text-gray-400 mt-1 mr-1 text-right">{msg.time}</p>
+                <p className="text-[10px] text-gray-400 mt-1 mr-1 text-right">
+                  {msg.time}
+                </p>
               </div>
-            </div>)
+            </div>
           ) : (
             // Admin → bên TRÁI, bong bóng xám
-            (<div key={msg.id} className="flex items-end gap-2">
+            <div key={msg.id} className="flex items-end gap-2">
               <div className="w-7 h-7 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-[10px] font-bold shrink-0">
                 AD
               </div>
@@ -168,10 +177,12 @@ function ChatView({
                 <div className="bg-white border border-slate-200 text-slate-800 text-sm px-4 py-2.5 rounded-2xl rounded-bl-sm shadow-sm">
                   {msg.text}
                 </div>
-                <p className="text-[10px] text-gray-400 mt-1 ml-1">{msg.time}</p>
+                <p className="text-[10px] text-gray-400 mt-1 ml-1">
+                  {msg.time}
+                </p>
               </div>
-            </div>)
-          )
+            </div>
+          ),
         )}
 
         {/* Typing indicator */}
@@ -196,7 +207,10 @@ function ChatView({
           <p className="text-center text-sm text-gray-400">Yêu cầu đã đóng</p>
         ) : (
           <form
-            onSubmit={(e) => { e.preventDefault(); send(); }}
+            onSubmit={(e) => {
+              e.preventDefault();
+              send();
+            }}
             className="flex gap-2"
           >
             <input
@@ -254,7 +268,8 @@ export default function ContactPage() {
       !form.name.trim() ||
       !form.content.trim() ||
       (!isLoggedIn && (!form.phone.trim() || !form.email.trim()))
-    ) return;
+    )
+      return;
     setTicketId(nextTicketId());
     setSubmitted(true);
   };
@@ -266,19 +281,19 @@ export default function ContactPage() {
     <div className="min-h-[70vh] bg-[#F5F7FA]">
       {/* Hero */}
       <div className="bg-gradient-to-br from-[#0B3E77] via-[#1D4EAA] to-[#2740BA] px-4 py-4 md:px-6 md:py-6 lg:px-10">
-      <div className="max-w-7xl mx-auto">
-        <p className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-2">
-          Liên hệ
-        </p>
-        <h1 className="text-3xl lg:text-4xl font-extrabold uppercase border-t-[color:var(--color-slate-200)] border-r-[color:var(--color-slate-200)] border-b-[color:var(--color-slate-200)] border-l-[color:var(--color-slate-200)] text-input">
-          Kênh Hỗ Trợ &amp; Liên Hệ
-        </h1>
-        <p className="mt-3 text-blue-100/80 max-w-xl">
-          Liên hệ với Sở Khoa học và Công nghệ Thành phố Đồng Nai để được hỗ
-          trợ về hệ thống truy xuất nguồn gốc sản phẩm.
-        </p>
+        <div className="max-w-7xl mx-auto">
+          <p className="text-xs font-bold uppercase tracking-widest text-blue-200 mb-2">
+            Liên hệ
+          </p>
+          <h1 className="text-3xl lg:text-4xl font-extrabold uppercase border-t-[color:var(--color-slate-200)] border-r-[color:var(--color-slate-200)] border-b-[color:var(--color-slate-200)] border-l-[color:var(--color-slate-200)] text-input">
+            Kênh Hỗ Trợ &amp; Liên Hệ
+          </h1>
+          <p className="mt-3 text-blue-100/80 max-w-xl">
+            Liên hệ với Sở Khoa học và Công nghệ Thành phố Đồng Nai để được hỗ
+            trợ về hệ thống truy xuất nguồn gốc sản phẩm.
+          </p>
+        </div>
       </div>
-    </div>
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 py-10 sm:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact cards */}
@@ -287,7 +302,8 @@ export default function ContactPage() {
               {
                 icon: MapPin,
                 label: "Địa chỉ",
-                value: "Số 1597, Đường Phạm Văn Thuận, phường Trấn Biên, thành phố Đồng Nai",
+                value:
+                  "Số 1597, Đường Phạm Văn Thuận, phường Trấn Biên, thành phố Đồng Nai",
                 color: "text-[#E8650A]",
                 href: "https://maps.google.com/?q=1592+Nguy%E1%BB%85n+%C3%81i+Qu%E1%BB%91c+Bi%C3%AAn+Ho%C3%A0+%C4%90%E1%BB%93ng+Nai",
               },
@@ -322,7 +338,9 @@ export default function ContactPage() {
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-0.5">
                       {label}
                     </p>
-                    <p className={`text-sm font-medium leading-relaxed ${href ? "text-[#2740BA] hover:underline" : "text-slate-800"}`}>
+                    <p
+                      className={`text-sm font-medium leading-relaxed ${href ? "text-[#2740BA] hover:underline" : "text-slate-800"}`}
+                    >
                       {value}
                     </p>
                   </div>
@@ -333,13 +351,18 @@ export default function ContactPage() {
                   key={label}
                   href={href}
                   target={href.startsWith("http") ? "_blank" : undefined}
-                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  rel={
+                    href.startsWith("http") ? "noopener noreferrer" : undefined
+                  }
                   className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex gap-4 items-start hover:shadow-md transition-shadow"
                 >
                   {inner}
                 </a>
               ) : (
-                <div key={label} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex gap-4 items-start">
+                <div
+                  key={label}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex gap-4 items-start"
+                >
                   {inner}
                 </div>
               );
@@ -369,7 +392,13 @@ export default function ContactPage() {
                 ticketId={ticketId}
                 onClose={() => {
                   setSubmitted(false);
-                  setForm({ name: "", phone: "", email: "", topic: "", content: "" });
+                  setForm({
+                    name: "",
+                    phone: "",
+                    email: "",
+                    topic: "",
+                    content: "",
+                  });
                 }}
               />
             ) : (
@@ -397,7 +426,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                        Số điện thoại {!isLoggedIn && <span className="text-red-500">*</span>}
+                        Số điện thoại{" "}
+                        {!isLoggedIn && <span className="text-red-500">*</span>}
                       </label>
                       <input
                         type="tel"
@@ -411,7 +441,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                      Email {!isLoggedIn && <span className="text-red-500">*</span>}
+                      Email{" "}
+                      {!isLoggedIn && <span className="text-red-500">*</span>}
                     </label>
                     <input
                       type="email"
