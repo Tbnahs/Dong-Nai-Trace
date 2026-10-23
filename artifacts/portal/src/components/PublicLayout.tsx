@@ -472,7 +472,6 @@ export default function PublicLayout({
           </div>
         )}
       </header>
-
       {/* Backdrop for mobile drawer */}
       {mobileMenuOpen && (
         <button
@@ -482,10 +481,8 @@ export default function PublicLayout({
           aria-label="Đóng menu"
         />
       )}
-
       {/* PAGE CONTENT */}
       <main className="flex-1">{children}</main>
-
       {/* FOOTER */}
       <footer className="relative mt-auto bg-gradient-to-br from-[#0B3E77] via-[#1D4EAA] to-[#2740BA] text-white">
         <div className="mx-auto max-w-[1280px] px-4 pb-5 pt-8 md:px-6 md:pb-8 md:pt-14 lg:px-10">
@@ -501,7 +498,7 @@ export default function PublicLayout({
 
                 {/* Footer title: split into exactly two lines */}
                 <span className="pr-1 text-left text-[12px] font-extrabold leading-snug text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base">
-                  <span className="block">
+                  <span className="block text-[15px]">
                   HỆ THỐNG TRUY XUẤT NGUỒN GỐC
                   </span>
                   <span className="block">
