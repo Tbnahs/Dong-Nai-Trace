@@ -8,18 +8,13 @@ import {
 
 // ─── Products ─────────────────────────────────────────────────────────────────
 export const MOCK_PRODUCTS = [
-  { id: 'sp001', name: 'Bưởi Tân Triều', traceCode: 'TXNG-VCU-001-2024', org: 'HTX Nông nghiệp Xanh', category: 'Nông sản & Rau củ', district: 'Vĩnh Cửu', status: 'published', cert: 'VietGAP', img: 'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?w=300&h=200&fit=crop' },
-  { id: 'sp002', name: 'Rau muống hữu cơ VietGAP', traceCode: 'TXNG-XL-002-2024', org: 'Trang trại Sạch Đồng Nai', category: 'Nông sản & Rau củ', district: 'Biên Hòa', status: 'published', cert: 'VietGAP', img: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=300&h=200&fit=crop' },
-  { id: 'sp003', name: 'Tôm sú đông lạnh', traceCode: 'TXNG-LT-003-2024', org: 'Công ty Thủy sản Đồng Nai', category: 'Thủy sản', district: 'Long Thành', status: 'published', cert: 'HACCP', img: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=300&h=200&fit=crop' },
-  { id: 'sp004', name: 'Cá tra phi lê', org: 'Công ty TNHH Thủy sản Nam Phát', category: 'Thủy sản', district: 'Nhơn Trạch', status: 'published', cert: 'GlobalGAP', img: 'https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=300&h=200&fit=crop' },
-  { id: 'sp005', name: 'Nước mắm truyền thống', org: 'Cơ sở Nước mắm Hương Đồng', category: 'Thực phẩm chế biến', district: 'Xuân Lộc', status: 'published', cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=300&h=200&fit=crop' },
+  { id: 'sp001', name: 'Bưởi Tân Triều', traceCode: 'TXNG-VCU-001-2024', org: 'HTX Nông nghiệp Xanh', category: 'Nông sản & Rau củ', district: 'Vĩnh Cửu', status: 'published', cert: 'VietGAP', img: `${import.meta.env.BASE_URL}images/buoi-tan-trieu.jpg`},
+  { id: 'sp002', name: 'Rau muống hữu cơ VietGAP', traceCode: 'TXNG-XL-002-2024', org: 'Trang trại Sạch Đồng Nai', category: 'Nông sản & Rau củ', district: 'Biên Hòa', status: 'published', cert: 'VietGAP', img: `${import.meta.env.BASE_URL}images/rau-muong.jpg` },
+  { id: 'sp003', name: 'Tôm sú đông lạnh', traceCode: 'TXNG-LT-003-2024', org: 'Công ty Thủy sản Đồng Nai', category: 'Thủy sản', district: 'Long Thành', status: 'published', cert: 'HACCP', img: `${import.meta.env.BASE_URL}images/tom-su-dong-lanh.jpg` },
+  { id: 'sp004', name: 'Cá tra phi lê', org: 'Công ty TNHH Thủy sản Nam Phát', category: 'Thủy sản', district: 'Nhơn Trạch', status: 'published', cert: 'GlobalGAP', img: `${import.meta.env.BASE_URL}images/ca-tra-phi-le.jpg` },
   { id: 'sp006', name: 'Dưa hấu không hạt', org: 'HTX Dưa hấu Định Quán', category: 'Nông sản & Rau củ', district: 'Định Quán', status: 'published', cert: 'OCOP', img: 'https://images.unsplash.com/photo-1563114773-84221bd62daa?w=300&h=200&fit=crop' },
-  { id: 'sp007', name: 'Mật ong rừng nguyên chất', org: 'Trang trại Ong Rừng Đồng Nai', category: 'Thực phẩm chế biến', district: 'Tân Phú', status: 'published', cert: 'OCOP', img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=300&h=200&fit=crop' },
-  { id: 'sp008', name: 'Gạo hữu cơ Định Quán', org: 'HTX Nông sản Định Quán', category: 'Nông sản & Rau củ', district: 'Định Quán', status: 'published', cert: 'VietGAP', img: 'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=300&h=200&fit=crop' },
-  { id: 'sp009', name: 'Chả giò chiên giòn', org: 'Công ty TNHH Thực phẩm Bình An', category: 'Thực phẩm chế biến', district: 'Biên Hòa', status: 'published', cert: 'ISO 22000', img: 'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=300&h=200&fit=crop' },
   { id: 'sp010', name: 'Tiêu sọ Long Khánh', org: 'HTX Hồ Tiêu Long Khánh', category: 'Nông sản & Rau củ', district: 'Long Khánh', status: 'published', cert: 'OCOP', img: `${import.meta.env.BASE_URL}images/peppercorns-black.jpg` },
   { id: 'sp011', name: 'Bò khô Long Khánh', org: 'Cơ sở Đặc sản Long Khánh', category: 'Thực phẩm chế biến', district: 'Long Khánh', status: 'published', cert: 'HACCP', img: 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=300&h=200&fit=crop' },
-  { id: 'sp012', name: 'Dệt thổ cẩm thủ công', org: 'Làng nghề Trị An', category: 'Thủ công mỹ nghệ', district: 'Vĩnh Cửu', status: 'published', cert: '', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=200&fit=crop' },
 ];
 
 // ─── Businesses ───────────────────────────────────────────────────────────────
