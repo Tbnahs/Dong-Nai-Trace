@@ -287,7 +287,7 @@ export default function ContactPage() {
               {
                 icon: MapPin,
                 label: "Địa chỉ",
-                value: "1592 Nguyễn Ái Quốc, KP6, P.Trung Dũng, Biên Hoà, Đồng Nai",
+                value: "Số 1597, Đường Phạm Văn Thuận, phường Trấn Biên, thành phố Đồng Nai",
                 color: "text-[#E8650A]",
                 href: "https://maps.google.com/?q=1592+Nguy%E1%BB%85n+%C3%81i+Qu%E1%BB%91c+Bi%C3%AAn+Ho%C3%A0+%C4%90%E1%BB%93ng+Nai",
               },
