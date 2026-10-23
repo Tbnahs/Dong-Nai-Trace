@@ -500,7 +500,7 @@ export default function PublicLayout({
                   alt="Logo hệ thống"
                   className="h-8 w-8 shrink-0 object-contain md:h-11 md:w-11"
                 />
-                <span className="pr-1 text-left font-extrabold text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base text-[15px]">
+                <span className="pr-1 text-left font-extrabold text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base text-[10px]">
                   HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI
                 </span>
               </div>
