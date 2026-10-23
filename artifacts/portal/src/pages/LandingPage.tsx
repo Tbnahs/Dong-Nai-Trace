@@ -217,10 +217,12 @@ export default function LandingPage() {
           </div>
 
           <div className="relative z-10 mx-auto flex max-w-[850px] flex-col items-center">
-            <h1 className="text-[clamp(1.55rem,4.4vw,3.25rem)] font-extrabold uppercase leading-[1.12] tracking-tight text-white">
-              <span className="block mb-[5px]">Truy xuất nguồn gốc</span>
-              <span className="block text-[40px]">Sản phẩm, hàng hóa </span>
-              <span className="block text-[#ffffff] mt-[5px]">Thành phố Đồng Nai</span>
+            <h1 className="w-full text-[clamp(1.5rem,4.2vw,3.25rem)] font-extrabold uppercase leading-[1.3] tracking-tight text-white">
+              <span className="mb-2 block">Truy xuất nguồn gốc</span>
+
+              <span className="block text-[45px]">Sản phẩm, hàng hóa</span>
+
+              <span className="mt-2 block text-white">Thành phố Đồng Nai</span>
             </h1>
 
             <form
