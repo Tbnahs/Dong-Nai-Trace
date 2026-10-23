@@ -477,7 +477,6 @@ export default function PublicLayout({
           </div>
         )}
       </header>
-
       {/* Backdrop for mobile drawer */}
       {mobileMenuOpen && (
         <button
@@ -487,10 +486,8 @@ export default function PublicLayout({
           aria-label="Đóng menu"
         />
       )}
-
       {/* PAGE CONTENT */}
       <main className="flex-1">{children}</main>
-
       {/* FOOTER: smooth blue gradient, no SVG or waves */}
       <footer className="relative mt-auto bg-gradient-to-br from-[#0B3E77] via-[#1D4EAA] to-[#2740BA] text-white">
         <div className="mx-auto max-w-[1280px] px-4 pb-5 pt-8 md:px-6 md:pb-8 md:pt-14 lg:px-10">
@@ -503,7 +500,7 @@ export default function PublicLayout({
                   alt="Logo hệ thống"
                   className="h-8 w-8 shrink-0 object-contain md:h-11 md:w-11"
                 />
-                <span className="pr-1 text-left text-[11px] font-extrabold leading-snug text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base">
+                <span className="pr-1 text-left font-extrabold text-[#2740BA] sm:text-xs md:max-w-[290px] md:text-sm lg:text-base text-[15px]">
                   HỆ THỐNG TRUY XUẤT NGUỒN GỐC SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI
                 </span>
               </div>
