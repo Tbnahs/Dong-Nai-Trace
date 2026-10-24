@@ -74,7 +74,6 @@ export default function BusinessDetailPage() {
           <span className="text-xs text-gray-400">Đồng Nai Trace — Doanh nghiệp</span>
         </div>
       </div>
-
       <div className="max-w-[1280px] mx-auto px-4 md:px-6 lg:px-10 py-6 md:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-8">
 
@@ -140,7 +139,7 @@ export default function BusinessDetailPage() {
               <div className="border-t border-slate-100 pt-5">
                 <div className="flex items-center gap-2 mb-3">
                   <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                  <span className="text-sm font-semibold text-gray-700">Đã xác thực trên hệ thống Đồng Nai Trace</span>
+                  <span className="text-sm font-semibold text-gray-700">Đã xác thực trên hệ thống Truy xuất nguồn gốc sản phẩm, hàng hóa Thành phố Đồng Nai</span>
                 </div>
                 <p className="text-sm text-gray-600 leading-relaxed">
                   {biz.name} là đơn vị tham gia hệ thống truy xuất nguồn gốc Đồng Nai Trace, đã đăng ký và xác thực thông tin theo quy định của Sở Khoa học và Công nghệ Thành phố Đồng Nai.
