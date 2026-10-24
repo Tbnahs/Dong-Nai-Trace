@@ -509,11 +509,7 @@ export default function PublicLayout({
 
               <div className="mb-3 h-1 w-10 rounded-full bg-[#E8650A] md:mb-4 md:w-12" />
 
-              <p className="hidden max-w-xl text-sm leading-7 text-blue-100/90 md:block">
-                Hệ thống Truy xuất nguồn gốc sản phẩm hàng hóa Thành phố Đồng
-                Nai. Nền tảng kết nối doanh nghiệp, cơ quan quản lý và người
-                tiêu dùng nhằm minh bạch hóa thông tin chuỗi cung ứng.
-              </p>
+              <p className="hidden max-w-xl text-blue-100/90 md:block text-[15px]">Nền tảng kết nối doanh nghiệp, cơ quan quản lý và người tiêu dùng nhằm minh bạch hóa thông tin chuỗi cung ứng.</p>
 
               <p className="text-[11px] leading-relaxed text-blue-100/90 md:hidden">
                 Hệ thống Truy xuất nguồn gốc sản phẩm hàng hóa Thành phố Đồng
