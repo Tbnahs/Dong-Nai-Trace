@@ -573,9 +573,8 @@ export default function AuthPage({ defaultTab = 'login' }: { defaultTab?: 'login
               data-testid="img-brand-auth"
               className="h-14 w-14 shrink-0 object-contain"
             />
-            <span data-testid="text-brand-auth" className="sm:text-xl font-extrabold tracking-tight text-[#2740BA] text-[15px]">
-              Truy Xuất Đồng Nai
-            </span>
+            <span data-testid="text-brand-auth" className="sm:text-xl font-extrabold tracking-tight text-[#2740BA] text-[15px] text-left">TRUY XUẤT NGUỒN GỐC 
+            SẢN PHẨM, HÀNG HÓA THÀNH PHỐ ĐỒNG NAI</span>
           </div>
 
           {defaultTab === 'login' ? (
