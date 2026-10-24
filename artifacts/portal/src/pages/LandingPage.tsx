@@ -304,7 +304,9 @@ export default function LandingPage() {
                 className="mx-auto mt-4 max-w-3xl px-2 text-center text-white/90 sm:mt-5 sm:text-sm md:text-base text-[15px]"
               >
                 Đồng Nai khẳng định chất lượng sản phẩm, minh bạch nguồn gốc và
-                nâng cao uy tín thương hiệu địa&nbsp;phương.
+                nâng cao uy tín
+                <br />
+                thương hiệu địa phương.
               </p>
             </form>
           </div>
